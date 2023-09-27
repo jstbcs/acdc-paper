@@ -53,8 +53,6 @@ abstract: |
 keywords          : "keywords"
 wordcount         : "X"
 
-bibliography      : ["lab.bib", "r-references.bib"]
-
 floatsintext      : no
 linenumbers       : yes
 draft             : no
@@ -79,6 +77,7 @@ header-includes:
 classoption       : "man"
 output            : papaja::apa6_pdf
 csl               : apa6.csl
+bibliography: references.bib
 ---
 
 ```{r setup, include = FALSE}
@@ -92,7 +91,7 @@ set.seed(42)
 knitr::opts_chunk$set(cache.extra = knitr::rand_seed)
 ```
 
-
+Making data openly available has been a central demand by reformers since the start of the reproducibility crisis in psychology [REFS]. Fortunately, this demand has lead to a considerable increase in data availability. While only about 25% of data were shared after request in 2006 [@Wicherts:etal:2006], publicly sharing data upon publication is now more and more the norm. This cultural shift becomes more and more institutionalized. Universities and funding agencies prioritize open data, and some journals even mandate the publication of data with every published article [@Sloman:2015]. In addition, technology like the Open Science Framework and other data sharing facilities enable an easy process for researchers, further reducing barriers to share data.
 
 # SQLight Data Base
 
@@ -113,7 +112,6 @@ knitr::opts_chunk$set(cache.extra = knitr::rand_seed)
 ## A Closer Look at the Stroop Task
 
 # Discussion
-
 
 \newpage
 
