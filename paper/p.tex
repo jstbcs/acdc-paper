@@ -255,6 +255,59 @@ One of the most standard ways in computer science for storing data is using SQL 
 \hypertarget{data-base-structure}{%
 \subsection{Data Base Structure}\label{data-base-structure}}
 
+\begin{itemize}
+\tightlist
+\item
+  SQL databases are composed of several data tables consisting of rows and columns.
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Each row in a data table has foreign key (essentially a row ID) which uniquely identifies it. Additionally, SQL data tables may contain foreign keys which reference a unique row in another data table. In contrast to primary keys, these foreign keys allow for duplicate values within the same data table.
+  \item
+    For instance, a study table may store information about all studies in a database where each row corresponds to one study. Here the foreign key is the study\_id. We can ensure that our database links each study to the publication it was published in by adding a foreign key called publication\_id which references the unique identifier of the respective publication in a publication table (see Figure 1).
+  \end{itemize}
+\end{itemize}
+
+
+
+\begin{figure}
+\includegraphics[width=4.95in]{images/illustrate_SQL_keys} \caption{Figure 1. Illustrative example of using foreign and primary keys in a SQL database.}(\#fig:figure 1)
+\end{figure}
+
+\begin{itemize}
+\tightlist
+\item
+  The structure of ACDC is adapted to the logic of publications consisting of one or multiple studies which in turn include one or several datasets (see Figure 2).
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Each dataset stores information about a single attentional control task within a certain study. A dataset table stores information about each dataset (such as sample size) while the observation table contains the actual attentional control task data.
+  \item
+    A between table contains information about between-person manipulations on a study level and a within table stores information about within-person manipulations within a dataset.
+  \item
+    Note that since the congruency between stimuli is part of every attentional control task it is not considered a within-manipulation in this database but is per default included in the observation table.
+  \item
+    The combination of within- and between-manipulations results in several possible conditions within a dataset, which are stored in a condition table.
+
+    \begin{itemize}
+    \item
+      \begin{itemize}
+      \tightlist
+      \item
+        Add this?: Both the condition table and the observation table contain the within\_id, between\_id and condition\_id. We deliberately chose this duplication within our database to increase the speed of accessing data through our R package and through the R shiny app.
+      \end{itemize}
+    \end{itemize}
+  \end{itemize}
+\end{itemize}
+
+Figure 1. Illustrative example of using foreign and primary keys in a SQL database. Figure 2. Structure of the ACDC database. Note. Primary keys are indicated by the key symbol. References between data tables are illustrated through lines connecting columns across data tables. This overview includes the data type of each column: integers (int), numbers with decimal places (float), characters (varchar) and logical true/false values (Booleans).
+
+\begin{figure}
+\includegraphics[width=10.87in]{images/db_structure} \caption{Figure 1. Illustrative example of using foreign and primary keys in a SQL database.}(\#fig:figure 2)
+\end{figure}
+
 \hypertarget{included-data}{%
 \subsection{Included Data}\label{included-data}}
 
