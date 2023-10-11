@@ -143,9 +143,43 @@ knitr::include_graphics("images/db_structure.png")
 
 ## R-Package
 
+```{r package-install, echo = T, eval = F}
+devtools::install_github("SLesche/acdc-query")
+
+library(acdcquery)
+```
+
+
 ## Queries and Output
 
 # Example Analysis
+
+```{r}
+library("acdcquery")
+
+conn <- connect_to_db("../acdc.db")
+
+arguments <-  list()
+arguments <- add_argument(
+ list = arguments,
+ conn = conn,
+ variable = "study_id",
+ operator = "greater",
+ values = c(-1)
+)
+
+query_results <- query_db(
+ conn = conn,
+ arguments = arguments,
+ target_vars = c("default", "publication_id")
+)
+
+# head(query_results)
+length(unique(query_results$dataset_id))
+length(unique(query_results$publication_id))
+
+```
+
 
 ## Reliability of Experimental Tasks
 
