@@ -32,7 +32,7 @@ affiliation:
     institution   : "University of Heidelberg"
 
 authornote: |
-  We are indepted to Arte Bischop for her thesis work on the initial SQL data base.
+  We are indebted to Arte Bischop for her thesis work on the initial SQL data base.
   
   This work was supported in part by a Veni grant from the NWO (VI.Veni.201G.019) and a talent grant by Amsterdam Brain & Cognition (ABC.T09.0921) to J.M.H.
 
@@ -112,8 +112,8 @@ One of the most standard ways in computer science for storing data is using SQL 
 ## Data Base Structure
 
 * SQL databases are composed of several data tables consisting of rows and columns. 
-  * Each row in a data table has foreign key (essentially a row ID) which uniquely identifies it. Additionally, SQL data tables may contain foreign keys which reference a unique row in another data table. In contrast to primary keys, these foreign keys allow for duplicate values within the same data table.
-  * For instance, a study table may store information about all studies in a database where each row corresponds to one study. Here the foreign key is the study_id. We can ensure that our database links each study to the publication it was published in by adding a foreign key called publication_id which references the unique identifier of the respective publication in a publication table (see Figure 1). 
+  * Each row in a data table has primary key (essentially a row ID) which uniquely identifies it. Additionally, SQL data tables may contain foreign keys which reference a unique row in another data table. In contrast to primary keys, these foreign keys allow for duplicate values within the same data table.
+  * For instance, a study table may store information about all studies in a database where each row corresponds to one study. Here the primary key is the study_id. We can ensure that our database links each study to the publication it was published in by adding a foreign key called publication_id which references the unique identifier of the respective publication in a publication table (see Figure 1). 
   
 (ref:caption-figure1) Figure 1. Illustrative example of using foreign and primary keys in a SQL database. 
 
@@ -127,6 +127,7 @@ knitr::include_graphics("images/illustrate_SQL_keys.png")
   * Note that since the congruency between stimuli is part of every attentional control task it is not considered a within-manipulation in this database but is per default included in the observation table. 
   * The combination of within- and between-manipulations results in several possible conditions within a dataset, which are stored in a condition table.
     * + Add this?: Both the condition table and the observation table contain the within_id, between_id and condition_id. We deliberately chose this duplication within our database to increase the speed of accessing data through our R package and through the R shiny app. 
+  * + Add this? maybe add a section describing where you would find commonly needed variables: (rt, acc, condition, n_participants, percentage_congruent, task_name)
 
 (ref:caption-figure2) Figure 2. Structure of the ACDC database. Note. Primary keys are indicated by the key symbol. References between data tables are illustrated through lines connecting columns across data tables. This overview includes the data type of each column: integers (int), numbers with decimal places (float), characters (varchar) and logical true/false values (Booleans). 
 
