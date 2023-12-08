@@ -113,7 +113,6 @@ One of the most standard ways in computer science for storing data is using SQL 
 
 ## Database Structure
 
-
 SQL databases are composed of several data tables consisting of rows and columns. Each row in a data table has a primary key (essentially a row ID) which uniquely identifies it. Additionally, SQL data tables may contain foreign keys which reference a unique row in another data table. In contrast to primary keys, these foreign keys allow for duplicate values within the same data table. For instance, a study table may store information about all studies in a database where each row corresponds to one study. Here the primary key is the study_id. We can ensure that our database links each study to the publication it was published in by adding a foreign key called publication_id. This foreign key references the unique identifier of the respective publication in a publication table (see Figure 1). 
 
 (ref:caption-figure1) Illustrative example of using foreign and primary keys in a SQL database. 
@@ -121,7 +120,6 @@ SQL databases are composed of several data tables consisting of rows and columns
 ```{r figure1, fig.cap = "(ref:caption-figure1)"}
 knitr::include_graphics("images/illustrate_SQL_keys.png")
 ```
-
 
 The structure of ACDC is adapted to the logic of publications consisting of one or multiple studies which in turn include one or several data sets (see Figure 2). A *publication table* and a *study table* contain specific information about each publication and study, respectively. Each data set within a study stores trial-level information about a single attentional control task within a certain study. If a between-subject manipulation exists, our data base contains a separate data set for each group and each task. For instance, a study in which two groups (younger and older adults) completed a Simon and a Stroop task would consist of four data sets in the ACDC data base. 
 
@@ -154,7 +152,7 @@ One advantage of SQLite databases is that they are simply a file that can be dow
 ## R-Package
 
 ```{r package-install, echo = T, eval = F}
-# devtools::install_github("SLesche/acdc-query")
+devtools::install_github("SLesche/acdc-query")
 
 library(acdcquery)
 ```
@@ -163,12 +161,10 @@ library(acdcquery)
 
 # Example Analysis
 
-```{r eval = F}
+```{r}
 library("acdcquery")
 
-# conn <- connect_to_db("../acdc.db")
-db_file <- base::system.file("extdata", "acdc.db", package = "acdcquery")
-conn <- connect_to_db(db_file)
+conn <- connect_to_db("../acdc.db")
 
 arguments <-  list()
 arguments <- add_argument(

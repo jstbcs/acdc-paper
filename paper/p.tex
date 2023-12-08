@@ -345,7 +345,7 @@ One advantage of SQLite databases is that they are simply a file that can be dow
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{\# devtools::install\_github("SLesche/acdc{-}query")}
+\NormalTok{devtools}\SpecialCharTok{::}\FunctionTok{install\_github}\NormalTok{(}\StringTok{"SLesche/acdc{-}query"}\NormalTok{)}
 
 \FunctionTok{library}\NormalTok{(acdcquery)}
 \end{Highlighting}
@@ -356,6 +356,19 @@ One advantage of SQLite databases is that they are simply a file that can be dow
 
 \hypertarget{example-analysis}{%
 \section{Example Analysis}\label{example-analysis}}
+
+\begin{verbatim}
+## Warning: Column `block`: mixed type, first seen values of type integer,
+## coercing other values of type string
+\end{verbatim}
+
+\begin{verbatim}
+## [1] 40
+\end{verbatim}
+
+\begin{verbatim}
+## [1] 8
+\end{verbatim}
 
 \hypertarget{reliability-of-experimental-tasks}{%
 \subsection{Reliability of Experimental Tasks}\label{reliability-of-experimental-tasks}}
