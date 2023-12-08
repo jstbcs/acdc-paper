@@ -1,9 +1,10 @@
 % Options for packages loaded elsewhere
 \PassOptionsToPackage{unicode}{hyperref}
 \PassOptionsToPackage{hyphens}{url}
+\PassOptionsToPackage{dvipsnames,svgnames,x11names}{xcolor}
 %
 \documentclass[
-  man]{apa6}
+  man,floatsintext]{apa6}
 \usepackage{amsmath,amssymb}
 \usepackage{iftex}
 \ifPDFTeX
@@ -36,6 +37,46 @@
   \KOMAoptions{parskip=half}}
 \makeatother
 \usepackage{xcolor}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
 \usepackage{graphicx}
 \makeatletter
 \def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
@@ -159,12 +200,6 @@
   }
 {}{\PatchFailed}
 \keywords{Open Data, Attentional Control, SQL\newline\indent Word count: X}
-\DeclareDelayedFloatFlavor{ThreePartTable}{table}
-\DeclareDelayedFloatFlavor{lltable}{table}
-\DeclareDelayedFloatFlavor*{longtable}{table}
-\makeatletter
-\renewcommand{\efloat@iwrite}[1]{\immediate\expandafter\protected@write\csname efloat@post#1\endcsname{}}
-\makeatother
 \usepackage{lineno}
 
 \linenumbers
@@ -190,7 +225,11 @@
   pdfauthor={Julia M. Haaf1, Madlen Hoffstadt1, \& Sven Lesche2},
   pdflang={en-EN},
   pdfkeywords={Open Data, Attentional Control, SQL},
-  hidelinks,
+  colorlinks=true,
+  linkcolor={Maroon},
+  filecolor={Maroon},
+  citecolor={Blue},
+  urlcolor={blue},
   pdfcreator={LaTeX via pandoc}}
 
 \title{Attentional Control Data Collection: A Resource for Efficient Data Reuse}
@@ -202,7 +241,7 @@
 
 \authornote{
 
-We are indepted to Arte Bischop for her thesis work on the initial SQL data base.
+We are indebted to Arte Bischop for her thesis work on the initial SQL data base.
 
 This work was supported in part by a Veni grant from the NWO (VI.Veni.201G.019) and a talent grant by Amsterdam Brain \& Cognition (ABC.T09.0921) to J.M.H.
 
@@ -247,78 +286,70 @@ We think it is necessary to provide a data sharing solution that solves the curr
 
 To provide a little history of the project, the Attentional Control Data Collection was inspired by a collection of open data sets from attentional control tasks by the Perception and Cognition Lab led by J. Rouder (\href{https://github.com/PerceptionCognitionLab/data0}{url}). Colleagues provided the first author and Rouder with data sets for their statistical work (Haaf \& Rouder, 2017; \textbf{Rouder:etal:2023?}). To ensure that data sets were accessible, we gathered them in a github repository. However, there was little structure to the collection, and github repositories are neither stable entities nor are they designed as data storage. Here, we describe how a structured data collection can be achieved and which benefits it provides.
 
-\hypertarget{sqlight-data-base}{%
-\section{SQLight Data Base}\label{sqlight-data-base}}
+\hypertarget{sqlight-database}{%
+\section{SQLight Database}\label{sqlight-database}}
 
 One of the most standard ways in computer science for storing data is using SQL data bases. Structured query language (SQL) allows to create, access and manipulate a structured data storage. SQL data bases consist of data tables and relations between these tables. There are many flavors of SQL data bases. Here, we decided to use an SQLight data base, a lightweight solution that allows us to store the entire data base in a single file of moderate size that can be downloaded by researchers for data reuse. In this section we describe the structure of the data base and the data currently included. Researchers who simply want to use ACDC may safely skip this section.
 
-\hypertarget{data-base-structure}{%
-\subsection{Data Base Structure}\label{data-base-structure}}
+\hypertarget{database-structure}{%
+\subsection{Database Structure}\label{database-structure}}
 
-\begin{itemize}
-\tightlist
-\item
-  SQL databases are composed of several data tables consisting of rows and columns.
-
-  \begin{itemize}
-  \tightlist
-  \item
-    Each row in a data table has foreign key (essentially a row ID) which uniquely identifies it. Additionally, SQL data tables may contain foreign keys which reference a unique row in another data table. In contrast to primary keys, these foreign keys allow for duplicate values within the same data table.
-  \item
-    For instance, a study table may store information about all studies in a database where each row corresponds to one study. Here the foreign key is the study\_id. We can ensure that our database links each study to the publication it was published in by adding a foreign key called publication\_id which references the unique identifier of the respective publication in a publication table (see Figure 1).
-  \end{itemize}
-\end{itemize}
+SQL databases are composed of several data tables consisting of rows and columns. Each row in a data table has a primary key (essentially a row ID) which uniquely identifies it. Additionally, SQL data tables may contain foreign keys which reference a unique row in another data table. In contrast to primary keys, these foreign keys allow for duplicate values within the same data table. For instance, a study table may store information about all studies in a database where each row corresponds to one study. Here the primary key is the study\_id. We can ensure that our database links each study to the publication it was published in by adding a foreign key called publication\_id. This foreign key references the unique identifier of the respective publication in a publication table (see Figure 1).
 
 
 
 \begin{figure}
-\includegraphics[width=4.95in]{images/illustrate_SQL_keys} \caption{Figure 1. Illustrative example of using foreign and primary keys in a SQL database.}(\#fig:figure 1)
+\centering
+\includegraphics{images/illustrate_SQL_keys.png}
+\caption{\label{fig:figure1}Illustrative example of using foreign and primary keys in a SQL database.}
 \end{figure}
 
+The structure of ACDC is adapted to the logic of publications consisting of one or multiple studies which in turn include one or several data sets (see Figure 2). A \emph{publication table} and a \emph{study table} contain specific information about each publication and study, respectively. Each data set within a study stores trial-level information about a single attentional control task within a certain study. If a between-subject manipulation exists, our data base contains a separate data set for each group and each task. For instance, a study in which two groups (younger and older adults) completed a Simon and a Stroop task would consist of four data sets in the ACDC data base.
+
+A \emph{data set table} stores information about each data set (such as sample size) while the \emph{observation table} hold the trial-level attentional control task data (including reaction time and accuracy). The task type of each data set (i.e., Stroop, Simon, Flanker, negative priming, or other) and a description of which stimuli were presented in the task are documented in a \emph{task table}.
+
+Note that since the congruency between stimuli is part of every attentional control task it is not considered a within-manipulation in this database but is per default included in the observation table. Any additional within-subject manipulations (such as repeated measurements) are coded in the within ID column of the observation table. Further information about each within condition of each data set (such as the percentage of congruent trials, mean reaction time, and mean accuracy) are recorded in a separate \emph{within table}.
+
 \begin{itemize}
-\tightlist
 \item
-  The structure of ACDC is adapted to the logic of publications consisting of one or multiple studies which in turn include one or several datasets (see Figure 2).
-
-  \begin{itemize}
-  \tightlist
-  \item
-    Each dataset stores information about a single attentional control task within a certain study. A dataset table stores information about each dataset (such as sample size) while the observation table contains the actual attentional control task data.
-  \item
-    A between table contains information about between-person manipulations on a study level and a within table stores information about within-person manipulations within a dataset.
-  \item
-    Note that since the congruency between stimuli is part of every attentional control task it is not considered a within-manipulation in this database but is per default included in the observation table.
-  \item
-    The combination of within- and between-manipulations results in several possible conditions within a dataset, which are stored in a condition table.
-
-    \begin{itemize}
-    \item
-      \begin{itemize}
-      \tightlist
-      \item
-        Add this?: Both the condition table and the observation table contain the within\_id, between\_id and condition\_id. We deliberately chose this duplication within our database to increase the speed of accessing data through our R package and through the R shiny app.
-      \end{itemize}
-    \end{itemize}
-  \end{itemize}
+  Add this? maybe add a section describing where you would find commonly needed variables: (rt, acc, condition, n\_participants, percentage\_congruent, task\_name)
+\item
+  Add this?: Both the condition table and the observation table contain the within\_id, between\_id and condition\_id. We deliberately chose this duplication within our database to increase the speed of accessing data through our R package and through the R shiny app.
 \end{itemize}
 
-Figure 1. Illustrative example of using foreign and primary keys in a SQL database. Figure 2. Structure of the ACDC database. Note. Primary keys are indicated by the key symbol. References between data tables are illustrated through lines connecting columns across data tables. This overview includes the data type of each column: integers (int), numbers with decimal places (float), characters (varchar) and logical true/false values (Booleans).
+
 
 \begin{figure}
-\includegraphics[width=10.87in]{images/db_structure} \caption{Figure 1. Illustrative example of using foreign and primary keys in a SQL database.}(\#fig:figure 2)
+\centering
+\includegraphics{images/db_structure.png}
+\caption{\label{fig:figure2}Structure of the ACDC database. Note. Primary keys are indicated by the key symbol. References between data tables are illustrated through lines connecting columns across data tables. This overview includes the data type of each column: integers (int), numbers with decimal places (float), characters (varchar) and logical true/false values (Booleans).}
 \end{figure}
 
 \hypertarget{included-data}{%
 \subsection{Included Data}\label{included-data}}
 
-\hypertarget{accessing-the-data-base}{%
-\section{Accessing the Data Base}\label{accessing-the-data-base}}
+Up to the date of submission of the manuscript, XX data sets from YY publications are included in the database. The full list of data sets and references is provided in the Appendix. The current database includes data sets from studies with an experimental as well as a correlational focus.
+
+We did not conduct a systematic search for data sets or attempted to distribute a wider call for open data. Instead, we included the data sets that were already made available to the lab for previous projects, and added bit by bit data sets from collaborators. This approach was chosen to make the project feasible, and to first set up a working data base before large quantities of data are added.
+
+\hypertarget{accessing-the-database}{%
+\section{Accessing the Database}\label{accessing-the-database}}
+
+One advantage of SQLite databases is that they are simply a file that can be downloaded and locally accesses by anyone. Our database is provided in a github repository.\footnote{The newest version can be accessed via \url{https://github.com/jstbcs/acdc-database/blob/main/acdc.db}, the version at the time of submission can be found \href{https://github.com/jstbcs/acdc-database/blob/main/acdc.db}{here}. TODO: REPLACE WITH CURRENT COMMIT.} To access the database, researchers can download the file \texttt{acdc.db}, and use the SQLite tool of their choice. In additon, we build \texttt{R}-based tools to inspect, access, and use the data. We introduce these tools, a shiny app and an \texttt{R} package subsequently.
 
 \hypertarget{shiny-app}{%
 \subsection{Shiny App}\label{shiny-app}}
 
 \hypertarget{r-package}{%
 \subsection{R-Package}\label{r-package}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# devtools::install\_github("SLesche/acdc{-}query")}
+
+\FunctionTok{library}\NormalTok{(acdcquery)}
+\end{Highlighting}
+\end{Shaded}
 
 \hypertarget{queries-and-output}{%
 \subsection{Queries and Output}\label{queries-and-output}}
@@ -337,8 +368,17 @@ Figure 1. Illustrative example of using foreign and primary keys in a SQL databa
 
 \newpage
 
+\hypertarget{appendix}{%
+\section{Appendix}\label{appendix}}
+
+INSERT TABLE WITH ALL DATASETS AND PUBLICATION REFERENCE HERE.
+
+\newpage
+
 \hypertarget{references}{%
 \section{References}\label{references}}
+
+References marked with an asterisk indicate studies included in the meta-analysis.
 
 \hypertarget{refs}{}
 \begin{CSLReferences}{1}{0}
