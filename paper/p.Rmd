@@ -127,10 +127,6 @@ A *data set table* stores information about each data set (such as sample size) 
 
 Note that since the congruency between stimuli is part of every attentional control task it is not considered a within-manipulation in this database but is per default included in the observation table. Any additional within-subject manipulations (such as repeated measurements) are coded in the within ID column of the observation table. Further information about each within condition of each data set (such as the percentage of congruent trials, mean reaction time, and mean accuracy) are recorded in a separate *within table*. 
 
-+ Add this? maybe add a section describing where you would find commonly needed variables: (rt, acc, condition, n_participants, percentage_congruent, task_name)
-
--   Add this?: Both the condition table and the observation table contain the within_id, between_id and condition_id. We deliberately chose this duplication within our database to increase the speed of accessing data through our R package and through the R shiny app.
-
 (ref:caption-figure2) Structure of the ACDC database. Note. Primary keys are indicated by the key symbol. References between data tables are illustrated through lines connecting columns across data tables. This overview includes the data type of each column: integers (int), numbers with decimal places (float), characters (varchar) and logical true/false values (Booleans).
 
 ```{r figure2, fig.cap = "(ref:caption-figure2)"}
