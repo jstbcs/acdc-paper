@@ -209,7 +209,7 @@
 \usepackage{pcl}
 \usepackage{setspace}\doublespacing
 \usepackage{marginnote}
-\newcommand{\readme}[1]{\emph{\marginnote{Julia} (#1)}}
+\newcommand{\readme}[1]{\emph{\marginnote{\color{red}Julia} (#1)}}
 \usepackage{pifont}
 \usepackage{hyperref}
 \usepackage{colortbl}
@@ -284,97 +284,104 @@ To enable data reuse, data sharing needs to be approached differently. For examp
 
 We think it is necessary to provide a data sharing solution that solves the current problems and enables easy and efficient data reuse. Here, we propose to gather open data sets from a specific research area in an SQL data base. This process requires little to no work in addition to current data sharing policies from the authors of original papers, some work from the lab(s) setting up the data base, and little to no work from the researchers who wish to reuse open data. We describe the process and structure we used to set up a data base of attentional control tasks called the Attentional Control Data Collection (ACDC). The data base includes XXX data sets from XXX publications from tasks like the Stroop, Simon, and flanker tasks. Subsequently, we show how the data can be explored using a Shiny app and accessed using an R-package. In an example analysis, we assess the reliability of the included tasks. This section highlights how an open data base like ACDC can aid meta-analytic efforts as well as methodological innovation.
 
-To provide a little history of the project, the Attentional Control Data Collection was inspired by a collection of open data sets from attentional control tasks by the Perception and Cognition Lab led by J. Rouder (\href{https://github.com/PerceptionCognitionLab/data0}{url}). Colleagues provided the first author and Rouder with data sets for their statistical work (Haaf \& Rouder, 2017; \textbf{Rouder:etal:2023?}). To ensure that data sets were accessible, we gathered them in a github repository. However, there was little structure to the collection, and github repositories are neither stable entities nor are they designed as data storage. Here, we describe how a structured data collection can be achieved and which benefits it provides.
+To provide a little history of the project, the Attentional Control Data Collection was inspired by a collection of open data sets from attentional control tasks by the Perception and Cognition Lab led by J. Rouder (\href{https://github.com/PerceptionCognitionLab/data0}{url}). Colleagues provided the first author and Rouder with data sets for their statistical work (Haaf \& Rouder, 2017; Rouder, Kumar, \& Haaf, 2023). To ensure that data sets were accessible, we gathered them in a github repository. However, there was little structure to the collection, and github repositories are neither stable entities nor are they designed as data storage. Here, we describe how a structured data collection can be achieved and which benefits it provides.
 
 \hypertarget{sqlight-database}{%
 \section{SQLight Database}\label{sqlight-database}}
 
-One of the most standard ways in computer science for storing data is using SQL data bases. Structured query language (SQL) allows to create, access and manipulate a structured data storage. SQL data bases consist of data tables and relations between these tables. There are many flavors of SQL data bases. Here, we decided to use an SQLight data base, a lightweight solution that allows us to store the entire data base in a single file of moderate size that can be downloaded by researchers for data reuse. In this section we describe the structure of the data base and the data currently included. Researchers who simply want to use ACDC may safely skip this section.
+One of the most standard ways in computer science for storing data is using a Structured query language (SQL) data base. SQL allows to create, access and manipulate a structured data storage. SQL data bases consist of data tables and relations between these tables. There are many flavors of SQL data bases. Here, we decided to use an SQLight data base, a lightweight solution that allows us to store the entire data base in a single file of moderate size that can be downloaded by researchers for data reuse. In this section we describe the structure of the data base and the data currently included. Researchers who simply want to use ACDC may safely skip this section.
 
 \hypertarget{database-structure}{%
 \subsection{Database Structure}\label{database-structure}}
 
-SQL databases are composed of several data tables consisting of rows and columns. Each row in a data table has a primary key (essentially a row ID) which uniquely identifies it. Additionally, SQL data tables may contain foreign keys which reference a unique row in another data table. In contrast to primary keys, these foreign keys allow for duplicate values within the same data table. For instance, a study table may store information about all studies in a database where each row corresponds to one study. Here the primary key is the study\_id. We can ensure that our database links each study to the publication it was published in by adding a foreign key called publication\_id. This foreign key references the unique identifier of the respective publication in a publication table (see Figure 1).
+SQL databases are composed of several data tables consisting of rows and columns. Each row in a data table has a primary key (essentially a row ID) which uniquely identifies it. To connect one table to another table in the database, tables may contain foreign keys which reference a unique row in another data table. In contrast to primary keys, these foreign keys can have duplicate values in the data table, as long as they are unique in their primary table. For instance, a study table may store information about all studies in a database where each row corresponds to a single study. Here the primary key is the study\_id. We can ensure that our database links each study to the publication it was published in by adding a foreign key called publication\_id. This foreign key references the unique identifier of the respective publication in a publication table. Figure \ref{fig:figure1} illustrates the relationship between study table and publication table. While publication\_id links to a single row in the publication table, it can occur several times in the study\_table as there can be several studies per publication.
 
 
 
 \begin{figure}
-\centering
-\includegraphics{images/illustrate_SQL_keys.png}
-\caption{\label{fig:figure1}Illustrative example of using foreign and primary keys in a SQL database.}
+
+{\centering \includegraphics[width=350px]{images/illustrate_SQL_keys} 
+
+}
+
+\caption{Illustrative example of using foreign and primary keys in a SQL database.}\label{fig:figure1}
 \end{figure}
 
-The structure of ACDC is adapted to the logic of publications consisting of one or multiple studies which in turn include one or several data sets (see Figure 2). A \emph{publication table} and a \emph{study table} contain specific information about each publication and study, respectively. Each data set within a study stores trial-level information about a single attentional control task within a certain study. If a between-subject manipulation exists, our data base contains a separate data set for each group and each task. For instance, a study in which two groups (younger and older adults) completed a Simon and a Stroop task would consist of four data sets in the ACDC data base.
+ACDC is adapted to the logic of publications consisting of one or multiple studies which in turn include one or several data sets. The whole structure of ACDC is shown in Figure \ref{fig:figure2}. A \emph{publication table} and a \emph{study table} contain specific information about each publication and study, respectively. Each data set within a study stores trial-level information about a single attentional control task within a certain study. If a between-subject manipulation exists, our data base contains a separate data set for each group and each task. For instance, a study in which two groups (younger and older adults) who completed a Simon and a Stroop task would consist of four data sets (i.e., younger-Stroop, younger-Simon, older-Stroop, older-Simon) in the ACDC data base.
 
-A \emph{data set table} stores information about each data set (such as sample size) while the \emph{observation table} hold the trial-level attentional control task data (including reaction time and accuracy). The task type of each data set (i.e., Stroop, Simon, Flanker, negative priming, or other) and a description of which stimuli were presented in the task are documented in a \emph{task table}.
+A \emph{data set table} stores information about each data set, such as sample size, the number of within-participant manipulations, and whether a fixation cross was used. The \emph{observation table} hold the trial-level attentional control task data (including response time and accuracy). The task type of each data set (i.e., Stroop, Simon, Flanker, negative priming, or other) and a description of which stimuli were presented in the task are documented in the \emph{task table}.
 
-Note that since the congruency between stimuli is part of every attentional control task it is not considered a within-manipulation in this database but is per default included in the observation table. Any additional within-subject manipulations (such as repeated measurements) are coded in the within ID column of the observation table. Further information about each within condition of each data set (such as the percentage of congruent trials, mean reaction time, and mean accuracy) are recorded in a separate \emph{within table}.
-
-\begin{itemize}
-\item
-  Add this? maybe add a section describing where you would find commonly needed variables: (rt, acc, condition, n\_participants, percentage\_congruent, task\_name)
-\item
-  Add this?: Both the condition table and the observation table contain the within\_id, between\_id and condition\_id. We deliberately chose this duplication within our database to increase the speed of accessing data through our R package and through the R shiny app.
-\end{itemize}
+Note that since the congruency of stimuli, i.e., whether response and stimulus attributes are compatible or incompatible, is part of every attentional control task, it is not considered a separate within-participant manipulation in this database but is per default included in the observation table. Any additional within-participant manipulations are coded in the within ID column of the observation table. Further information about each condition of each data set (such as the percentage of congruent trials, mean response time, and mean accuracy) are recorded in the \emph{within table}.
 
 
 
 \begin{figure}
 \centering
 \includegraphics{images/db_structure.png}
-\caption{\label{fig:figure2}Structure of the ACDC database. Note. Primary keys are indicated by the key symbol. References between data tables are illustrated through lines connecting columns across data tables. This overview includes the data type of each column: integers (int), numbers with decimal places (float), characters (varchar) and logical true/false values (Booleans).}
+\caption{\label{fig:figure2}Structure of the ACDC database. Primary keys are indicated by the key symbol. References between data tables are illustrated through lines connecting columns across data tables. This overview includes the data type of each column: integers (int), numbers with decimal places (float), characters (varchar) and logical true/false values (Booleans).}
 \end{figure}
 
 \hypertarget{included-data}{%
 \subsection{Included Data}\label{included-data}}
 
-Up to the date of submission of the manuscript, XX data sets from YY publications are included in the database. The full list of data sets and references is provided in the Appendix. The current database includes data sets from studies with an experimental as well as a correlational focus.
+Up to the date of submission of the manuscript, 54 data sets from 11 publications are included in the database. The full list of data sets and references is provided in the Appendix. The current database includes data sets from studies with an experimental as well as a correlational focus. The data contain \(10^ 6\) observations collected from 7486 participants.
 
-We did not conduct a systematic search for data sets or attempted to distribute a wider call for open data. Instead, we included the data sets that were already made available to the lab for previous projects, and added bit by bit data sets from collaborators. This approach was chosen to make the project feasible, and to first set up a working data base before large quantities of data are added.
+We did not conduct a systematic search for data sets nor attempted to distribute a wider call for open data. Instead, we included the data sets that were already made available to the lab for previous projects, and added data sets from collaborators bit by bit. This approach was chosen to make the project feasible, and to first set up a working data base before large quantities of data are added.
+
+\hypertarget{contribute}{%
+\subsection{Contribute}\label{contribute}}
+
+\emph{\marginnote{\color{red}Julia} (TODO: Add a brief description on how researcher can add their own data.)}
 
 \hypertarget{accessing-the-database}{%
 \section{Accessing the Database}\label{accessing-the-database}}
 
-One advantage of SQLite databases is that they are simply a file that can be downloaded and locally accesses by anyone. Our database is provided in a github repository.\footnote{The newest version can be accessed via \url{https://github.com/jstbcs/acdc-database/blob/main/acdc.db}, the version at the time of submission can be found \href{https://github.com/jstbcs/acdc-database/blob/main/acdc.db}{here}. TODO: REPLACE WITH CURRENT COMMIT.} To access the database, researchers can download the file \texttt{acdc.db}, and use the SQLite tool of their choice. In additon, we build \texttt{R}-based tools to inspect, access, and use the data. We introduce these tools, a shiny app and an \texttt{R} package subsequently.
+One advantage of SQLite databases is that they are simply a file that can be downloaded and locally accesses by anyone. Our database is provided in a github repository.\footnote{The newest version can be accessed via \url{https://github.com/jstbcs/acdc-database/blob/main/acdc.db}, the version at the time of submission can be found \href{https://github.com/jstbcs/acdc-database/blob/main/acdc.db}{here}. \emph{\marginnote{\color{red}Julia} (TODO: REPLACE WITH CURRENT COMMIT.)}} To access the database, researchers can download the file \texttt{acdc.db}, and use the SQLite tool of their choice. In addition, we build \texttt{R}-based tools to inspect, access, and select data from ACDC. We introduce these tools, a shiny app and an \texttt{R} package, subsequently.
 
 \hypertarget{shiny-app}{%
 \subsection{Shiny App}\label{shiny-app}}
 
+The easiest way to inspect the data is using our shiny app provided \href{LINKTOSHINYAPP}{here}. The app allows to inspect all data sets or select data sets with certain specification using the filter box on the left. For example, if a researcher is interested in the flanker task, they may select all flanker data sets for closer inspection. After selection, researchers can choose between an overview of the included data sets, some descriptive statistics, and descriptive plots (see Figure XXX). If they want to further analyze the data, they can download the data via the ``get the data tab'', either directly as \texttt{csv} file or using the provided \texttt{R}-code.
+
+\emph{\marginnote{\color{red}Julia} (TODO: Add screenshot from the shiny app as figure.)}
+
+Note that all descriptive statistics in the data base are aggregated across congruency conditions. This was a deliberate choice when designing the shiny app. By withholding information about the effect of interest, researches can inspect and select the data based on varying characteristics of the data set (including distributional properties), but remain unbiased as to the most relevant outcome variable. We hope that researchers can then formulate (and perhaps preregister) hypotheses about their reanalysis without much hindsight bias.
+
+\emph{\marginnote{\color{red}Julia} (TODO: Add example descriptive plots.)}
+
 \hypertarget{r-package}{%
 \subsection{R-Package}\label{r-package}}
 
+\emph{\marginnote{\color{red}Julia} (SVEN: Add an overview or the R package.)}
+
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{devtools}\SpecialCharTok{::}\FunctionTok{install\_github}\NormalTok{(}\StringTok{"SLesche/acdc{-}query"}\NormalTok{)}
+\FunctionTok{install.packages}\NormalTok{(}\StringTok{"acdcquery"}\NormalTok{) }\CommentTok{\# install package}
 
-\FunctionTok{library}\NormalTok{(acdcquery)}
+\FunctionTok{library}\NormalTok{(acdcquery) }\CommentTok{\# load package}
 \end{Highlighting}
 \end{Shaded}
 
 \hypertarget{queries-and-output}{%
 \subsection{Queries and Output}\label{queries-and-output}}
 
-\hypertarget{example-analysis}{%
-\section{Example Analysis}\label{example-analysis}}
+\emph{\marginnote{\color{red}Julia} (SVEN: Show and explain an example query with several arguments, selection of the target table, etc.)}
 
-\begin{verbatim}
-## Warning: Column `block`: mixed type, first seen values of type integer,
-## coercing other values of type string
-\end{verbatim}
+\hypertarget{reliability-of-acdc-tasks}{%
+\section{Reliability of ACDC Tasks}\label{reliability-of-acdc-tasks}}
 
-\begin{verbatim}
-## [1] 40
-\end{verbatim}
+To illustrate how ACDC can be used for reanalysis, and to further assess the reliability of attentional control tasks included, we provide an example data analysis. The reliability of attentional control tasks auch as the Stroop task has been critically discussed in recent literature (Draheim, Mashburn, Martin, \& Engle, 2019; Hedge, Powell, \& Sumner, 2018; Rey-Mermet, Gade, \& Oberauer, 2018; Rouder \& Haaf, 2019; Rouder et al., 2023). Here, we rely on methodological development by Rouder and colleagues @{[}Rouder:Haaf:2019a; Rouder et al. (2023){]} to survey the reliability of data sets in ACDC. This analysis can be understood as an extension of to\ldots{}
 
-\begin{verbatim}
-## [1] 8
-\end{verbatim}
 
-\hypertarget{reliability-of-experimental-tasks}{%
-\subsection{Reliability of Experimental Tasks}\label{reliability-of-experimental-tasks}}
 
-\hypertarget{a-closer-look-at-the-stroop-task}{%
-\subsection{A Closer Look at the Stroop Task}\label{a-closer-look-at-the-stroop-task}}
+\begin{figure}
+
+{\centering \includegraphics{p_files/figure-latex/line-plot-1} 
+
+}
+
+\caption{Signal-to-noise ratio and reliability. A. Signal-to-noise ratio \(\gamma\) for all data sets ordered from smallest to largest. B. Reliability as a function of number of trials for all data sets in ACDC. The lines represent different signal-to-noise ratios. For a fixed \(\gamma\), the relationship between the number of trials per condition and the reliability is deterministic.}\label{fig:line-plot}
+\end{figure}
 
 \hypertarget{discussion}{%
 \section{Discussion}\label{discussion}}
@@ -384,22 +391,35 @@ One advantage of SQLite databases is that they are simply a file that can be dow
 \hypertarget{appendix}{%
 \section{Appendix}\label{appendix}}
 
-INSERT TABLE WITH ALL DATASETS AND PUBLICATION REFERENCE HERE.
+\emph{\marginnote{\color{red}Julia} (INSERT TABLE WITH ALL DATASETS AND PUBLICATION REFERENCE HERE.)}
 
 \newpage
 
 \hypertarget{references}{%
 \section{References}\label{references}}
 
-References marked with an asterisk indicate studies included in the meta-analysis.
-
 \hypertarget{refs}{}
 \begin{CSLReferences}{1}{0}
+\leavevmode\vadjust pre{\hypertarget{ref-Draheim:etal:2019}{}}%
+Draheim, C., Mashburn, C. A., Martin, J. D., \& Engle, R. W. (2019). Reaction time in differential and developmental research: A review and commentary on the problems and alternatives. \emph{Psychological Bulletin}, \emph{145}(5), 508.
+
 \leavevmode\vadjust pre{\hypertarget{ref-Haaf:Rouder:2017}{}}%
 Haaf, J. M., \& Rouder, J. N. (2017). Developing constraint in {B}ayesian mixed models. \emph{Psychological Methods}, \emph{22}(4), 779--798.
 
+\leavevmode\vadjust pre{\hypertarget{ref-Hedge:etal:2018}{}}%
+Hedge, C., Powell, G., \& Sumner, P. (2018). The reliability paradox: {W}hy robust cognitive tasks do not produce reliable individual differences. \emph{Behavioral Research Methods}.
+
 \leavevmode\vadjust pre{\hypertarget{ref-MacLeod:1991}{}}%
 MacLeod, C. (1991). Half a century of research on the {S}troop effect: {A}n integrative review. \emph{Psychological Bulletin}, \emph{109}, 163--203.
+
+\leavevmode\vadjust pre{\hypertarget{ref-ReyMermet:etal:2018}{}}%
+Rey-Mermet, A., Gade, M., \& Oberauer, K. (2018). Should we stop thinking about inhibition? Searching for individual and age differences in inhibition ability. \emph{Journal of Experimental Psychology: Learning, Memory, and Cognition}. Retrieved from \url{http://dx.doi.org/10.1037/xlm0000450}
+
+\leavevmode\vadjust pre{\hypertarget{ref-Rouder:Haaf:2019a}{}}%
+Rouder, J. N., \& Haaf, J. M. (2019). A psychometrics of individual differences in experimental tasks. \emph{Psychonomic Bulletin and Review}, \emph{26}(2), 452--467. Retrieved from \url{https://doi.org/10.3758/s13423-018-1558-y}
+
+\leavevmode\vadjust pre{\hypertarget{ref-Rouder:etal:2023}{}}%
+Rouder, J. N., Kumar, A., \& Haaf, J. M. (2023). \emph{Why many studies of individual differences with inhibition tasks may not localize correlations}. \emph{Psychonomic Bulletin and Review}. Retrieved from \url{https://doi.org/10.3758/s13423-023-02293-3}
 
 \leavevmode\vadjust pre{\hypertarget{ref-Sloman:2015}{}}%
 Sloman, S. A. (2015). Opening editorial: The changing face of cognition. \emph{Cognition}, \emph{135}, 1--3.
