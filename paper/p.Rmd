@@ -79,6 +79,8 @@ header-includes:
   - \usepackage{hyperref}
   - \usepackage{colortbl}
   - \hypersetup{colorlinks=true,urlcolor=blue,citecolor=black,linkcolor=black}
+  - \AtBeginEnvironment{longtable}{\singlespacing}
+  - \AtBeginEnvironment{tablenotes}{\doublespacing}
   
 classoption       : "man"
 output            : papaja::apa6_pdf
@@ -163,7 +165,7 @@ arguments <- add_argument(
 query_results <- query_db(
  conn = conn,
  arguments = arguments,
- target_vars = c("default", "publication_id", "publication_code")
+ target_vars = c("default", "publication_id", "publication_code", "task_name")
 )
 
 # head(query_results)
@@ -246,7 +248,7 @@ for(i in ids.sel){
 }
 ```
 
-```{r get_stn}
+```{r get_stn, cache = T}
 stn <- matrix(ncol = 3, nrow = length(ids.sel))
 for(i in ids.sel){
   tmp <- res[[i]]
@@ -256,17 +258,93 @@ for(i in ids.sel){
 }
 ```
 
+```{r get_splithalf, cache = T, warning=FALSE, message=FALSE, results='hide'}
+res.splithalf <- matrix(ncol = 2, nrow = length(ids.sel))
+for(i in ids.sel){
+  dat_sub <- subset(dat, dataset_id == i)
+  dat_sub <- subset(dat_sub, accuracy == 1)
+  dat_sub <- subset(dat_sub, rt > .2)
+  dat_sub <- subset(dat_sub, rt < 2.5)
+  dat_sub <- subset(dat_sub, congruency %in% 1:2)
+  issue <- issue.sub(dat_sub)
+  dat_sub <- subset(dat_sub, !(subject %in% issue))
+  res.splithalf[i, ] <- get.splithalf(dat_sub)
+}
+```
 
-To illustrate how ACDC can be used for reanalysis, and to further assess the reliability of attentional control tasks included, we provide an example data analysis. The reliability of attentional control tasks auch as the Stroop task has been critically discussed in recent literature [@Hedge:etal:2018; @Rouder:Haaf:2019a; @Rouder:etal:2023; @ReyMermet:etal:2018; @Draheim:etal:2019]. Here, we rely on methodological development by Rouder and colleagues @[Rouder:Haaf:2019a; @Rouder:etal:2023] to survey the reliability of data sets in ACDC. This analysis can be understood as an extension of to...
+```{r all-dat-tab}
+taskname <- with(query_results, tapply(task_name, dataset_id, first))
+reldat <- data.frame(dataset_id = unique(dat$dataset_id)
+                     , publication_code = pubCode
+                     , taskname
+                     , stn
+                     , res.splithalf)
+colnames(reldat) <- c("dataset_id", "publication_code", "task_name"
+                      , "gamma", "I", "K", "splithalf", "spearman")
+reldat$gamma <- round(sqrt(reldat$gamma), 3)
+```
+
+To illustrate how ACDC can be used for reanalysis, and to further assess the reliability of attentional control tasks included, we provide an example data analysis. The reliability of attentional control tasks auch as the Stroop task has been critically discussed in recent literature [@hedge2018reliability; @Rouder:Haaf:2019a; @Rouder:etal:2023; @mermet2018should; @Draheim:etal:2019]. The current analysis can be understood as an extension of to the analysis of 24 data sets conducted by @Rouder:etal:2023 (see their Table 2).
+
+Here, we rely on methodological development by Rouder and colleagues [@Rouder:Haaf:2019a; @Rouder:etal:2023] to survey the reliability of data sets in ACDC. The authors have made suggestions to update the analysis of reliability of individual differences in cognitive tasks based on two simple observation. First, conventional measures of reliability such as the split-half reliability or intra-class correlation are not well suited for cognitive tasks as they are dependent on the number of trials. The reason for this dependency is that observed between-subjects variability of a target effect is a combination of true individual differences and sample noise. If sample noise is large, as is the case in these tasks, reliability can be drastically reduced with a small numbers of trials. Second, unlike with psychometric tests, the number of trials of cognitive tasks is oftentimes chosen arbitrarily, as a matter of preference by the lab conducting the experiment, making it difficult to compare reliability across labs or across tasks [@Rouder:Haaf:2019a].
+
+(ref:caption-reliability-plot) Reliability estimates as a function of number of trials and participants. A. The signal-to-noise ratio is independent of the (log) number of trials per condition but has a small positive correlation. B. The split-half reliability is highly correlated with the (log) number of trials per condition. C. The signal-to-noise ratio is independent of the (log) number of participants. D. The split-half reliability has a slight negative relationship with (log) number of participants due to the fact that large-participants studies commonly use a smaller number of trials per task.
+
+```{r reliability-fig, fig.asp = .9, fig.width=5, fig.align='center', fig.cap = "(ref:caption-reliability-plot)"}
+myCols <- RColorBrewer::brewer.pal(8, "Dark2")
+layout(matrix(1:4, ncol = 2, byrow = T))
+par(mgp = c(2, .6, 0), cex = 1, mar = c(3.5, 3.5, 1, 1), cex.axis = .9)
+plot(log(reldat$K), reldat$gamma, ylim = c(0, .4)
+, pch = 19, col = adjustcolor("slateblue", .8)
+, axes = F
+, ylab = expression("Signal-to-noise" ~ gamma)
+, xlab = "Trials per condition")
+axis(1, at = log(c(30, 100, 250, 800)), labels = c(30, 100, 250, 800))
+axis(2, seq(0, .3, .1), las = 2)
+mtext("A.", adj = .5, cex = 1.3)
+
+plot(log(reldat$K), reldat$splithalf, ylim = c(-.1, 1)
+, pch = 19, col = adjustcolor(myCols[4], .8)
+, axes = F
+, ylab = "Split-half reliability"
+, xlab = "Trials per condition")
+axis(1, at = log(c(30, 100, 250, 800)), labels = c(30, 100, 250, 800))
+axis(2, seq(0, 1, .2), las = 2)
+mtext("B.", adj = .5, cex = 1.3)
+
+plot(log(reldat$I), reldat$gamma, ylim = c(0, .4), xlim = log(c(20, 650))
+, pch = 19, col = adjustcolor("slateblue", .8)
+, axes = F
+, ylab = expression("Signal-to-noise" ~ gamma)
+, xlab = "Participants")
+axis(1, at = log(c(20, 50, 150, 500)), labels = c(20, 50, 150, 500))
+axis(2, seq(0, .3, .1), las = 2)
+mtext("C.", adj = .5, cex = 1.3)
+
+plot(log(reldat$I), reldat$splithalf, ylim = c(-.1, 1), xlim = log(c(20, 650))
+, pch = 19, col = adjustcolor(myCols[4], .8)
+, axes = F
+, ylab = "Split-half reliability"
+, xlab = "Participants")
+axis(1, at = log(c(20, 50, 150, 500)), labels = c(20, 50, 150, 500))
+axis(2, seq(0, 1, .2), las = 2)
+mtext("D.", adj = .5, cex = 1.3)
+```
+
+The relationship between common reliability estimates and trial number is illustrated in Figure \@ref(fig:reliability-fig)B. The figure shows the split-half reliability coefficients for all ACDC datasets as a function of the (log) number of trials per condition. The correlation between split-half-reliability and log trial number is `r apa_print(BayesFactor::correlationBF(log(reldat$K), reldat$splithalf))$full_result`. Figure \@ref(fig:reliability-fig)D shows the relationship between split-half reliability coefficients and the (log) number of participants. Theoretically, there should be no relationship. However, many studies with a large number of participants have in turn a low number of trials for reasond of practicality. Therefore, empirically we do find a negative relationship between the log number of participants and split-half reliability, `r apa_print(BayesFactor::correlationBF(log(reldat$I), reldat$splithalf))$full_result`.
+
+To counter the lack of comparability of conventional measures of reliability, @Rouder:etal:2023 proposed a measure of reliability that is derived from hierarchical modeling of the nested data structure. This modeling approach allows to separately estimate true individual variability and sample noise. As a result, we may determine how much true variability there is relative to variability due to sample noise. This ratio, termed $\gamma^2$, can be expressed as
+
+\[\gamma^2 = \frac{\sigma^2_{\text{true}}}{\sigma^2_{\text{noise}}},\]
+
+where the numerator is the true variance of individuals' effects and the denominator is the variance due to sample noise. For the purpose of individual differences research, $\sigma^2_{\text{true}}$ represents the signal and $\sigma^2_{\text{noise}}$ represents noise, therefore, Rouder and colleagues labeled $\gamma^2$ as the signal-to-noise ratio.
 
 (ref:caption-line-plot) Signal-to-noise ratio and reliability. A. Signal-to-noise ratio $\gamma$ for all data sets ordered from smallest to largest. B. Reliability as a function of number of trials for all data sets in ACDC. The lines represent different signal-to-noise ratios. For a fixed $\gamma$, the relationship between the number of trials per condition and the reliability is deterministic.
 
-```{r line-plot, fig.asp = 1, fig.width=4.5, fig.align='center', fig.cap = "(ref:caption-line-plot)"}
+```{r line-plot, fig.asp = .85, fig.width=5.5, fig.align='center', fig.cap = "(ref:caption-line-plot)"}
 layout(matrix(c(0, 1, 1, 0, rep(2, 4)), ncol = 4, byrow = T)
        , heights = c(.4,.6))
-
-myCols <- RColorBrewer::brewer.pal(8, "Dark2")
-par(mgp = c(2.3, .7, 0), mar = c(3.5,4,2,1), cex.lab = 1.3)
+par(mgp = c(2.2, .7, 0), mar = c(3,4,1.5,1), cex.lab = 1.3)
 
 plot(ids.sel, sort(sqrt(stn[, 1]))
      , col = myCols[1]
@@ -294,13 +372,52 @@ makeRelCoefFig(dots = dots, Var = FALSE)
 mtext("B.", adj = .5, line = -1)
 ```
 
+Figure \@ref(fig:line-plot)A. shows the ratio of signal and noise standard deviations, $\gamma$ for all data sets ordered from smallest to largest. The median of $\gamma$ is $Med = `r round(median(sqrt(stn[, 1])), 2)`$ corresponding to a ratio of roughly 1 to 8.5. That is, for every unit of signal there are 8.5 units of noise. 
+
+Using the ACDC datasets, we can also illustrate the independence of $\gamma$
+
 # Discussion
 
 \newpage
 
 # Appendix
 
-\readme{INSERT TABLE WITH ALL DATASETS AND PUBLICATION REFERENCE HERE.}
+(ref:mytablenote) $\gamma =$ signal-to-noise ratio; $I =$ number of participants; $K =$ number of trials per condition; $\rho =$ split-half reliability coefficient; $\rho^* =$ Spearman-Brown corrected reliability coefficient.
+
+
+(ref:tabref1) @chetverikov2017blame
+(ref:tabref2) @enkavi2019large
+(ref:tabref3) @hedge2018reliability
+(ref:tabref4) @kucina2023calibration
+(ref:tabref5) @loeffler2022common
+(ref:tabref6) @ebersole2016many
+(ref:tabref7) @pratte2010exploring
+(ref:tabref8) @mermet2018should
+(ref:tabref9) @stahl2014behavioral
+(ref:tabref10) @tang2023dual
+(ref:tabref11) @vonbastian2016evidence
+
+```{r taball, results='asis'}
+reldat <- reldat[, c(1:3, 5:6, 4, 7:8)]
+linesep <- ifelse(reldat$publication_code[1:(nrow(reldat) - 1)] == reldat$publication_code[2:nrow(reldat)], '', '\\addlinespace')
+publication_code = gsub('[_]', '', unique(dat$publication_code))
+
+stub_indents = list(1, 2:3, 4:7, 8:12, 13:15, 16:36, 37:40, 41:48, 49:50, 51, 52:54)
+names(stub_indents) <- paste0("(ref:tabref", 1:length(publication_code), ")")
+
+apa_table(reldat[,-2]
+          , caption = "All datasets currently in ACDC."
+          , note = "(ref:mytablenote)"
+          , align = c("wl{3cm}", rep("c", 6))
+          , digits = c(0,0,0,0,3,2,2)
+          , col.names = c("ID", "Task name", "I", "K"
+                          , "$\\gamma$", "$\\rho$", "$\\rho^*$")
+          , longtable = T
+          , font_size = "small"
+          , stub_indents = stub_indents
+          )
+```
+
 
 \newpage
 

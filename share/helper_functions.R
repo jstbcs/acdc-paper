@@ -132,7 +132,7 @@ makeRelCoefFig = function(Var = T, dots = NULL){
   rel = function(g2, L) g2 / (g2 + 2/L)
   
   # Set graphical parameters
-  par(mgp=c(2.3,.7,0), mar = c(5,5,2,1) + 0.1) 
+  par(mgp=c(2.3,.7,0), mar = c(5,5,1,1) + 0.1) 
   
   # Define range for trial sizes
   n1 = 1:9
@@ -215,3 +215,21 @@ makeRelCoefFig = function(Var = T, dots = NULL){
   }
 }
 
+## Function to do the splithalf analysis
+
+get.splithalf <- function(dats){
+  dats$congruency <- factor(dats$congruency, levels = 1:2, labels = c("congruent", "incongruent"))
+  difference <- splithalf(data = dats,
+                          outcome = "RT",
+                          score = "difference",
+                          halftype = "random",
+                          permutations = 2000,
+                          var.RT = "rt",
+                          var.participant = "subject",
+                          var.compare = "congruency",
+                          compare1 = "congruent",
+                          compare2 = "incongruent",
+                          average = "mean",
+                          plot = FALSE)
+  return(c(sh = difference$final_estimates$splithalf, sb =  difference$final_estimates$spearmanbrown))
+}

@@ -214,6 +214,8 @@
 \usepackage{hyperref}
 \usepackage{colortbl}
 \hypersetup{colorlinks=true,urlcolor=blue,citecolor=black,linkcolor=black}
+\AtBeginEnvironment{longtable}{\singlespacing}
+\AtBeginEnvironment{tablenotes}{\doublespacing}
 \ifLuaTeX
   \usepackage{selnolig}  % disable illegal ligatures
 \fi
@@ -370,7 +372,28 @@ Note that all descriptive statistics in the data base are aggregated across cong
 \hypertarget{reliability-of-acdc-tasks}{%
 \section{Reliability of ACDC Tasks}\label{reliability-of-acdc-tasks}}
 
-To illustrate how ACDC can be used for reanalysis, and to further assess the reliability of attentional control tasks included, we provide an example data analysis. The reliability of attentional control tasks auch as the Stroop task has been critically discussed in recent literature (Draheim, Mashburn, Martin, \& Engle, 2019; Hedge, Powell, \& Sumner, 2018; Rey-Mermet, Gade, \& Oberauer, 2018; Rouder \& Haaf, 2019; Rouder et al., 2023). Here, we rely on methodological development by Rouder and colleagues @{[}Rouder:Haaf:2019a; Rouder et al. (2023){]} to survey the reliability of data sets in ACDC. This analysis can be understood as an extension of to\ldots{}
+To illustrate how ACDC can be used for reanalysis, and to further assess the reliability of attentional control tasks included, we provide an example data analysis. The reliability of attentional control tasks auch as the Stroop task has been critically discussed in recent literature (Draheim, Mashburn, Martin, \& Engle, 2019; Hedge, Powell, \& Sumner, 2018; Rey-Mermet, Gade, \& Oberauer, 2018; Rouder \& Haaf, 2019; Rouder et al., 2023). The current analysis can be understood as an extension of to the analysis of 24 data sets conducted by Rouder et al. (2023) (see their Table 2).
+
+Here, we rely on methodological development by Rouder and colleagues (Rouder \& Haaf, 2019; Rouder et al., 2023) to survey the reliability of data sets in ACDC. The authors have made suggestions to update the analysis of reliability of individual differences in cognitive tasks based on two simple observation. First, conventional measures of reliability such as the split-half reliability or intra-class correlation are not well suited for cognitive tasks as they are dependent on the number of trials. The reason for this dependency is that observed between-subjects variability of a target effect is a combination of true individual differences and sample noise. If sample noise is large, as is the case in these tasks, reliability can be drastically reduced with a small numbers of trials. Second, unlike with psychometric tests, the number of trials of cognitive tasks is oftentimes chosen arbitrarily, as a matter of preference by the lab conducting the experiment, making it difficult to compare reliability across labs or across tasks (Rouder \& Haaf, 2019).
+
+
+
+\begin{figure}
+
+{\centering \includegraphics{p_files/figure-latex/reliability-fig-1} 
+
+}
+
+\caption{Reliability estimates as a function of number of trials and participants. A. The signal-to-noise ratio is independent of the (log) number of trials per condition but has a small positive correlation. B. The split-half reliability is highly correlated with the (log) number of trials per condition. C. The signal-to-noise ratio is independent of the (log) number of participants. D. The split-half reliability has a slight negative relationship with (log) number of participants due to the fact that large-participants studies commonly use a smaller number of trials per task.}\label{fig:reliability-fig}
+\end{figure}
+
+The relationship between common reliability estimates and trial number is illustrated in Figure \ref{fig:reliability-fig}B. The figure shows the split-half reliability coefficients for all ACDC datasets as a function of the (log) number of trials per condition. The correlation between split-half-reliability and log trial number is \(r = 0.72\), 95\% HDI \([0.59, 0.84]\), \(\mathrm{BF}_{\textrm{10}} = 2.52 \times 10^{8}\). Figure \ref{fig:reliability-fig}D shows the relationship between split-half reliability coefficients and the (log) number of participants. Theoretically, there should be no relationship. However, many studies with a large number of participants have in turn a low number of trials for reasond of practicality. Therefore, empirically we do find a negative relationship between the log number of participants and split-half reliability, \(r = -0.31\), 95\% HDI \([-0.54, -0.08]\), \(\mathrm{BF}_{\textrm{10}} = 6.15\).
+
+To counter the lack of comparability of conventional measures of reliability, Rouder et al. (2023) proposed a measure of reliability that is derived from hierarchical modeling of the nested data structure. This modeling approach allows to separately estimate true individual variability and sample noise. As a result, we may determine how much true variability there is relative to variability due to sample noise. This ratio, termed \(\gamma^2\), can be expressed as
+
+\[\gamma^2 = \frac{\sigma^2_{\text{true}}}{\sigma^2_{\text{noise}}},\]
+
+where the numerator is the true variance of individuals' effects and the denominator is the variance due to sample noise. For the purpose of individual differences research, \(\sigma^2_{\text{true}}\) represents the signal and \(\sigma^2_{\text{noise}}\) represents noise, therefore, Rouder and colleagues labeled \(\gamma^2\) as the signal-to-noise ratio.
 
 
 
@@ -383,6 +406,10 @@ To illustrate how ACDC can be used for reanalysis, and to further assess the rel
 \caption{Signal-to-noise ratio and reliability. A. Signal-to-noise ratio \(\gamma\) for all data sets ordered from smallest to largest. B. Reliability as a function of number of trials for all data sets in ACDC. The lines represent different signal-to-noise ratios. For a fixed \(\gamma\), the relationship between the number of trials per condition and the reliability is deterministic.}\label{fig:line-plot}
 \end{figure}
 
+Figure \ref{fig:line-plot}A. shows the ratio of signal and noise standard deviations, \(\gamma\) for all data sets ordered from smallest to largest. The median of \(\gamma\) is \(Med = 0.12\) corresponding to a ratio of roughly 1 to 8.5. That is, for every unit of signal there are 8.5 units of noise.
+
+Using the ACDC datasets, we can also illustrate the independence of \(\gamma\)
+
 \hypertarget{discussion}{%
 \section{Discussion}\label{discussion}}
 
@@ -391,7 +418,114 @@ To illustrate how ACDC can be used for reanalysis, and to further assess the rel
 \hypertarget{appendix}{%
 \section{Appendix}\label{appendix}}
 
-\emph{\marginnote{\color{red}Julia} (INSERT TABLE WITH ALL DATASETS AND PUBLICATION REFERENCE HERE.)}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\begin{center}
+\begin{ThreePartTable}
+
+\begin{TableNotes}[para]
+\normalsize{\textit{Note.} \(\gamma =\) signal-to-noise ratio; \(I =\) number of participants; \(K =\) number of trials per condition; \(\rho =\) split-half reliability coefficient; \(\rho^* =\) Spearman-Brown corrected reliability coefficient.}
+\end{TableNotes}
+
+\small{
+
+\begin{longtable}{wl{3cm}cccccc}\noalign{\getlongtablewidth\global\LTcapwidth=\longtablewidth}
+\caption{\label{tab:taball}All datasets currently in ACDC.}\\
+\toprule
+ID & Task name & I & K & $\gamma$ & $\rho$ & $\rho^*$\\
+\midrule
+\endfirsthead
+\caption*{\normalfont{Table \ref{tab:taball} continued}}\\
+\toprule
+ID & Task name & I & K & $\gamma$ & $\rho$ & $\rho^*$\\
+\midrule
+\endhead
+Chetverikov et al. (2017) &  &  &  &  &  & \\
+\ \ \ 1 & flanker & 58 & 100 & 0.191 & 0.35 & 0.51\\
+Enkavi et al. (2019) &  &  &  &  &  & \\
+\ \ \ 2 & stroop & 523 & 73 & 0.257 & 0.52 & 0.68\\
+\ \ \ 3 & simon & 522 & 73 & 0.110 & 0.17 & 0.29\\
+Hedge et al. (2018) &  &  &  &  &  & \\
+\ \ \ 4 & stroop & 47 & 439 & 0.107 & 0.56 & 0.72\\
+\ \ \ 5 & flanker & 47 & 426 & 0.145 & 0.66 & 0.80\\
+\ \ \ 6 & stroop & 60 & 428 & 0.176 & 0.74 & 0.85\\
+\ \ \ 7 & flanker & 60 & 414 & 0.162 & 0.61 & 0.75\\
+Kucina et al. (2023) &  &  &  &  &  & \\
+\ \ \ 8 & other & 31 & 205 & 0.124 & 0.49 & 0.65\\
+\ \ \ 9 & other & 30 & 205 & 0.132 & 0.53 & 0.68\\
+\ \ \ 10 & other & 31 & 207 & 0.319 & 0.86 & 0.92\\
+\ \ \ 11 & flanker & 33 & 198 & 0.225 & 0.64 & 0.77\\
+\ \ \ 12 & other & 30 & 210 & 0.240 & 0.77 & 0.87\\
+Löffler, Frischkorn, Hagemann, Sadus, and Schubert (2022) &  &  &  &  &  & \\
+\ \ \ 13 & stroop & 148 & 98 & 0.290 & 0.74 & 0.85\\
+\ \ \ 14 & flanker & 147 & 93 & 0.213 & 0.50 & 0.67\\
+\ \ \ 15 & negative priming & 142 & 94 & 0.095 & 0.08 & 0.13\\
+Ebersole et al. (2016) &  &  &  &  &  & \\
+\ \ \ 16 & stroop & 160 & 30 & 0.090 & 0.07 & 0.13\\
+\ \ \ 17 & stroop & 288 & 31 & 0.108 & 0.07 & 0.13\\
+\ \ \ 18 & stroop & 136 & 31 & 0.129 & 0.16 & 0.27\\
+\ \ \ 19 & stroop & 195 & 30 & 0.144 & 0.18 & 0.30\\
+\ \ \ 20 & stroop & 93 & 30 & 0.081 & -0.07 & -0.13\\
+\ \ \ 21 & stroop & 117 & 30 & 0.162 & 0.24 & 0.38\\
+\ \ \ 22 & stroop & 127 & 31 & 0.115 & 0.10 & 0.18\\
+\ \ \ 23 & stroop & 142 & 30 & 0.104 & 0.06 & 0.12\\
+\ \ \ 24 & stroop & 131 & 31 & 0.127 & 0.15 & 0.25\\
+\ \ \ 25 & stroop & 82 & 30 & 0.090 & -0.03 & -0.05\\
+\ \ \ 26 & stroop & 98 & 30 & 0.094 & 0.02 & 0.04\\
+\ \ \ 27 & stroop & 119 & 31 & 0.106 & 0.02 & 0.03\\
+\ \ \ 28 & stroop & 100 & 30 & 0.104 & 0.14 & 0.24\\
+\ \ \ 29 & stroop & 120 & 30 & 0.113 & 0.10 & 0.18\\
+\ \ \ 30 & stroop & 613 & 30 & 0.185 & 0.16 & 0.28\\
+\ \ \ 31 & stroop & 96 & 30 & 0.111 & 0.11 & 0.20\\
+\ \ \ 32 & stroop & 178 & 30 & 0.138 & 0.16 & 0.26\\
+\ \ \ 33 & stroop & 84 & 31 & 0.086 & -0.07 & -0.13\\
+\ \ \ 34 & stroop & 45 & 31 & 0.100 & 0.07 & 0.12\\
+\ \ \ 35 & stroop & 250 & 30 & 0.136 & 0.15 & 0.25\\
+\ \ \ 36 & stroop & 129 & 30 & 0.095 & 0.01 & 0.02\\
+Pratte, Rouder, Morey, and Feng (2010) &  &  &  &  &  & \\
+\ \ \ 37 & simon & 38 & 245 & 0.093 & 0.33 & 0.48\\
+\ \ \ 38 & stroop & 38 & 160 & 0.168 & 0.57 & 0.72\\
+\ \ \ 39 & simon & 38 & 174 & 0.117 & 0.40 & 0.56\\
+\ \ \ 40 & stroop & 38 & 178 & 0.096 & 0.22 & 0.34\\
+Rey-Mermet et al. (2018) &  &  &  &  &  & \\
+\ \ \ 41 & stroop & 129 & 102 & 0.123 & 0.26 & 0.41\\
+\ \ \ 42 & stroop & 129 & 100 & 0.132 & 0.29 & 0.45\\
+\ \ \ 43 & flanker & 129 & 102 & 0.100 & 0.10 & 0.17\\
+\ \ \ 44 & flanker & 129 & 101 & 0.078 & 0.05 & 0.09\\
+\ \ \ 45 & stroop & 155 & 101 & 0.307 & 0.68 & 0.81\\
+\ \ \ 46 & stroop & 155 & 100 & 0.076 & 0.07 & 0.12\\
+\ \ \ 47 & flanker & 158 & 103 & 0.363 & 0.76 & 0.86\\
+\ \ \ 48 & flanker & 157 & 103 & 0.073 & 0.03 & 0.05\\
+Stahl et al. (2014) &  &  &  &  &  & \\
+\ \ \ 49 & stroop & 199 & 131 & 0.129 & 0.34 & 0.50\\
+\ \ \ 50 & flanker & 199 & 196 & 0.079 & 0.17 & 0.29\\
+Tang, Bugg, Snijder, Conway, and Braver (2023) &  &  &  &  &  & \\
+\ \ \ 51 & stroop & 176 & 801 & 0.303 & 0.91 & 0.95\\
+Von Bastian, Souza, and Gade (2016) &  &  &  &  &  & \\
+\ \ \ 52 & stroop & 121 & 47 & 0.096 & 0.10 & 0.18\\
+\ \ \ 53 & simon & 121 & 97 & 0.216 & 0.43 & 0.60\\
+\ \ \ 54 & flanker & 121 & 46 & 0.097 & -0.01 & -0.01\\
+\bottomrule
+\addlinespace
+\insertTableNotes
+\end{longtable}
+
+}
+
+\end{ThreePartTable}
+\end{center}
 
 \newpage
 
@@ -400,20 +534,38 @@ To illustrate how ACDC can be used for reanalysis, and to further assess the rel
 
 \hypertarget{refs}{}
 \begin{CSLReferences}{1}{0}
+\leavevmode\vadjust pre{\hypertarget{ref-chetverikov2017blame}{}}%
+Chetverikov, A., Iamschinina, P., Begler, A., Ivanchei, I., Filippova, M., \& Kuvaldina, M. (2017). Blame everyone: Error-related devaluation in eriksen flanker task. \emph{Acta Psychologica}, \emph{180}, 155--159.
+
 \leavevmode\vadjust pre{\hypertarget{ref-Draheim:etal:2019}{}}%
 Draheim, C., Mashburn, C. A., Martin, J. D., \& Engle, R. W. (2019). Reaction time in differential and developmental research: A review and commentary on the problems and alternatives. \emph{Psychological Bulletin}, \emph{145}(5), 508.
+
+\leavevmode\vadjust pre{\hypertarget{ref-ebersole2016many}{}}%
+Ebersole, C. R., Atherton, O. E., Belanger, A. L., Skulborstad, H. M., Allen, J. M., Banks, J. B., et al.others. (2016). Many labs 3: Evaluating participant pool quality across the academic semester via replication. \emph{Journal of Experimental Social Psychology}, \emph{67}, 68--82.
+
+\leavevmode\vadjust pre{\hypertarget{ref-enkavi2019large}{}}%
+Enkavi, A. Z., Eisenberg, I. W., Bissett, P. G., Mazza, G. L., MacKinnon, D. P., Marsch, L. A., \& Poldrack, R. A. (2019). Large-scale analysis of test--retest reliabilities of self-regulation measures. \emph{Proceedings of the National Academy of Sciences}, \emph{116}(12), 5472--5477.
 
 \leavevmode\vadjust pre{\hypertarget{ref-Haaf:Rouder:2017}{}}%
 Haaf, J. M., \& Rouder, J. N. (2017). Developing constraint in {B}ayesian mixed models. \emph{Psychological Methods}, \emph{22}(4), 779--798.
 
-\leavevmode\vadjust pre{\hypertarget{ref-Hedge:etal:2018}{}}%
-Hedge, C., Powell, G., \& Sumner, P. (2018). The reliability paradox: {W}hy robust cognitive tasks do not produce reliable individual differences. \emph{Behavioral Research Methods}.
+\leavevmode\vadjust pre{\hypertarget{ref-hedge2018reliability}{}}%
+Hedge, C., Powell, G., \& Sumner, P. (2018). The reliability paradox: Why robust cognitive tasks do not produce reliable individual differences. \emph{Behavior Research Methods}, \emph{50}, 1166--1186.
+
+\leavevmode\vadjust pre{\hypertarget{ref-kucina2023calibration}{}}%
+Kucina, T., Wells, L., Lewis, I., Salas, K. de, Kohl, A., Palmer, M. A., \ldots{} Heathcote, A. (2023). Calibration of cognitive tests to address the reliability paradox for decision-conflict tasks. \emph{Nature Communications}, \emph{14}(1), 2234.
+
+\leavevmode\vadjust pre{\hypertarget{ref-loeffler2022common}{}}%
+Löffler, C., Frischkorn, G. T., Hagemann, D., Sadus, K., \& Schubert, A.-L. (2022). The common factor of executive functions measures nothing but speed of information uptake.
 
 \leavevmode\vadjust pre{\hypertarget{ref-MacLeod:1991}{}}%
 MacLeod, C. (1991). Half a century of research on the {S}troop effect: {A}n integrative review. \emph{Psychological Bulletin}, \emph{109}, 163--203.
 
-\leavevmode\vadjust pre{\hypertarget{ref-ReyMermet:etal:2018}{}}%
-Rey-Mermet, A., Gade, M., \& Oberauer, K. (2018). Should we stop thinking about inhibition? Searching for individual and age differences in inhibition ability. \emph{Journal of Experimental Psychology: Learning, Memory, and Cognition}. Retrieved from \url{http://dx.doi.org/10.1037/xlm0000450}
+\leavevmode\vadjust pre{\hypertarget{ref-pratte2010exploring}{}}%
+Pratte, M. S., Rouder, J. N., Morey, R. D., \& Feng, C. (2010). Exploring the differences in distributional properties between stroop and simon effects using delta plots. \emph{Attention, Perception, \& Psychophysics}, \emph{72}, 2013--2025.
+
+\leavevmode\vadjust pre{\hypertarget{ref-mermet2018should}{}}%
+Rey-Mermet, A., Gade, M., \& Oberauer, K. (2018). Should we stop thinking about inhibition? Searching for individual and age differences in inhibition ability. \emph{Journal of Experimental Psychology: Learning, Memory, and Cognition}, \emph{44}(4), 501.
 
 \leavevmode\vadjust pre{\hypertarget{ref-Rouder:Haaf:2019a}{}}%
 Rouder, J. N., \& Haaf, J. M. (2019). A psychometrics of individual differences in experimental tasks. \emph{Psychonomic Bulletin and Review}, \emph{26}(2), 452--467. Retrieved from \url{https://doi.org/10.3758/s13423-018-1558-y}
@@ -424,8 +576,17 @@ Rouder, J. N., Kumar, A., \& Haaf, J. M. (2023). \emph{Why many studies of indiv
 \leavevmode\vadjust pre{\hypertarget{ref-Sloman:2015}{}}%
 Sloman, S. A. (2015). Opening editorial: The changing face of cognition. \emph{Cognition}, \emph{135}, 1--3.
 
+\leavevmode\vadjust pre{\hypertarget{ref-stahl2014behavioral}{}}%
+Stahl, C., Voss, A., Schmitz, F., Nuszbaum, M., Tüscher, O., Lieb, K., \& Klauer, K. C. (2014). Behavioral components of impulsivity. \emph{Journal of Experimental Psychology: General}, \emph{143}(2), 850.
+
 \leavevmode\vadjust pre{\hypertarget{ref-Stroop:1935}{}}%
 Stroop, J. R. (1935). Studies of interference in serial verbal reactions. \emph{Journal of Experimental Psychology}, \emph{18}, 643--662.
+
+\leavevmode\vadjust pre{\hypertarget{ref-tang2023dual}{}}%
+Tang, R., Bugg, J. M., Snijder, J.-P., Conway, A. R., \& Braver, T. S. (2023). The dual mechanisms of cognitive control (DMCC) project: Validation of an online behavioural task battery. \emph{Quarterly Journal of Experimental Psychology}, \emph{76}(7), 1457--1480.
+
+\leavevmode\vadjust pre{\hypertarget{ref-vonbastian2016evidence}{}}%
+Von Bastian, C. C., Souza, A. S., \& Gade, M. (2016). No evidence for bilingual cognitive advantages: A test of four hypotheses. \emph{Journal of Experimental Psychology: General}, \emph{145}(2), 246.
 
 \leavevmode\vadjust pre{\hypertarget{ref-Wicherts:etal:2006}{}}%
 Wicherts, J. M., Borsboom, D., Kats, J., \& Molenaar, D. (2006). The poor availability of psychological research data for reanalysis. \emph{American Psychologist}, \emph{61}(7), 726--728. Retrieved from \url{http://wicherts.socsci.uva.nl/datasharing.pdf}
