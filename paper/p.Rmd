@@ -198,18 +198,98 @@ Note that all descriptive statistics in the data base are aggregated across cong
 \readme{TODO: Add example descriptive plots.}
 
 ## R-Package
+The R-package `acdcquery` accompanying this publication allows a more customized, but still user-friendly interaction with the database. The `add_argument()`function allows easy specification of filter arguments. Any variable present in any table in the database may be used in the query. Users may also provide multiple arguments and control which of them should be combined using _AND_ and which will be combined using _OR_. Users may also request any variable present in the database to be returned by the query. 
 
-\readme{SVEN: Add an overview or the R package.}
+The package constructs one SQL query combining all query arguments and returning the requested variables. This query will join multiple tables together if the user requests variables from multiple tables or the query is based on variables present in multiple tables. The query constructed by package is optimized for speed by automatically discarding unnecessary variables and eliminating the need for temporary storage of query results. All arguments and requests are combined simultaneously, allowing optimal use of SQL's base optimization.
+
+## Queries and Output
+Below, we will illustrate several examples for using the database. Before querying, the package needs to be installed from CRAN and loaded. Querying also requires that you download the database and establish a connection using `connect_to_db()`.
 
 ```{r package-install, echo = T, eval = F}
 install.packages("acdcquery") # install package
 
 library(acdcquery) # load package
+
+db_filepath <- "path/to/database.db" # specify location of the db
+
+conn <- connect_to_db(db_filepath) # establish a connection
 ```
 
-## Queries and Output
+The function `add_argument()` allows easy specification of the list containing query arguments. 
 
-\readme{SVEN: Show and explain an example query with several arguments, selection of the target table, etc.}
+```{r add-argument, echo = T, eval = F}
+argument_list <- list() # Initialize List
+
+# Adding the first argument, n_participants > 100
+argument_list <- add_argument(
+  list = argument_list, # The list to which the new argument is added
+  conn = conn, # The connection to the database
+  variable = "n_participants", # The variable name. No need to specify the table
+  operator = "greater", # greater, less, equal, between
+  value = 100 
+)
+
+# Adding the second argument, task_name is either flanker or stroop
+argument_list <- add_argument(
+  list = argument_list,
+  conn = conn,
+  variable = "task_name",
+  operator = "equal",
+  value = c("stroop", "flanker")
+)
+
+# You can also specify your own SQL statement for more advanced control
+# Adding a third argument manually, percentage_neutral > 0.1
+argument_list <- add_argument(
+  list = argument_list,
+  conn = conn,
+  statement = "SELECT within_id FROM within_table WHERE percentage_neutral > 0.1"
+)
+```
+
+This argument-list now contains three separate filter-arguments. In our case, we only want those cases for which all are true. The package also allows the user to specify which arguments should be combined using _AND_ or using _OR_.
+
+```{r argument-sequence, eval = F, echo = T}
+all_true <- "AND" # All arguments combined using "AND"
+one_true <- "OR" # All arguments combined using "OR"
+
+# same numbers lead to combination via OR, different numbers combination via AND
+custom <- c(1, 1, 2) # (Argument 1 OR Argument 2) AND Argument 3
+```
+
+The user can also specify which variables should be returned by the query. Here, any variable present in any table can be selected. To allow for fast queries in the case of limited involvement of multiple tables, the user can specify the table the query is centered on using the `target_table` argument of `query_db()`. In most cases, this is the observation-table containing trial data. If dataset-level data is of interest, it is wise to specify `target_table = dataset_table`. If all variables of the target table and some additional variables from other tables should be returned, simply add "default" to the vector specifying the target variables.
+
+```{r target-vars, eval = F, echo = T}
+# Trial data is of interest, also the task_name should be joined
+mostly_trial_targets <- c("task_name", "dataset_id", "subject", "block", "trial", "rt", "accuracy")
+
+# Mostly higher-level data is of interest
+mostly_data_targets <- c("authors", "task_name", "n_participants", "mean_dataset_rt")
+
+# All variables of the dataset_table + publication data
+dataset_table_default <- c("default", "publication_id", "authors")
+```
+
+The argument-list, relationship of arguments, target variables and target table are then supplied to the `query_db()` function.
+
+```{r querying, eval = F, echo = T}
+trial_results <- query_db(
+  conn = conn,
+  arguments = argument_list,
+  target_vars = mostly_trial_targets,
+  target_table = "observation_table",
+  argument_relation = all_true
+)
+
+dataset_results <- query_db(
+  conn = conn,
+  arguments = argument_list,
+  target_vars = dataset_table_default, 
+  target_table = "dataset_table",
+  argument_relation = all_true # or any other valid specification
+)
+```
+
 
 # Reliability of ACDC Tasks
 
