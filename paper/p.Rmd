@@ -55,7 +55,7 @@ abstract: |
   
 keywords          : "Open Data, Attentional Control, SQL"
 wordcount         : "X"
-note              : "Version 1, October 2023"
+note              : "Version 1, January 2024"
 
 floatsintext      : yes
 linenumbers       : yes
@@ -209,9 +209,7 @@ Below, we will illustrate several examples for using the database. Querying the 
 install.packages("acdcquery") # install package
 
 library(acdcquery) # load package
-
 db_filepath <- "path/to/database.db" # specify location of the db
-
 conn <- connect_to_db(db_filepath) # establish a connection
 ```
 
@@ -224,7 +222,7 @@ argument_list <- list() # Initialize List
 argument_list <- add_argument(
   list = argument_list, # The list to which the new argument is added
   conn = conn, # The connection to the database
-  variable = "n_participants", # The variable name. No need to specify the table
+  variable = "n_participants", # The variable name from any table
   operator = "greater", # greater, less, equal, between
   value = 100 
 )
@@ -253,7 +251,8 @@ This argument-list now contains three separate filter-arguments. In our case, we
 all_true <- "AND" # All arguments combined using "AND"
 one_true <- "OR" # All arguments combined using "OR"
 
-# same numbers lead to combination via OR, different numbers combination via AND
+# same numbers lead to combination via OR
+# different numbers combination via AND
 custom <- c(1, 1, 2) # (Argument 1 OR Argument 2) AND Argument 3
 ```
 
@@ -261,10 +260,12 @@ The user can also specify which variables should be returned by the query. Here,
 
 ```{r target-vars, eval = F, echo = T}
 # Trial data is of interest, also the task_name should be joined
-mostly_trial_targets <- c("task_name", "dataset_id", "subject", "block", "trial", "rt", "accuracy")
+mostly_trial_targets <- c("task_name", "dataset_id", "subject"
+                          , "block", "trial", "rt", "accuracy")
 
 # Mostly higher-level data is of interest
-mostly_data_targets <- c("authors", "task_name", "n_participants", "mean_dataset_rt")
+mostly_data_targets <- c("authors", "task_name"
+                         , "n_participants", "mean_dataset_rt")
 
 # All variables of the dataset_table + publication data
 dataset_table_default <- c("default", "publication_id", "authors")
@@ -365,9 +366,9 @@ colnames(reldat) <- c("dataset_id", "publication_code", "task_name"
 reldat$gamma <- round(sqrt(reldat$gamma), 3)
 ```
 
-To illustrate how ACDC can be used for reanalysis, and to further assess the reliability of attentional control tasks included, we provide an example data analysis. The reliability of attentional control tasks auch as the Stroop task has been critically discussed in recent literature [@hedge2018reliability; @Rouder:Haaf:2019a; @Rouder:etal:2023; @mermet2018should; @Draheim:etal:2019]. The current analysis can be understood as an extension of to the analysis of 24 data sets conducted by @Rouder:etal:2023 (see their Table 2).
+To illustrate how ACDC can be used for reanalysis, we provide an example data analysis assessing the reliability of attentional control tasks. Reliability of tasks like the Stroop task has recently been the target of much debate [e.g., @hedge2018reliability; @Rouder:Haaf:2019a; @Rouder:etal:2023; @mermet2018should; @Draheim:etal:2019]. The current analysis can be understood as an extension of to the analysis of 24 data sets conducted by @Rouder:etal:2023 (see their Table 2).
 
-Here, we rely on methodological development by Rouder and colleagues [@Rouder:Haaf:2019a; @Rouder:etal:2023] to survey the reliability of data sets in ACDC. The authors have made suggestions to update the analysis of reliability of individual differences in cognitive tasks based on two simple observation. First, conventional measures of reliability such as the split-half reliability or intra-class correlation are not well suited for cognitive tasks as they are dependent on the number of trials. The reason for this dependency is that observed between-subjects variability of a target effect is a combination of true individual differences and sample noise. If sample noise is large, as is the case in these tasks, reliability can be drastically reduced with a small numbers of trials. Second, unlike with psychometric tests, the number of trials of cognitive tasks is oftentimes chosen arbitrarily, as a matter of preference by the lab conducting the experiment, making it difficult to compare reliability across labs or across tasks [@Rouder:Haaf:2019a].
+Here, we rely on methodological development by Rouder and colleagues [@Rouder:Haaf:2019a; @Rouder:etal:2023] to survey the reliability of data sets in ACDC. The authors have made suggestions to update the analysis of reliability of individual differences in cognitive tasks based on two simple observations. First, conventional measures of reliability such as the split-half reliability or intra-class correlation are not well suited for cognitive tasks as they are dependent on the number of trials. The reason for this dependency is that observed between-subjects variability of a target effect is a combination of true individual differences and sample noise. If sample noise is large, as is the case in these tasks, reliability can be drastically reduced with a small numbers of trials compared to a large number of trials. Second, unlike with psychometric tests, the number of trials of cognitive tasks is oftentimes chosen arbitrarily, as a matter of preference by the lab conducting the experiment, making it difficult to compare reliability across labs or across tasks [@Rouder:Haaf:2019a].
 
 (ref:caption-reliability-plot) Reliability estimates as a function of number of trials and participants. A. The signal-to-noise ratio is independent of the (log) number of trials per condition but has a small positive correlation. B. The split-half reliability is highly correlated with the (log) number of trials per condition. C. The signal-to-noise ratio is independent of the (log) number of participants. D. The split-half reliability has a slight negative relationship with (log) number of participants due to the fact that large-participants studies commonly use a smaller number of trials per task.
 
@@ -412,13 +413,13 @@ axis(2, seq(0, 1, .2), las = 2)
 mtext("D.", adj = .5, cex = 1.3)
 ```
 
-The relationship between common reliability estimates and trial number is illustrated in Figure \@ref(fig:reliability-fig)B. The figure shows the split-half reliability coefficients for all ACDC datasets as a function of the (log) number of trials per condition. The correlation between split-half-reliability and log trial number is `r apa_print(BayesFactor::correlationBF(log(reldat$K), reldat$splithalf))$full_result`. Figure \@ref(fig:reliability-fig)D shows the relationship between split-half reliability coefficients and the (log) number of participants. Theoretically, there should be no relationship. However, many studies with a large number of participants have in turn a low number of trials for reasond of practicality. Therefore, empirically we do find a negative relationship between the log number of participants and split-half reliability, `r apa_print(BayesFactor::correlationBF(log(reldat$I), reldat$splithalf))$full_result`.
+The relationship between common reliability estimates and trial number is illustrated in Figure \@ref(fig:reliability-fig)B. The figure shows the split-half reliability coefficients for all ACDC data sets as a function of the (log) number of trials per condition. The correlation between split-half-reliability and log trial number is `r apa_print(BayesFactor::correlationBF(log(reldat$K), reldat$splithalf))$full_result`. Figure \@ref(fig:reliability-fig)D shows the relationship between split-half reliability coefficients and the (log) number of participants. Theoretically, there should be no relationship. However, for purely practical reasons, many studies with a large number of participants have in turn a low number of trials. Therefore, empirically, we do find a negative relationship between the log number of participants and split-half reliability, `r apa_print(BayesFactor::correlationBF(log(reldat$I), reldat$splithalf))$full_result`.
 
-To counter the lack of comparability of conventional measures of reliability, @Rouder:etal:2023 proposed a measure of reliability that is derived from hierarchical modeling of the nested data structure. This modeling approach allows to separately estimate true individual variability and sample noise. As a result, we may determine how much true variability there is relative to variability due to sample noise. This ratio, termed $\gamma^2$, can be expressed as
+To counter the lack of comparability of conventional reliability measures, @Rouder:etal:2023 proposed a measure of reliability that is derived from hierarchical modeling of the trial-level data. This modeling approach allows to separately estimate true individual variability and sample noise. As a result, we may determine how much true variability there is relative to variability due to sample noise. This ratio, termed $\gamma^2$, can be expressed as
 
 \[\gamma^2 = \frac{\sigma^2_{\text{true}}}{\sigma^2_{\text{noise}}},\]
 
-where the numerator is the true variance of individuals' effects and the denominator is the variance due to sample noise. For the purpose of individual differences research, $\sigma^2_{\text{true}}$ represents the signal and $\sigma^2_{\text{noise}}$ represents noise, therefore, Rouder and colleagues labeled $\gamma^2$ as the signal-to-noise ratio.
+where the numerator is the true variance of individuals' effects estimated by the model, and the denominator is the trial-by-trial within-person variability. For the purpose of individual differences research, $\sigma^2_{\text{true}}$ represents the signal and $\sigma^2_{\text{noise}}$ represents noise, therefore, Rouder and colleagues labeled $\gamma^2$ as the signal-to-noise ratio. Here, we use the square-root of $\gamma^2$, $\gamma$, representing a ratio of standard deviations as researcher tend to be more familiar with standard deviations rather than variances.
 
 (ref:caption-line-plot) Signal-to-noise ratio and reliability. A. Signal-to-noise ratio $\gamma$ for all data sets ordered from smallest to largest. B. Reliability as a function of number of trials for all data sets in ACDC. The lines represent different signal-to-noise ratios. For a fixed $\gamma$, the relationship between the number of trials per condition and the reliability is deterministic.
 
@@ -451,53 +452,13 @@ text(length(ids.sel) + 4, 1/3 + .02, "1/3", cex = 1.2)
 dots = list("l" = stn[, 3], "g" = sqrt(stn[, 1]))
 makeRelCoefFig(dots = dots, Var = FALSE)
 mtext("B.", adj = .5, line = -1)
+
+reldat_l <- subset(reldat, K > 30)
 ```
 
-Figure \@ref(fig:line-plot)A. shows the ratio of signal and noise standard deviations, $\gamma$ for all data sets ordered from smallest to largest. The median of $\gamma$ is $Med = `r round(median(sqrt(stn[, 1])), 2)`$ corresponding to a ratio of roughly 1 to 8.5. That is, for every unit of signal there are 8.5 units of noise. 
-
-Using the ACDC datasets, we can also illustrate the independence of $\gamma$
+Figure \@ref(fig:line-plot)A. shows the signal-to-noise ratio $\gamma$ for all data sets ordered from smallest to largest. The median of $\gamma$ is $Med = `r round(median(sqrt(stn[, 1])), 2)`$ corresponding to a ratio of roughly 1 to 8.5. That is, for every unit of signal there are 8.5 units of noise. Using the ACDC datasets, we can also assess the independence of $\gamma$ from the number of trials and participants. Figure \@ref(fig:line-plot)A and C show these relationships. While there is no correlation between the log number of participants and $\gamma$, `r apa_print(BayesFactor::correlationBF(log(reldat$I), reldat$gamma))$full_result`, there is evidence for a positive relationship between the log number of trials and $\gamma$, `r apa_print(BayesFactor::correlationBF(log(reldat$K), reldat$gamma))$full_result`. However, we suspect that this dependence is in part due to the large number of data sets from the ManyLabs study by @ebersole2016many that only had 30 trials per participant and condition rendering them extremely unreliable. If these data sets are removed from the analysis, the Bayes factor between models with and without correlation coefficient is inconclusive, `r apa_print(BayesFactor::correlationBF(log(reldat_l$K), reldat_l$gamma))$full_result`. For the same data selection, the correlation between split-half reliability and number of trials is somewhat reduced but remains high, `r apa_print(BayesFactor::correlationBF(log(reldat_l$K), reldat_l$splithalf))$full_result`.
 
 # Discussion
-
-\newpage
-
-# Appendix
-
-(ref:mytablenote) $\gamma =$ signal-to-noise ratio; $I =$ number of participants; $K =$ number of trials per condition; $\rho =$ split-half reliability coefficient; $\rho^* =$ Spearman-Brown corrected reliability coefficient.
-
-
-(ref:tabref1) @chetverikov2017blame
-(ref:tabref2) @enkavi2019large
-(ref:tabref3) @hedge2018reliability
-(ref:tabref4) @kucina2023calibration
-(ref:tabref5) @loeffler2022common
-(ref:tabref6) @ebersole2016many
-(ref:tabref7) @pratte2010exploring
-(ref:tabref8) @mermet2018should
-(ref:tabref9) @stahl2014behavioral
-(ref:tabref10) @tang2023dual
-(ref:tabref11) @vonbastian2016evidence
-
-```{r taball, results='asis'}
-reldat <- reldat[, c(1:3, 5:6, 4, 7:8)]
-linesep <- ifelse(reldat$publication_code[1:(nrow(reldat) - 1)] == reldat$publication_code[2:nrow(reldat)], '', '\\addlinespace')
-publication_code = gsub('[_]', '', unique(dat$publication_code))
-
-stub_indents = list(1, 2:3, 4:7, 8:12, 13:15, 16:36, 37:40, 41:48, 49:50, 51, 52:54)
-names(stub_indents) <- paste0("(ref:tabref", 1:length(publication_code), ")")
-
-apa_table(reldat[,-2]
-          , caption = "All datasets currently in ACDC."
-          , note = "(ref:mytablenote)"
-          , align = c("wl{3cm}", rep("c", 6))
-          , digits = c(0,0,0,0,3,2,2)
-          , col.names = c("ID", "Task name", "I", "K"
-                          , "$\\gamma$", "$\\rho$", "$\\rho^*$")
-          , longtable = T
-          , font_size = "small"
-          , stub_indents = stub_indents
-          )
-```
 
 
 \newpage
@@ -506,3 +467,12 @@ apa_table(reldat[,-2]
 
 ::: {#refs custom-style="Bibliography"}
 :::
+
+
+\newpage
+
+# (APPENDIX) Appendix {-}
+
+```{r child = "appendix.Rmd"}
+```
+

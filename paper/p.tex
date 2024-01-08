@@ -255,7 +255,7 @@ Correspondence concerning this article should be addressed to Julia M. Haaf, Nie
 
 \affiliation{\vspace{0.5cm}\textsuperscript{1} University of Amsterdam\\\textsuperscript{2} University of Heidelberg}
 
-\note{Version 1, October 2023}
+\note{Version 1, January 2024}
 
 \abstract{%
 One or two sentences providing a \textbf{basic introduction} to the field, comprehensible to a scientist in any discipline.
@@ -354,27 +354,119 @@ Note that all descriptive statistics in the data base are aggregated across cong
 \hypertarget{r-package}{%
 \subsection{R-Package}\label{r-package}}
 
-\emph{\marginnote{\color{red}Julia} (SVEN: Add an overview or the R package.)}
+The R-package \texttt{acdcquery} accompanying this publication allows a more customized, but still user-friendly interaction with the database (\textbf{R-acdcquery?}). The \texttt{add\_argument()} function allows easy specification of filter arguments. Any variable present in any table in the database may be used in the query. Users may also provide multiple arguments and control which of them should be combined using \emph{AND} and which will be combined using \emph{OR}. Users may also request any variable present in the database to be returned by the query.
+
+The package constructs one SQL query combining all query arguments and the requested variables. This SQL query will join multiple tables together if the user requests variables from multiple tables or the query is based on variables present in multiple tables. The query constructed by the package is optimized for speed by automatically discarding unnecessary variables, choosing efficient ways to join tables, and eliminating the need for temporary storage of query results. All arguments and requests are combined simultaneously, allowing optimal use of SQL's base optimization.
+
+\hypertarget{queries-and-output}{%
+\subsection{Queries and Output}\label{queries-and-output}}
+
+Below, we will illustrate several examples for using the database. Querying the database consists of 5 steps. Connecting to the database, specifying the filter arguments, specifying the relationship of filter arguments, specifying the target variables and finally querying the database. For the first step, the package needs to be installed from CRAN and loaded. Querying also requires that researchers download the database and establish a connection using \texttt{connect\_to\_db()}.
 
 \begin{Shaded}
 \begin{Highlighting}[]
 \FunctionTok{install.packages}\NormalTok{(}\StringTok{"acdcquery"}\NormalTok{) }\CommentTok{\# install package}
 
 \FunctionTok{library}\NormalTok{(acdcquery) }\CommentTok{\# load package}
+\NormalTok{db\_filepath }\OtherTok{\textless{}{-}} \StringTok{"path/to/database.db"} \CommentTok{\# specify location of the db}
+\NormalTok{conn }\OtherTok{\textless{}{-}} \FunctionTok{connect\_to\_db}\NormalTok{(db\_filepath) }\CommentTok{\# establish a connection}
 \end{Highlighting}
 \end{Shaded}
 
-\hypertarget{queries-and-output}{%
-\subsection{Queries and Output}\label{queries-and-output}}
+The function \texttt{add\_argument()} allows easy specification of the list containing query arguments.
 
-\emph{\marginnote{\color{red}Julia} (SVEN: Show and explain an example query with several arguments, selection of the target table, etc.)}
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{argument\_list }\OtherTok{\textless{}{-}} \FunctionTok{list}\NormalTok{() }\CommentTok{\# Initialize List}
+
+\CommentTok{\# Adding the first argument, n\_participants \textgreater{} 100}
+\NormalTok{argument\_list }\OtherTok{\textless{}{-}} \FunctionTok{add\_argument}\NormalTok{(}
+  \AttributeTok{list =}\NormalTok{ argument\_list, }\CommentTok{\# The list to which the new argument is added}
+  \AttributeTok{conn =}\NormalTok{ conn, }\CommentTok{\# The connection to the database}
+  \AttributeTok{variable =} \StringTok{"n\_participants"}\NormalTok{, }\CommentTok{\# The variable name from any table}
+  \AttributeTok{operator =} \StringTok{"greater"}\NormalTok{, }\CommentTok{\# greater, less, equal, between}
+  \AttributeTok{value =} \DecValTok{100} 
+\NormalTok{)}
+
+\CommentTok{\# Adding the second argument, task\_name is either flanker or stroop}
+\NormalTok{argument\_list }\OtherTok{\textless{}{-}} \FunctionTok{add\_argument}\NormalTok{(}
+  \AttributeTok{list =}\NormalTok{ argument\_list,}
+  \AttributeTok{conn =}\NormalTok{ conn,}
+  \AttributeTok{variable =} \StringTok{"task\_name"}\NormalTok{,}
+  \AttributeTok{operator =} \StringTok{"equal"}\NormalTok{,}
+  \AttributeTok{value =} \FunctionTok{c}\NormalTok{(}\StringTok{"stroop"}\NormalTok{, }\StringTok{"flanker"}\NormalTok{)}
+\NormalTok{)}
+
+\CommentTok{\# You can also specify your own SQL statement for more advanced control}
+\CommentTok{\# Adding a third argument manually, percentage\_neutral \textgreater{} 0.1}
+\NormalTok{argument\_list }\OtherTok{\textless{}{-}} \FunctionTok{add\_argument}\NormalTok{(}
+  \AttributeTok{list =}\NormalTok{ argument\_list,}
+  \AttributeTok{conn =}\NormalTok{ conn,}
+  \AttributeTok{statement =} \StringTok{"SELECT within\_id FROM within\_table WHERE percentage\_neutral \textgreater{} 0.1"}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+This argument-list now contains three separate filter-arguments. In our case, we only want those cases for which all are true. The package also allows the user to specify which arguments should be combined using \emph{AND} or using \emph{OR}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{all\_true }\OtherTok{\textless{}{-}} \StringTok{"AND"} \CommentTok{\# All arguments combined using "AND"}
+\NormalTok{one\_true }\OtherTok{\textless{}{-}} \StringTok{"OR"} \CommentTok{\# All arguments combined using "OR"}
+
+\CommentTok{\# same numbers lead to combination via OR}
+\CommentTok{\# different numbers combination via AND}
+\NormalTok{custom }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{2}\NormalTok{) }\CommentTok{\# (Argument 1 OR Argument 2) AND Argument 3}
+\end{Highlighting}
+\end{Shaded}
+
+The user can also specify which variables should be returned by the query. Here, any variable present in any table can be selected. To allow for fast queries in the case of limited involvement of multiple tables, the user can specify the table the query is centered on using the \texttt{target\_table} argument of \texttt{query\_db()}. In most cases, this is the observation-table containing trial data. If dataset-level data is of interest, it is wise to specify \texttt{target\_table\ =\ dataset\_table}. If all variables of the target table and some additional variables from other tables should be returned, simply add ``default'' to the vector specifying the target variables.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Trial data is of interest, also the task\_name should be joined}
+\NormalTok{mostly\_trial\_targets }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"task\_name"}\NormalTok{, }\StringTok{"dataset\_id"}\NormalTok{, }\StringTok{"subject"}
+\NormalTok{                          , }\StringTok{"block"}\NormalTok{, }\StringTok{"trial"}\NormalTok{, }\StringTok{"rt"}\NormalTok{, }\StringTok{"accuracy"}\NormalTok{)}
+
+\CommentTok{\# Mostly higher{-}level data is of interest}
+\NormalTok{mostly\_data\_targets }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"authors"}\NormalTok{, }\StringTok{"task\_name"}
+\NormalTok{                         , }\StringTok{"n\_participants"}\NormalTok{, }\StringTok{"mean\_dataset\_rt"}\NormalTok{)}
+
+\CommentTok{\# All variables of the dataset\_table + publication data}
+\NormalTok{dataset\_table\_default }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"default"}\NormalTok{, }\StringTok{"publication\_id"}\NormalTok{, }\StringTok{"authors"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+The argument-list, relationship of arguments, target variables and target table are then supplied to the \texttt{query\_db()} function.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{trial\_results }\OtherTok{\textless{}{-}} \FunctionTok{query\_db}\NormalTok{(}
+  \AttributeTok{conn =}\NormalTok{ conn,}
+  \AttributeTok{arguments =}\NormalTok{ argument\_list,}
+  \AttributeTok{target\_vars =}\NormalTok{ mostly\_trial\_targets,}
+  \AttributeTok{target\_table =} \StringTok{"observation\_table"}\NormalTok{,}
+  \AttributeTok{argument\_relation =}\NormalTok{ all\_true}
+\NormalTok{)}
+
+\NormalTok{dataset\_results }\OtherTok{\textless{}{-}} \FunctionTok{query\_db}\NormalTok{(}
+  \AttributeTok{conn =}\NormalTok{ conn,}
+  \AttributeTok{arguments =}\NormalTok{ argument\_list,}
+  \AttributeTok{target\_vars =}\NormalTok{ dataset\_table\_default, }
+  \AttributeTok{target\_table =} \StringTok{"dataset\_table"}\NormalTok{,}
+  \AttributeTok{argument\_relation =}\NormalTok{ all\_true }\CommentTok{\# or any other valid specification}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+Additional info can be found on the package's \href{https://github.com/SLesche/acdc-query}{GitHub page}.
 
 \hypertarget{reliability-of-acdc-tasks}{%
 \section{Reliability of ACDC Tasks}\label{reliability-of-acdc-tasks}}
 
-To illustrate how ACDC can be used for reanalysis, and to further assess the reliability of attentional control tasks included, we provide an example data analysis. The reliability of attentional control tasks auch as the Stroop task has been critically discussed in recent literature (Draheim, Mashburn, Martin, \& Engle, 2019; Hedge, Powell, \& Sumner, 2018; Rey-Mermet, Gade, \& Oberauer, 2018; Rouder \& Haaf, 2019; Rouder et al., 2023). The current analysis can be understood as an extension of to the analysis of 24 data sets conducted by Rouder et al. (2023) (see their Table 2).
+To illustrate how ACDC can be used for reanalysis, we provide an example data analysis assessing the reliability of attentional control tasks. Reliability of tasks like the Stroop task has recently been the target of much debate (Draheim, Mashburn, Martin, \& Engle, 2019; e.g., Hedge, Powell, \& Sumner, 2018; Rey-Mermet, Gade, \& Oberauer, 2018; Rouder \& Haaf, 2019; Rouder et al., 2023). The current analysis can be understood as an extension of to the analysis of 24 data sets conducted by Rouder et al. (2023) (see their Table 2).
 
-Here, we rely on methodological development by Rouder and colleagues (Rouder \& Haaf, 2019; Rouder et al., 2023) to survey the reliability of data sets in ACDC. The authors have made suggestions to update the analysis of reliability of individual differences in cognitive tasks based on two simple observation. First, conventional measures of reliability such as the split-half reliability or intra-class correlation are not well suited for cognitive tasks as they are dependent on the number of trials. The reason for this dependency is that observed between-subjects variability of a target effect is a combination of true individual differences and sample noise. If sample noise is large, as is the case in these tasks, reliability can be drastically reduced with a small numbers of trials. Second, unlike with psychometric tests, the number of trials of cognitive tasks is oftentimes chosen arbitrarily, as a matter of preference by the lab conducting the experiment, making it difficult to compare reliability across labs or across tasks (Rouder \& Haaf, 2019).
+Here, we rely on methodological development by Rouder and colleagues (Rouder \& Haaf, 2019; Rouder et al., 2023) to survey the reliability of data sets in ACDC. The authors have made suggestions to update the analysis of reliability of individual differences in cognitive tasks based on two simple observations. First, conventional measures of reliability such as the split-half reliability or intra-class correlation are not well suited for cognitive tasks as they are dependent on the number of trials. The reason for this dependency is that observed between-subjects variability of a target effect is a combination of true individual differences and sample noise. If sample noise is large, as is the case in these tasks, reliability can be drastically reduced with a small numbers of trials compared to a large number of trials. Second, unlike with psychometric tests, the number of trials of cognitive tasks is oftentimes chosen arbitrarily, as a matter of preference by the lab conducting the experiment, making it difficult to compare reliability across labs or across tasks (Rouder \& Haaf, 2019).
 
 
 
@@ -387,13 +479,13 @@ Here, we rely on methodological development by Rouder and colleagues (Rouder \& 
 \caption{Reliability estimates as a function of number of trials and participants. A. The signal-to-noise ratio is independent of the (log) number of trials per condition but has a small positive correlation. B. The split-half reliability is highly correlated with the (log) number of trials per condition. C. The signal-to-noise ratio is independent of the (log) number of participants. D. The split-half reliability has a slight negative relationship with (log) number of participants due to the fact that large-participants studies commonly use a smaller number of trials per task.}\label{fig:reliability-fig}
 \end{figure}
 
-The relationship between common reliability estimates and trial number is illustrated in Figure \ref{fig:reliability-fig}B. The figure shows the split-half reliability coefficients for all ACDC datasets as a function of the (log) number of trials per condition. The correlation between split-half-reliability and log trial number is \(r = 0.72\), 95\% HDI \([0.59, 0.84]\), \(\mathrm{BF}_{\textrm{10}} = 2.52 \times 10^{8}\). Figure \ref{fig:reliability-fig}D shows the relationship between split-half reliability coefficients and the (log) number of participants. Theoretically, there should be no relationship. However, many studies with a large number of participants have in turn a low number of trials for reasond of practicality. Therefore, empirically we do find a negative relationship between the log number of participants and split-half reliability, \(r = -0.31\), 95\% HDI \([-0.54, -0.08]\), \(\mathrm{BF}_{\textrm{10}} = 6.15\).
+The relationship between common reliability estimates and trial number is illustrated in Figure \ref{fig:reliability-fig}B. The figure shows the split-half reliability coefficients for all ACDC data sets as a function of the (log) number of trials per condition. The correlation between split-half-reliability and log trial number is \(r = 0.72\), 95\% HDI \([0.59, 0.84]\), \(\mathrm{BF}_{\textrm{10}} = 2.52 \times 10^{8}\). Figure \ref{fig:reliability-fig}D shows the relationship between split-half reliability coefficients and the (log) number of participants. Theoretically, there should be no relationship. However, for purely practical reasons, many studies with a large number of participants have in turn a low number of trials. Therefore, empirically, we do find a negative relationship between the log number of participants and split-half reliability, \(r = -0.31\), 95\% HDI \([-0.54, -0.08]\), \(\mathrm{BF}_{\textrm{10}} = 6.15\).
 
-To counter the lack of comparability of conventional measures of reliability, Rouder et al. (2023) proposed a measure of reliability that is derived from hierarchical modeling of the nested data structure. This modeling approach allows to separately estimate true individual variability and sample noise. As a result, we may determine how much true variability there is relative to variability due to sample noise. This ratio, termed \(\gamma^2\), can be expressed as
+To counter the lack of comparability of conventional reliability measures, Rouder et al. (2023) proposed a measure of reliability that is derived from hierarchical modeling of the trial-level data. This modeling approach allows to separately estimate true individual variability and sample noise. As a result, we may determine how much true variability there is relative to variability due to sample noise. This ratio, termed \(\gamma^2\), can be expressed as
 
 \[\gamma^2 = \frac{\sigma^2_{\text{true}}}{\sigma^2_{\text{noise}}},\]
 
-where the numerator is the true variance of individuals' effects and the denominator is the variance due to sample noise. For the purpose of individual differences research, \(\sigma^2_{\text{true}}\) represents the signal and \(\sigma^2_{\text{noise}}\) represents noise, therefore, Rouder and colleagues labeled \(\gamma^2\) as the signal-to-noise ratio.
+where the numerator is the true variance of individuals' effects estimated by the model, and the denominator is the trial-by-trial within-person variability. For the purpose of individual differences research, \(\sigma^2_{\text{true}}\) represents the signal and \(\sigma^2_{\text{noise}}\) represents noise, therefore, Rouder and colleagues labeled \(\gamma^2\) as the signal-to-noise ratio. Here, we use the square-root of \(\gamma^2\), \(\gamma\), representing a ratio of standard deviations as researcher tend to be more familiar with standard deviations rather than variances.
 
 
 
@@ -406,17 +498,87 @@ where the numerator is the true variance of individuals' effects and the denomin
 \caption{Signal-to-noise ratio and reliability. A. Signal-to-noise ratio \(\gamma\) for all data sets ordered from smallest to largest. B. Reliability as a function of number of trials for all data sets in ACDC. The lines represent different signal-to-noise ratios. For a fixed \(\gamma\), the relationship between the number of trials per condition and the reliability is deterministic.}\label{fig:line-plot}
 \end{figure}
 
-Figure \ref{fig:line-plot}A. shows the ratio of signal and noise standard deviations, \(\gamma\) for all data sets ordered from smallest to largest. The median of \(\gamma\) is \(Med = 0.12\) corresponding to a ratio of roughly 1 to 8.5. That is, for every unit of signal there are 8.5 units of noise.
-
-Using the ACDC datasets, we can also illustrate the independence of \(\gamma\)
+Figure \ref{fig:line-plot}A. shows the signal-to-noise ratio \(\gamma\) for all data sets ordered from smallest to largest. The median of \(\gamma\) is \(Med = 0.12\) corresponding to a ratio of roughly 1 to 8.5. That is, for every unit of signal there are 8.5 units of noise. Using the ACDC datasets, we can also assess the independence of \(\gamma\) from the number of trials and participants. Figure \ref{fig:line-plot}A and C show these relationships. While there is no correlation between the log number of participants and \(\gamma\), \(r = 0.00\), 95\% HDI \([-0.24, 0.26]\), \(\mathrm{BF}_{\textrm{10}} = 0.31\), there is evidence for a positive relationship between the log number of trials and \(\gamma\), \(r = 0.32\), 95\% HDI \([0.08, 0.53]\), \(\mathrm{BF}_{\textrm{10}} = 7.44\). However, we suspect that this dependence is in part due to the large number of data sets from the ManyLabs study by Ebersole et al. (2016) that only had 30 trials per participant and condition rendering them extremely unreliable. If these data sets are removed from the analysis, the Bayes factor between models with and without correlation coefficient is inconclusive, \(r = 0.25\), 95\% HDI \([-0.05, 0.49]\), \(\mathrm{BF}_{\textrm{10}} = 1.41\). For the same data selection, the correlation between split-half reliability and number of trials is somewhat reduced but remains high, \(r = 0.65\), 95\% HDI \([0.47, 0.82]\), \(\mathrm{BF}_{\textrm{10}} = 39,579.34\).
 
 \hypertarget{discussion}{%
 \section{Discussion}\label{discussion}}
 
 \newpage
 
+\hypertarget{references}{%
+\section{References}\label{references}}
+
+\hypertarget{refs}{}
+\begin{CSLReferences}{1}{0}
+\leavevmode\vadjust pre{\hypertarget{ref-chetverikov2017blame}{}}%
+Chetverikov, A., Iamschinina, P., Begler, A., Ivanchei, I., Filippova, M., \& Kuvaldina, M. (2017). Blame everyone: Error-related devaluation in eriksen flanker task. \emph{Acta Psychologica}, \emph{180}, 155--159.
+
+\leavevmode\vadjust pre{\hypertarget{ref-Draheim:etal:2019}{}}%
+Draheim, C., Mashburn, C. A., Martin, J. D., \& Engle, R. W. (2019). Reaction time in differential and developmental research: A review and commentary on the problems and alternatives. \emph{Psychological Bulletin}, \emph{145}(5), 508.
+
+\leavevmode\vadjust pre{\hypertarget{ref-ebersole2016many}{}}%
+Ebersole, C. R., Atherton, O. E., Belanger, A. L., Skulborstad, H. M., Allen, J. M., Banks, J. B., et al.others. (2016). Many labs 3: Evaluating participant pool quality across the academic semester via replication. \emph{Journal of Experimental Social Psychology}, \emph{67}, 68--82.
+
+\leavevmode\vadjust pre{\hypertarget{ref-enkavi2019large}{}}%
+Enkavi, A. Z., Eisenberg, I. W., Bissett, P. G., Mazza, G. L., MacKinnon, D. P., Marsch, L. A., \& Poldrack, R. A. (2019). Large-scale analysis of test--retest reliabilities of self-regulation measures. \emph{Proceedings of the National Academy of Sciences}, \emph{116}(12), 5472--5477.
+
+\leavevmode\vadjust pre{\hypertarget{ref-Haaf:Rouder:2017}{}}%
+Haaf, J. M., \& Rouder, J. N. (2017). Developing constraint in {B}ayesian mixed models. \emph{Psychological Methods}, \emph{22}(4), 779--798.
+
+\leavevmode\vadjust pre{\hypertarget{ref-hedge2018reliability}{}}%
+Hedge, C., Powell, G., \& Sumner, P. (2018). The reliability paradox: Why robust cognitive tasks do not produce reliable individual differences. \emph{Behavior Research Methods}, \emph{50}, 1166--1186.
+
+\leavevmode\vadjust pre{\hypertarget{ref-kucina2023calibration}{}}%
+Kucina, T., Wells, L., Lewis, I., Salas, K. de, Kohl, A., Palmer, M. A., \ldots{} Heathcote, A. (2023). Calibration of cognitive tests to address the reliability paradox for decision-conflict tasks. \emph{Nature Communications}, \emph{14}(1), 2234.
+
+\leavevmode\vadjust pre{\hypertarget{ref-loeffler2022common}{}}%
+Löffler, C., Frischkorn, G. T., Hagemann, D., Sadus, K., \& Schubert, A.-L. (2022). The common factor of executive functions measures nothing but speed of information uptake.
+
+\leavevmode\vadjust pre{\hypertarget{ref-MacLeod:1991}{}}%
+MacLeod, C. (1991). Half a century of research on the {S}troop effect: {A}n integrative review. \emph{Psychological Bulletin}, \emph{109}, 163--203.
+
+\leavevmode\vadjust pre{\hypertarget{ref-pratte2010exploring}{}}%
+Pratte, M. S., Rouder, J. N., Morey, R. D., \& Feng, C. (2010). Exploring the differences in distributional properties between stroop and simon effects using delta plots. \emph{Attention, Perception, \& Psychophysics}, \emph{72}, 2013--2025.
+
+\leavevmode\vadjust pre{\hypertarget{ref-mermet2018should}{}}%
+Rey-Mermet, A., Gade, M., \& Oberauer, K. (2018). Should we stop thinking about inhibition? Searching for individual and age differences in inhibition ability. \emph{Journal of Experimental Psychology: Learning, Memory, and Cognition}, \emph{44}(4), 501.
+
+\leavevmode\vadjust pre{\hypertarget{ref-Rouder:Haaf:2019a}{}}%
+Rouder, J. N., \& Haaf, J. M. (2019). A psychometrics of individual differences in experimental tasks. \emph{Psychonomic Bulletin and Review}, \emph{26}(2), 452--467. Retrieved from \url{https://doi.org/10.3758/s13423-018-1558-y}
+
+\leavevmode\vadjust pre{\hypertarget{ref-Rouder:etal:2023}{}}%
+Rouder, J. N., Kumar, A., \& Haaf, J. M. (2023). \emph{Why many studies of individual differences with inhibition tasks may not localize correlations}. \emph{Psychonomic Bulletin and Review}. Retrieved from \url{https://doi.org/10.3758/s13423-023-02293-3}
+
+\leavevmode\vadjust pre{\hypertarget{ref-Sloman:2015}{}}%
+Sloman, S. A. (2015). Opening editorial: The changing face of cognition. \emph{Cognition}, \emph{135}, 1--3.
+
+\leavevmode\vadjust pre{\hypertarget{ref-stahl2014behavioral}{}}%
+Stahl, C., Voss, A., Schmitz, F., Nuszbaum, M., Tüscher, O., Lieb, K., \& Klauer, K. C. (2014). Behavioral components of impulsivity. \emph{Journal of Experimental Psychology: General}, \emph{143}(2), 850.
+
+\leavevmode\vadjust pre{\hypertarget{ref-Stroop:1935}{}}%
+Stroop, J. R. (1935). Studies of interference in serial verbal reactions. \emph{Journal of Experimental Psychology}, \emph{18}, 643--662.
+
+\leavevmode\vadjust pre{\hypertarget{ref-tang2023dual}{}}%
+Tang, R., Bugg, J. M., Snijder, J.-P., Conway, A. R., \& Braver, T. S. (2023). The dual mechanisms of cognitive control (DMCC) project: Validation of an online behavioural task battery. \emph{Quarterly Journal of Experimental Psychology}, \emph{76}(7), 1457--1480.
+
+\leavevmode\vadjust pre{\hypertarget{ref-vonbastian2016evidence}{}}%
+Von Bastian, C. C., Souza, A. S., \& Gade, M. (2016). No evidence for bilingual cognitive advantages: A test of four hypotheses. \emph{Journal of Experimental Psychology: General}, \emph{145}(2), 246.
+
+\leavevmode\vadjust pre{\hypertarget{ref-Wicherts:etal:2006}{}}%
+Wicherts, J. M., Borsboom, D., Kats, J., \& Molenaar, D. (2006). The poor availability of psychological research data for reanalysis. \emph{American Psychologist}, \emph{61}(7), 726--728. Retrieved from \url{http://wicherts.socsci.uva.nl/datasharing.pdf}
+
+\end{CSLReferences}
+
+\newpage
+
+\hypertarget{appendix-appendix}{%
+\appendix}
+
+
 \hypertarget{appendix}{%
-\section{Appendix}\label{appendix}}
+\subsection{Appendix}\label{appendix}}
+
+Table \ref{tab:taball} contains all data sets that are part of the Attentional Control Data Collection at the time of manuscript submission.The table is ordered by dataset ID and study, and contains the number of trials per condition and participant, and the number of participants. Additionally, three reliability estimates are included: The signal-to-noise ratio, \(\gamma\), the split-half reliability for 2000 random splits, \(\rho\), and the corrected split-half reliability using the Spearman-Brown formula, \(\rho^*\).
 
 
 
@@ -526,72 +688,6 @@ Von Bastian, Souza, and Gade (2016) &  &  &  &  &  & \\
 
 \end{ThreePartTable}
 \end{center}
-
-\newpage
-
-\hypertarget{references}{%
-\section{References}\label{references}}
-
-\hypertarget{refs}{}
-\begin{CSLReferences}{1}{0}
-\leavevmode\vadjust pre{\hypertarget{ref-chetverikov2017blame}{}}%
-Chetverikov, A., Iamschinina, P., Begler, A., Ivanchei, I., Filippova, M., \& Kuvaldina, M. (2017). Blame everyone: Error-related devaluation in eriksen flanker task. \emph{Acta Psychologica}, \emph{180}, 155--159.
-
-\leavevmode\vadjust pre{\hypertarget{ref-Draheim:etal:2019}{}}%
-Draheim, C., Mashburn, C. A., Martin, J. D., \& Engle, R. W. (2019). Reaction time in differential and developmental research: A review and commentary on the problems and alternatives. \emph{Psychological Bulletin}, \emph{145}(5), 508.
-
-\leavevmode\vadjust pre{\hypertarget{ref-ebersole2016many}{}}%
-Ebersole, C. R., Atherton, O. E., Belanger, A. L., Skulborstad, H. M., Allen, J. M., Banks, J. B., et al.others. (2016). Many labs 3: Evaluating participant pool quality across the academic semester via replication. \emph{Journal of Experimental Social Psychology}, \emph{67}, 68--82.
-
-\leavevmode\vadjust pre{\hypertarget{ref-enkavi2019large}{}}%
-Enkavi, A. Z., Eisenberg, I. W., Bissett, P. G., Mazza, G. L., MacKinnon, D. P., Marsch, L. A., \& Poldrack, R. A. (2019). Large-scale analysis of test--retest reliabilities of self-regulation measures. \emph{Proceedings of the National Academy of Sciences}, \emph{116}(12), 5472--5477.
-
-\leavevmode\vadjust pre{\hypertarget{ref-Haaf:Rouder:2017}{}}%
-Haaf, J. M., \& Rouder, J. N. (2017). Developing constraint in {B}ayesian mixed models. \emph{Psychological Methods}, \emph{22}(4), 779--798.
-
-\leavevmode\vadjust pre{\hypertarget{ref-hedge2018reliability}{}}%
-Hedge, C., Powell, G., \& Sumner, P. (2018). The reliability paradox: Why robust cognitive tasks do not produce reliable individual differences. \emph{Behavior Research Methods}, \emph{50}, 1166--1186.
-
-\leavevmode\vadjust pre{\hypertarget{ref-kucina2023calibration}{}}%
-Kucina, T., Wells, L., Lewis, I., Salas, K. de, Kohl, A., Palmer, M. A., \ldots{} Heathcote, A. (2023). Calibration of cognitive tests to address the reliability paradox for decision-conflict tasks. \emph{Nature Communications}, \emph{14}(1), 2234.
-
-\leavevmode\vadjust pre{\hypertarget{ref-loeffler2022common}{}}%
-Löffler, C., Frischkorn, G. T., Hagemann, D., Sadus, K., \& Schubert, A.-L. (2022). The common factor of executive functions measures nothing but speed of information uptake.
-
-\leavevmode\vadjust pre{\hypertarget{ref-MacLeod:1991}{}}%
-MacLeod, C. (1991). Half a century of research on the {S}troop effect: {A}n integrative review. \emph{Psychological Bulletin}, \emph{109}, 163--203.
-
-\leavevmode\vadjust pre{\hypertarget{ref-pratte2010exploring}{}}%
-Pratte, M. S., Rouder, J. N., Morey, R. D., \& Feng, C. (2010). Exploring the differences in distributional properties between stroop and simon effects using delta plots. \emph{Attention, Perception, \& Psychophysics}, \emph{72}, 2013--2025.
-
-\leavevmode\vadjust pre{\hypertarget{ref-mermet2018should}{}}%
-Rey-Mermet, A., Gade, M., \& Oberauer, K. (2018). Should we stop thinking about inhibition? Searching for individual and age differences in inhibition ability. \emph{Journal of Experimental Psychology: Learning, Memory, and Cognition}, \emph{44}(4), 501.
-
-\leavevmode\vadjust pre{\hypertarget{ref-Rouder:Haaf:2019a}{}}%
-Rouder, J. N., \& Haaf, J. M. (2019). A psychometrics of individual differences in experimental tasks. \emph{Psychonomic Bulletin and Review}, \emph{26}(2), 452--467. Retrieved from \url{https://doi.org/10.3758/s13423-018-1558-y}
-
-\leavevmode\vadjust pre{\hypertarget{ref-Rouder:etal:2023}{}}%
-Rouder, J. N., Kumar, A., \& Haaf, J. M. (2023). \emph{Why many studies of individual differences with inhibition tasks may not localize correlations}. \emph{Psychonomic Bulletin and Review}. Retrieved from \url{https://doi.org/10.3758/s13423-023-02293-3}
-
-\leavevmode\vadjust pre{\hypertarget{ref-Sloman:2015}{}}%
-Sloman, S. A. (2015). Opening editorial: The changing face of cognition. \emph{Cognition}, \emph{135}, 1--3.
-
-\leavevmode\vadjust pre{\hypertarget{ref-stahl2014behavioral}{}}%
-Stahl, C., Voss, A., Schmitz, F., Nuszbaum, M., Tüscher, O., Lieb, K., \& Klauer, K. C. (2014). Behavioral components of impulsivity. \emph{Journal of Experimental Psychology: General}, \emph{143}(2), 850.
-
-\leavevmode\vadjust pre{\hypertarget{ref-Stroop:1935}{}}%
-Stroop, J. R. (1935). Studies of interference in serial verbal reactions. \emph{Journal of Experimental Psychology}, \emph{18}, 643--662.
-
-\leavevmode\vadjust pre{\hypertarget{ref-tang2023dual}{}}%
-Tang, R., Bugg, J. M., Snijder, J.-P., Conway, A. R., \& Braver, T. S. (2023). The dual mechanisms of cognitive control (DMCC) project: Validation of an online behavioural task battery. \emph{Quarterly Journal of Experimental Psychology}, \emph{76}(7), 1457--1480.
-
-\leavevmode\vadjust pre{\hypertarget{ref-vonbastian2016evidence}{}}%
-Von Bastian, C. C., Souza, A. S., \& Gade, M. (2016). No evidence for bilingual cognitive advantages: A test of four hypotheses. \emph{Journal of Experimental Psychology: General}, \emph{145}(2), 246.
-
-\leavevmode\vadjust pre{\hypertarget{ref-Wicherts:etal:2006}{}}%
-Wicherts, J. M., Borsboom, D., Kats, J., \& Molenaar, D. (2006). The poor availability of psychological research data for reanalysis. \emph{American Psychologist}, \emph{61}(7), 726--728. Retrieved from \url{http://wicherts.socsci.uva.nl/datasharing.pdf}
-
-\end{CSLReferences}
 
 
 \end{document}
