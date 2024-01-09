@@ -131,7 +131,7 @@ SQL databases are composed of several data tables consisting of rows and columns
 knitr::include_graphics("images/illustrate_SQL_keys.png")
 ```
 
-ACDC is adapted to the logic of publications consisting of one or multiple studies which in turn include one or several data sets. The whole structure of ACDC is shown in Figure \@ref(fig:figure2). A *publication table* and a *study table* contain specific information about each publication and study, respectively. Each data set within a study stores trial-level information about a single attentional control task within a certain study. If a between-subject manipulation exists, our data base contains a separate data set for each group and each task. For instance, a study in which two groups (younger and older adults) who completed a Simon and a Stroop task would consist of four data sets (i.e., younger-Stroop, younger-Simon, older-Stroop, older-Simon) in the ACDC data base. 
+ACDC is adapted to the logic of publications consisting of one or multiple studies which in turn include one or several data sets. The whole structure of ACDC is shown in Figure \@ref(fig:figure2). A *publication table* and a *study table* contain specific information about each publication and study, respectively. Each data set within a study stores trial-level information about a single attentional control task within a certain study. \readme{Re-reading my text I find this previous sentence quite confusing. Shall I just take it out or is it necessary for the reader's understanding?} If a between-subject manipulation exists, our data base contains a separate data set for each group and each task. For instance, a study in which two groups (younger and older adults) who completed a Simon and a Stroop task would consist of four data sets (i.e., younger-Stroop, younger-Simon, older-Stroop, older-Simon) in the ACDC data base. 
 
 A *data set table* stores information about each data set, such as sample size, the number of within-participant manipulations, and whether a fixation cross was used. The *observation table* hold the trial-level attentional control task data (including response time and accuracy). The task type of each data set (i.e., Stroop, Simon, Flanker, negative priming, or other) and a description of which stimuli were presented in the task are documented in the *task table*. 
 
@@ -181,7 +181,12 @@ We did not conduct a systematic search for data sets nor attempted to distribute
 
 ## Contribute
 
-\readme{TODO: Add a brief description on how researcher can add their own data.}
+We are continuously open for adding attentional control task data to our data base. Researchers who would like to contribute their data to enhance access to their data and increase their chances of citations are welcome to submit their data as well as meta-information about the respective studies using our online form. 
+
+To be eligible for the ACDC data base the data must have been collected for a published or pre-registered study using an attentional control task. \readme{Shall we define what we mean by "attentional control" exactly?} Researchers submitting the data must be allowed to publicly share them in anonymized format. Furthermore, the data files have to contain trial-level information on anonymized subject IDs, reaction time, accuracy (i.e., correct/ incorrect), and a congruency variable indicating whether trials. In case of between-subject manipulations and within-subject manipulations (beside congruency), the files should contain a between and a within variable indicating which condition a trial belonged to. 
+
+When submitting data to our online submission form, researchers will be asked to provide meta-information about the publication and study, such as descriptions of the attentional control task and the between and within manipulations. Data files can either be uploaded in openly readable data formats or as a link to a repository, such as on OSF or Github.  
+\readme{Shall we include the link to the website here? Or put it in the appendix?}
 
 # Accessing the Database
 
