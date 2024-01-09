@@ -181,7 +181,7 @@ We did not conduct a systematic search for data sets nor attempted to distribute
 
 ## Contribute
 
-We are continuously open for adding attentional control task data to our data base. Researchers who would like to contribute their data to enhance access to their data and increase their chances of citations are welcome to submit their data as well as meta-information about the respective studies using our online form. 
+We are planning to continuously add attentional control task data to our data base. Researchers who would like to contribute their data to enhance access to their data and increase their chances of citations are welcome to submit their data as well as meta-information about the respective studies using our online form. 
 
 To be eligible for the ACDC data base the data must have been collected for a published or pre-registered study using an attentional control task. \readme{Shall we define what we mean by "attentional control" exactly?} Researchers submitting the data must be allowed to publicly share them in anonymized format. Furthermore, the data files have to contain trial-level information on anonymized subject IDs, reaction time, accuracy (i.e., correct/ incorrect), and a congruency variable indicating whether trials. In case of between-subject manipulations and within-subject manipulations (beside congruency), the files should contain a between and a within variable indicating which condition a trial belonged to. 
 
