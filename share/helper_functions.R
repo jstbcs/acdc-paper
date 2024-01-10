@@ -115,7 +115,8 @@ get.splithalf <- function(dats){
                           compare1 = "congruent",
                           compare2 = "incongruent",
                           average = "mean",
-                          plot = TRUE)
+                          plot = TRUE
+                          )
   return(c(sh = difference$final_estimates$splithalf
            , sb =  difference$final_estimates$spearmanbrown))
 }
@@ -127,7 +128,7 @@ get.splithalf <- function(dats){
 #   Var: A Boolean indicating the variant of the plot. Default is TRUE.
 #   dots: An optional list of 'l' (trial sizes) and 'g' (gamma values) to plot as points.
 
-makeRelCoefFig = function(Var = T, dots = NULL){
+makeRelCoefFig = function(Var = T, dots = NULL, task = 21){
   # Define the reliability function
   rel = function(g2, L) g2 / (g2 + 2/L)
   
@@ -136,13 +137,18 @@ makeRelCoefFig = function(Var = T, dots = NULL){
   
   # Define range for trial sizes
   n1 = 1:9
-  n2 = 0:3
+  n2 = 0:3.5
   
   # Define colors for the lines in the plot
   colours = c("firebrick3", "firebrick1", "goldenrod1", 
               "darkseagreen2", "mediumseagreen", "deepskyblue2",
               "deepskyblue4", "mediumpurple3", "magenta3"
   )
+  
+  task[task == "negative priming"] <- "other"
+  task_pch <- recode(task
+                     , "stroop" = 21, "flanker" = 22
+                     , "simon" = 23, "other" = 24)
   
   # Conditional plotting based on the Var parameter
   if (Var == F){
@@ -203,6 +209,16 @@ makeRelCoefFig = function(Var = T, dots = NULL){
          bty = "n"
   )
   
+  if(length(unique(task)) > 1){
+    # Add legend
+    legend(2.8, .42, 
+           legend = unique(task), 
+           pch = unique(task_pch), 
+           cex = 1.2,
+           bty = "n"
+    )
+  }
+  
   ldots <- length(dots$l)
   # Add points to the plot if 'dots' is provided
   if (!is.null(dots) && length(dots) > 0){
@@ -210,7 +226,7 @@ makeRelCoefFig = function(Var = T, dots = NULL){
     for (i in 1:ldots){
       l = dots$l[i]
       g2 = dots$g[i]^2
-      points(log10(l), rel(g2,l), pch = 19, col = cols, cex = 2)
+      points(log10(l), rel(g2,l), pch = task_pch[i], bg = cols, cex = 2)
     }
   }
 }
