@@ -204,13 +204,18 @@ One advantage of SQLite databases is that they are simply a file that can be dow
 
 ## Shiny App
 
-The easiest way to inspect the data is using our shiny app provided [here](LINKTOSHINYAPP). The app allows to inspect all data sets or select data sets with certain specification using the filter box on the left. For example, if a researcher is interested in the flanker task, they may select all flanker data sets for closer inspection. After selection, researchers can choose between an overview of the included data sets, some descriptive statistics, and descriptive plots (see Figure XXX). If they want to further analyze the data, they can download the data via the "get the data" tab, either directly as `csv` file or using the provided `R`-code.
+The easiest way to inspect the data is using our shiny app provided [here](LINKTOSHINYAPP). The app allows to inspect all data sets or select data sets with certain specification using the filter box on the left. For example, if a researcher is interested in the flanker task, they may select all flanker data sets for closer inspection. After selection, researchers can choose between an overview of the included data sets, some descriptive statistics, and descriptive plots (see \@ref(fig:figure2)). If they want to further analyze the data, they can download the data via the "get the data" tab, either directly as `csv` file or using the provided `R`-code.
 
-\readme{TODO: Add screenshot from the shiny app as figure.}
+```{r figure2, fig.cap = "(ref:caption-figure3)"}
+knitr::include_graphics("images/Shiny_interface.png")
+```
 
 Note that all descriptive statistics in the data base are aggregated across congruency conditions. This was a deliberate choice when designing the shiny app. By withholding information about the effect of interest, researches can inspect and select the data based on varying characteristics of the data set (including distributional properties), but remain unbiased as to the most relevant outcome variable. We hope that researchers can then formulate (and perhaps preregister) hypotheses about their reanalysis without much hindsight bias.
 
-\readme{TODO: Add example descriptive plots.}
+```{r figure2, fig.cap = "(ref:caption-figure3)"}
+knitr::include_graphics("images/example_descriptive_plot.png")
+```
+\readme{So far this is a screenshot from the shiny app, might be good to download the actual plot as psf for better resolution?}
 
 ## R-Package
 
