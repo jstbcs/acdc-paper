@@ -215,7 +215,7 @@ Note that all descriptive statistics in the data base are aggregated across cong
 ```{r figure2, fig.cap = "(ref:caption-figure3)"}
 knitr::include_graphics("images/example_descriptive_plot.png")
 ```
-\readme{So far this is a screenshot from the shiny app, might be good to download the actual plot as psf for better resolution?}
+\readme{TODO: Enhance resolution of image?}
 
 ## R-Package
 
