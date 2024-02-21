@@ -122,6 +122,7 @@ dbfile <- tempfile(fileext=".sqlite") # not created yet, just a string
 download.file("https://github.com/jstbcs/acdc-database/raw/main/acdc.db", dbfile)
 
 conn <- connect_to_db(dbfile)
+# conn <- connect_to_db("acdc_old.db")
 
 arguments <-  list()
 arguments <- add_argument(
@@ -131,6 +132,14 @@ arguments <- add_argument(
  operator = "greater",
  values = c(-1)
 )
+
+# arguments <- add_argument(
+#  list = arguments,
+#  conn = conn,
+#  variable = "task_name",
+#  operator = "equal",
+#  values = "flanker"
+# )
 
 query_results <- query_db(
  conn = conn,
@@ -329,7 +338,7 @@ source("../share/helper_functions.R")
 
 ```{r hierarchical-modeling, cache = T, eval = T}
 res <- list()
-ids.sel <- 1:length(unique(dat$dataset_id))
+ids.sel <- unique(dat$dataset_id)
 
 for(i in ids.sel){
   dat_sub <- subset(dat, dataset_id == i)
@@ -337,6 +346,7 @@ for(i in ids.sel){
   dat_sub <- subset(dat_sub, rt > .2)
   dat_sub <- subset(dat_sub, rt < 2.5)
   dat_sub <- subset(dat_sub, congruency %in% 1:2)
+  dat_sub <- subset(dat_sub, block != -999)
   issue <- issue.sub(dat_sub)
   dat_sub <- subset(dat_sub, !(subject %in% issue))
   
@@ -347,22 +357,24 @@ for(i in ids.sel){
 
 ```{r get_stn, cache = T}
 stn <- matrix(ncol = 3, nrow = length(ids.sel))
-for(i in ids.sel){
+runner_id <- 1:length(ids.sel)
+for(i in runner_id){
   tmp <- res[[i]]
   stn[i, 1] <- mean(tmp$s2Theta / tmp$s2)
-  stn[i, 2] <- get.I(subset(dat, dataset_id == i))
-  stn[i, 3] <- get.K(subset(dat, dataset_id == i))
+  stn[i, 2] <- get.I(subset(dat, dataset_id == ids.sel[i]))
+  stn[i, 3] <- get.K(subset(dat, dataset_id == ids.sel[i]))
 }
 ```
 
 ```{r get_splithalf, cache = T, warning=FALSE, message=FALSE, results='hide'}
 res.splithalf <- matrix(ncol = 2, nrow = length(ids.sel))
-for(i in ids.sel){
-  dat_sub <- subset(dat, dataset_id == i)
+for(i in runner_id){
+  dat_sub <- subset(dat, dataset_id == ids.sel[i])
   dat_sub <- subset(dat_sub, accuracy == 1)
   dat_sub <- subset(dat_sub, rt > .2)
   dat_sub <- subset(dat_sub, rt < 2.5)
   dat_sub <- subset(dat_sub, congruency %in% 1:2)
+  dat_sub <- subset(dat_sub, block != -999)
   issue <- issue.sub(dat_sub)
   dat_sub <- subset(dat_sub, !(subject %in% issue))
   res.splithalf[i, ] <- get.splithalf(dat_sub)
@@ -469,6 +481,13 @@ makeRelCoefFig(dots = dots, Var = FALSE, task = reldat$task_name)
 mtext("B.", adj = .5, line = -1)
 
 reldat_l <- subset(reldat, K > 30)
+
+# png("flanker_results.png", width = 600, height = 600)
+# par(mgp = c(2.2, .7, 0), mar = c(3,4,1.5,1), cex.lab = 1.6, cex = 1.3)
+# dots = list("l" = stn[, 3], "g" = sqrt(stn[, 1]))
+# makeRelCoefFig(dots = dots, Var = FALSE, task = reldat$task_name)
+# mtext("B.", adj = .5, line = -1)
+# dev.off()
 ```
 
 Figure \@ref(fig:line-plot)A. shows the signal-to-noise ratio $\gamma$ for all data sets ordered from smallest to largest. The median of $\gamma$ is $Med = `r round(median(sqrt(stn[, 1])), 2)`$ corresponding to a ratio of roughly 1 to 8.5. That is, for every unit of signal there are 8.5 units of noise. Using the ACDC data sets, we can also assess the independence of $\gamma$ from the number of trials and participants. Figure \@ref(fig:line-plot)A and C show these relationships. While there is no correlation between the log number of participants and $\gamma$, `r apa_print(BayesFactor::correlationBF(log(reldat$I), reldat$gamma))$full_result`, there is evidence for a positive relationship between the log number of trials and $\gamma$, `r apa_print(BayesFactor::correlationBF(log(reldat$K), reldat$gamma))$full_result`. However, we suspect that this dependence is in part due to the large number of data sets from the ManyLabs study by @ebersole2016many that only had 30 trials per participant and condition rendering them extremely unreliable. If these data sets are removed from the analysis, the Bayes factor between models with and without correlation coefficient is inconclusive, `r apa_print(BayesFactor::correlationBF(log(reldat_l$K), reldat_l$gamma))$full_result`. For the same data selection, the correlation between split-half reliability and number of trials is somewhat reduced but remains high, `r apa_print(BayesFactor::correlationBF(log(reldat_l$K), reldat_l$splithalf))$full_result`.
