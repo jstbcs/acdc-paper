@@ -93,7 +93,8 @@ header-includes:
 classoption       : "man"
 output            : papaja::apa6_pdf
 csl               : apa6.csl
-bibliography: [references.bib, db.bib, lab.bib]
+bibliography: [references.bib, db.bib, lab.bib, r-references.bib]
+appendix: "appendix.Rmd"
 ---
 
 ```{r setup, include = FALSE}
@@ -105,6 +106,7 @@ library("splithalf")
 library("tidyverse")
 library("ggplot2")
 library("dplyr")
+library(acdcquery)
 
 r_refs("r-references.bib")
 ```
@@ -116,8 +118,6 @@ knitr::opts_chunk$set(cache.extra = knitr::rand_seed)
 ```
 
 ```{r data-overview, echo = F, eval = T, cache = T, message=F, warning=F}
-library(acdcquery)
-
 dbfile <- tempfile(fileext=".sqlite") # not created yet, just a string
 download.file("https://github.com/jstbcs/acdc-database/raw/main/acdc.db", dbfile)
 
@@ -213,15 +213,15 @@ One advantage of SQLite databases is that they are simply a file that can be dow
 
 ## Shiny App
 
-The easiest way to inspect the data is using our shiny app provided [here](LINKTOSHINYAPP). The app allows to inspect all data sets or select data sets with certain specification using the filter box on the left. For example, if a researcher is interested in the flanker task, they may select all flanker data sets for closer inspection. After selection, researchers can choose between an overview of the included data sets, some descriptive statistics, and descriptive plots (see \@ref(fig:figure2)). If they want to further analyze the data, they can download the data via the "get the data" tab, either directly as `csv` file or using the provided `R`-code.
+The easiest way to inspect the data is using our shiny app provided [here](LINKTOSHINYAPP). The app allows to inspect all data sets or to select data sets with certain specification using the filter box on the left. For example, if a researcher is interested in the flanker task, they may select all flanker data sets for closer inspection. After selection, researchers can choose between an overview of the included data sets, some descriptive statistics, and descriptive plots (see \@ref(fig:figure3)). If they want to further analyze the data, they can download the data via the "get the data" tab, either directly as `csv` file or using the provided `R`-code.
 
-```{r figure2, fig.cap = "(ref:caption-figure3)"}
+```{r figure3, fig.cap = "(ref:caption-figure3)"}
 knitr::include_graphics("images/Shiny_interface.png")
 ```
 
 Note that all descriptive statistics in the data base are aggregated across congruency conditions. This was a deliberate choice when designing the shiny app. By withholding information about the effect of interest, researches can inspect and select the data based on varying characteristics of the data set (including distributional properties), but remain unbiased as to the most relevant outcome variable. We hope that researchers can then formulate (and perhaps preregister) hypotheses about their reanalysis without much hindsight bias.
 
-```{r figure2, fig.cap = "(ref:caption-figure3)"}
+```{r figure4, fig.cap = "(ref:caption-figure4)"}
 knitr::include_graphics("images/example_descriptive_plot.png")
 ```
 \readme{So far this is a screenshot from the shiny app, might be good to download the actual plot as psf for better resolution?}
@@ -398,7 +398,7 @@ colnames(reldat) <- c("dataset_id", "publication_code", "task_name"
 reldat$gamma <- round(sqrt(reldat$gamma), 3)
 ```
 
-To illustrate how ACDC can be used for reanalysis, we provide an example data analysis assessing the reliability of attentional control tasks. Reliability of tasks like the Stroop task has recently been the target of much debate [e.g., @hedge2018reliability; @Rouder:Haaf:2019a; @Rouder:etal:2023; @mermet2018should; @Draheim:etal:2019]. The current analysis can be understood as an extension of to the analysis of 24 data sets conducted by @Rouder:etal:2023 (see their Table 2).
+To illustrate how ACDC can be used for reanalysis, we provide an example data analysis assessing the reliability of attentional control tasks.^[All analyses were conducted using the following R packages: `r cite_r(file = "r-references.bib")`] Reliability of tasks like the Stroop task has recently been the target of much debate [e.g., @hedge2018reliability; @Rouder:Haaf:2019a; @Rouder:etal:2023; @mermet2018should; @Draheim:etal:2019]. The current analysis can be understood as an extension of to the analysis of 24 data sets conducted by @Rouder:etal:2023 (see their Table 2).
 
 Here, we rely on methodological development by Rouder and colleagues [@Rouder:Haaf:2019a; @Rouder:etal:2023] to survey the reliability of data sets in ACDC. The authors have made suggestions to update the analysis of reliability of individual differences in cognitive tasks based on two simple observations. First, conventional measures of reliability such as the split-half reliability or intra-class correlation are not well suited for cognitive tasks as they are dependent on the number of trials. The reason for this dependency is that observed between-subjects variability of a target effect is a combination of true individual differences and sample noise. If sample noise is large, as is the case in these tasks, reliability can be drastically reduced with a small number of trials compared to a large number of trials. Second, unlike with psychometric tests, the number of trials of cognitive tasks is oftentimes chosen arbitrarily, as a matter of preference by the lab conducting the experiment, making it difficult to compare reliability across labs or across tasks [@Rouder:Haaf:2019a].
 
@@ -514,9 +514,12 @@ Finally, we hope researchers are willing to contribute data from their studies t
 ::: {#refs custom-style="Bibliography"}
 :::
 
+
+
 \newpage
 
-# (APPENDIX) Appendix {.unnumbered}
+# (APPENDIX) Appendix {-}
 
 ```{r child = "appendix.Rmd"}
 ```
+

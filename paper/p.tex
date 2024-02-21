@@ -266,25 +266,25 @@ Publicly available data are required 1. to assess the reproducibility of each in
 \begin{document}
 \maketitle
 
-Making data openly available has been a central demand by reformers since the start of the reproducibility crisis in psychology (Nosek et al., 2015). Fortunately, this demand has lead to a considerable increase in data availability. While only about 25\% of data were shared after request in 2006 (Wicherts, Borsboom, Kats, \& Molenaar, 2006), publicly sharing data upon publication is now more and more the norm. Between 2014 and 2021, the percentage of open data badges awarded at the journal \emph{Psychological Science} drastically increased from 16 to 78 percent (Bauer, 2022). This cultural shift is also increasingly institutionalize: Universities and funding agencies prioritize open data, and some journals even mandate the publication of data with every published article (Sloman, 2015). In addition, technology like the Open Science Framework (OSF) and other data sharing services enable an easy process for researchers, further reducing barriers to share data.
+Making data openly available has been a central demand by reformers since the start of the reproducibility crisis in psychology (Nosek et al., 2015). Fortunately, this demand has lead to a considerable increase in data availability. While only about 25\% of data were shared after request in 2006 (Wicherts, Borsboom, Kats, \& Molenaar, 2006), publicly sharing data upon publication is now more and more the norm. Between 2014 and 2021, the percentage of open data badges awarded at the journal \emph{Psychological Science} drastically increased from 16 to 78 percent (Bauer, 2022). This cultural shift is also increasingly institutionalized: Universities and funding agencies prioritize open data, and some journals even mandate the publication of data with every published article (Sloman, 2015). In addition, technology like the Open Science Framework (OSF) and other data sharing services enable an easy process for researchers, further reducing barriers to share data.
 
 Data sharing serves two goals: 1. To make the scientific process more transparent and enable error and fraud detection, and 2. to make the scientific process more efficient by allowing data reuse for different research projects. Current data sharing efforts, however, seemingly focus overwhelmingly on the first goal (Crüwell et al., 2023; Hardwicke et al., 2021; Obels, Lakens, Coles, Gottfried, \& Green, 2020). We argue that, as a result, current data sharing procedures do not sufficiently meet the second goal. Whenever researchers complying with common data sharing procedures publish an article, they share the corresponding data on the OSF, ideally in a format that allows to redo the exact analyses reported in the article. The OSF repository is linked in the article, and readers may access the data through this link and check whether analysis code and shared data correspond to the results section in the article. From an ethical standpoint, this process seems reasonable: Data shared through this process are often aggregated and cleaned allowing reproduction of results without sharing unnecessary details of participants' behavior. However, one may also argue that this approach is unethical - not sharing raw, unaggregated data that is easy to find and reuse, is a mismanagement of public resources and participants' time.
 
 To enable data reuse, data sharing needs to be approached differently. Consider as an example a researcher (like the first author of the current paper) might me interested in the Stroop task (Stroop, 1935). The Stroop task is popular in cognitive psychology (MacLeod, 1991), so we may assume that many studies include this or similar tasks in their studies. Instead of running yet another Stroop experiment, the researcher decides to use existing data to explore their research question before designing a more targeted study. First, the researcher needs to be able to find open Stroop task data. Currently, they could either search for papers on the topic and check whether open data are provided, or search directly via OSF or other data sharing servers. However, neither of these options is very promising as the vast majority of articles in the literature does not provide raw data, and data sharing servers are not equipped with sufficient search options. Second, data sets need to be accessed easily and in a general, understandable format ready for reuse. There are data sharing formats that provide this structure (Wilkinson et al., 2016), but they are rarely used. Moreover, data are usually shared on the level necessary for the original analysis. In case of the Stroop task, researchers might share the Stroop effect per participant, but for this new analysis the researcher needs trial-level data. So again, there is yet another barrier for data reuse.
 
-We think it is necessary to provide a data sharing solution that solves the current problems and enables easy and efficient data reuse. Here, we propose to gather open data sets from a specific research area in an SQL data base. This process requires little to no work from the authors of the original papers in addition to current data sharing policies, some work from the lab(s) setting up the data base, and little to no work from the researchers who wish to reuse open data. We describe the process and structure we used to set up a data base of attentional control tasks called the Attentional Control Data Collection (ACDC). The data base currently includes 54 data sets from 11 publications from tasks like the Stroop, Simon, and flanker tasks (see Appendix). Subsequently, we show how researchers can contribute their own data to the data base, how the data can be explored using a Shiny app and accessed for reuse using an \texttt{R}-package. In an example analysis, we assess the reliability of the included tasks. This section highlights how an open data base like ACDC can aid meta-analytic efforts as well as methodological innovation.
+We think it is necessary to provide a data sharing solution that solves the current problems and enables easy and efficient data reuse. Here, we propose to gather open data sets from a specific research area in an SQL data base. This process requires little to no work from the authors of the original papers in addition to current data sharing policies, some work from the lab(s) setting up the data base, and little to no work from the researchers who wish to reuse open data. We describe the process and structure we used to set up a data base of attentional control tasks called the Attentional Control Data Collection (ACDC). The data base currently includes 64 data sets from 12 publications from tasks like the Stroop, Simon, and flanker tasks (see Appendix). Subsequently, we show how researchers can contribute their own data to the data base, how the data can be explored using a Shiny app and accessed for reuse using an \texttt{R}-package. In an example analysis, we assess the reliability of the included tasks. This section highlights how an open data base like ACDC can aid meta-analytic efforts as well as methodological innovation.
 
 To provide a little history of the project, the Attentional Control Data Collection was inspired by a collection of open data sets from attentional control tasks by the Perception and Cognition Lab led by J. Rouder (\href{https://github.com/PerceptionCognitionLab/data0}{url}). Colleagues provided the first author and Rouder with data sets for their statistical work (Haaf \& Rouder, 2017; Rouder, Kumar, \& Haaf, 2023). To ensure that data sets were accessible, we gathered them in a github repository. However, there was little structure to the collection, and github repositories are neither stable entities nor are they designed as data storage. Here, we describe how a structured data collection can be achieved and which benefits it provides.
 
 \hypertarget{sqlight-database}{%
 \section{SQLight Database}\label{sqlight-database}}
 
-One of the most standard ways in computer science for storing data is using a Structured query language (SQL) data base. SQL allows to create, access and manipulate a structured data storage. SQL data bases consist of data tables and relations between these tables. There are many flavors of SQL data bases. Here, we decided to use an SQLight data base, a lightweight solution that allows us to store the entire data base in a single file of moderate size that can be downloaded by researchers for data reuse. In this section we describe the structure of the data base and the data currently included. Researchers who simply want to use ACDC may safely skip this section.
+One of the most standard ways in computer science for storing data is using a Structured Query Language (SQL) data base. SQL allows to create, access and manipulate a structured data storage. SQL data bases consist of data tables and relations between these tables. There are many flavors of SQL data bases. Here, we decided to use an SQLight data base, a lightweight solution that allows us to store the entire data base in a single file of moderate size that can be downloaded by researchers for data reuse. In this section we describe the structure of the data base and the data currently included. Researchers who simply want to use ACDC may safely skip this section.
 
 \hypertarget{database-structure}{%
 \subsection{Database Structure}\label{database-structure}}
 
-SQL databases are composed of several data tables consisting of rows and columns. Each row in a data table has a primary key (essentially a row ID) which uniquely identifies it. To connect one table to another table in the database, tables may contain foreign keys which reference a unique row in another data table. In contrast to primary keys, these foreign keys can have duplicate values in the data table, as long as they are unique in their primary table. For instance, a study table may store information about all studies in a database where each row corresponds to a single study. Here the primary key is the study\_id. We can ensure that our database links each study to the publication it was published in by adding a foreign key called publication\_id. This foreign key references the unique identifier of the respective publication in a publication table. Figure \ref{fig:figure1} illustrates the relationship between study table and publication table. While publication\_id links to a single row in the publication table, it can occur several times in the study\_table as there can be several studies per publication.
+SQL databases are composed of several data tables consisting of rows and columns. Each row in a data table has a primary key (essentially a row ID) which uniquely identifies it. To connect one table to another table in the database, tables may contain foreign keys which reference a unique row in another data table. In contrast to primary keys, these foreign keys can have duplicate values in the data table, as long as they are unique in their primary table. For instance, a study table may store information about all studies in a database where each row corresponds to a single study. Here the primary key is the study\_id. We can ensure that our database links each study to the publication it was published in by adding a foreign key called publication\_id to the study table. This foreign key references the unique identifier of the respective publication in a publication table. Figure \ref{fig:figure1} illustrates the relationship between study table and publication table. While publication\_id links to a single row in the publication table, it can occur several times in the study\_table as there can be several studies per publication.
 
 
 
@@ -297,9 +297,9 @@ SQL databases are composed of several data tables consisting of rows and columns
 \caption{Illustrative example of using foreign and primary keys in a SQL database.}\label{fig:figure1}
 \end{figure}
 
-ACDC is adapted to the logic of publications consisting of one or multiple studies which in turn include one or more data sets. The whole structure of ACDC is shown in Figure \ref{fig:figure2}. A \emph{publication table} and a \emph{study table} contain specific information about each publication and study, respectively. Each data set within a study contains trial-level data from an attentional control task within a certain study. \emph{\marginnote{\color{red}Julia} (Re-reading my text I find this previous sentence quite confusing. Shall I just take it out or is it necessary for the reader's understanding?)} If a between-subject manipulation exists, our data base contains a separate data set for each group and each task. For instance, a study in which two groups (younger and older adults) who completed a Simon and a Stroop task would consist of four data sets (i.e., younger-Stroop, younger-Simon, older-Stroop, older-Simon) in the ACDC data base.
+ACDC is adapted to the logic of publications consisting of one or multiple studies which in turn include one or more data sets. The whole structure of ACDC is shown in Figure \ref{fig:figure2}. A \emph{publication table} and a \emph{study table} contain specific information about each publication and study, respectively. Each data set within a study contains trial-level data from an attentional control task within a certain study. \emph{\marginnote{\color{red}Julia} (Re-reading my text I find this previous sentence quite confusing. Shall I just take it out or is it necessary for the reader's understanding?)} If a between-subject manipulation exists, our data base contains a separate data set for each group and each task. For instance, a study in which two groups (younger and older adults) completed a Simon and a Stroop task would consist of four data sets (i.e., younger-Stroop, younger-Simon, older-Stroop, older-Simon) in the ACDC data base.
 
-A \emph{data set table} stores information about each data set, such as sample size, the number of within-participant manipulations, and whether a fixation cross was used. The \emph{observation table} hold the trial-level attentional control task data (including response time and accuracy). The task type of each data set (i.e., Stroop, Simon, Flanker, negative priming, or other) and a description of which stimuli were presented in the task are documented in the \emph{task table}.
+A \emph{data set table} stores information about each data set, such as sample size, the number of within-participant manipulations, and whether a fixation cross was used. The \emph{observation table} holds the trial-level attentional control task data (including response time and accuracy). The task type of each data set (i.e., Stroop, Simon, Flanker, negative priming, or other) and a description of which stimuli were presented in the task are documented in the \emph{task table}.
 
 Note that since the congruency of stimuli, i.e., whether response and stimulus attributes are compatible or incompatible, is part of every attentional control task, it is not considered a separate within-participant manipulation in this database but is per default included in the observation table. Any additional within-participant manipulations are coded in the within ID column of the observation table. Further information about each condition of each data set (such as the percentage of congruent trials, mean response time, and mean accuracy) are recorded in the \emph{within table}.
 
@@ -308,24 +308,24 @@ Note that since the congruency of stimuli, i.e., whether response and stimulus a
 \begin{figure}
 \centering
 \includegraphics{images/db_structure.png}
-\caption{\label{fig:figure2}Structure of the ACDC database. Primary keys are indicated by the key symbol. References between data tables are illustrated through lines connecting columns across data tables. This overview includes the data type of each column: integers (int), numbers with decimal places (float), characters (varchar) and logical true/false values (Booleans).}
+\caption{\label{fig:figure2}Structure of the ACDC database. Primary keys are indicated by the key symbol. References between data tables are illustrated through lines connecting columns across data tables. This overview includes the data type of each column: integers (int), numbers with decimal places (float), characters (varchar) and logical true/false values (booleans).}
 \end{figure}
 
 \hypertarget{included-data}{%
 \subsection{Included Data}\label{included-data}}
 
-Up to the date of submission of the manuscript, 54 data sets from 11 publications are included in the database. The full list of data sets and references is provided in the Appendix. The current database includes data sets from studies with an experimental as well as a correlational focus. The data contain \(10^ 6\) observations collected from 7486 participants.
+Up to the date of submission of the manuscript, 64 data sets from 12 publications are included in the database. The full list of data sets and references is provided in the Appendix. The current database includes data sets from studies with an experimental as well as a correlational focus. The data contain \(10^ 7\) observations collected from 9978 participants.
 
 We did not conduct a systematic search for data sets nor attempted to distribute a wider call for open data. Instead, we included the data sets that were already made available to the lab for previous projects, and added data sets from collaborators bit by bit. This approach was chosen to make the project feasible, and to first set up a working data base before large quantities of data are added.
 
 \hypertarget{contribute}{%
 \subsection{Contribute}\label{contribute}}
 
-We are planning to continuously add attentional control task data to our data base. Researchers who would like to contribute their data to enhance access to their data and increase their chances of citations are welcome to submit their data as well as meta-information about the respective studies using our online form.
+We are planning to continuously add attentional control task data to our data base. Researchers seeking to improve data accessibility and citation potential are invited to submit their data and related study meta-information via our online form.
 
-To be eligible for the ACDC data base the data must have been collected for a published or pre-registered study using an attentional control task. \emph{\marginnote{\color{red}Julia} (Shall we define what we mean by "attentional control" exactly?)} Researchers submitting the data must be allowed to publicly share them in anonymized format. Furthermore, the data files have to contain trial-level information on anonymized subject IDs, reaction time, accuracy (i.e., correct/ incorrect), and a congruency variable indicating whether trials. In case of between-subject manipulations and within-subject manipulations (beside congruency), the files should contain a between and a within variable indicating which condition a trial belonged to.
+To be eligible for the ACDC data base the data must have been collected for a published or pre-registered study using an attentional control task. \emph{\marginnote{\color{red}Julia} (Shall we define what we mean by "attentional control" exactly?)} Researchers submitting the data must be allowed to publicly share them in anonymized format. Furthermore, the data files have to contain trial-level information on anonymized subject IDs, reaction time, accuracy (i.e., correct/ incorrect), and a congruency variable, indicating whether distractor stimuli were congruent, conflicting, or neutral. In case of between-subject manipulations and within-subject manipulations (besides congruency), the files should contain a between and a within variable indicating which condition a trial belonged to.
 
-When submitting data to our online submission form, researchers will be asked to provide meta-information about the publication and study, such as descriptions of the attentional control task and the between and within manipulations. Data files can either be uploaded in openly readable data formats or as a link to a repository, such as on OSF or Github.\\
+When submitting data to our online submission form, researchers will be asked to provide meta-information about the publication and study, such as descriptions of the attentional control task and the between and within manipulations. Data files can either be uploaded in openly readable data formats or as a link to a repository, such as OSF or Github.\\
 \emph{\marginnote{\color{red}Julia} (Shall we include the link to the website here? Or put it in the appendix?)}
 
 \hypertarget{accessing-the-database}{%
@@ -336,18 +336,23 @@ One advantage of SQLite databases is that they are simply a file that can be dow
 \hypertarget{shiny-app}{%
 \subsection{Shiny App}\label{shiny-app}}
 
-The easiest way to inspect the data is using our shiny app provided \href{LINKTOSHINYAPP}{here}. The app allows to inspect all data sets or select data sets with certain specification using the filter box on the left. For example, if a researcher is interested in the flanker task, they may select all flanker data sets for closer inspection. After selection, researchers can choose between an overview of the included data sets, some descriptive statistics, and descriptive plots (see Figure XXX). If they want to further analyze the data, they can download the data via the ``get the data tab'', either directly as \texttt{csv} file or using the provided \texttt{R}-code.
+The easiest way to inspect the data is using our shiny app provided \href{LINKTOSHINYAPP}{here}. The app allows to inspect all data sets or to select data sets with certain specification using the filter box on the left. For example, if a researcher is interested in the flanker task, they may select all flanker data sets for closer inspection. After selection, researchers can choose between an overview of the included data sets, some descriptive statistics, and descriptive plots (see \ref{fig:figure3}). If they want to further analyze the data, they can download the data via the ``get the data'' tab, either directly as \texttt{csv} file or using the provided \texttt{R}-code.
 
-\emph{\marginnote{\color{red}Julia} (TODO: Add screenshot from the shiny app as figure.)}
+\begin{figure}
+\centering
+\includegraphics{images/Shiny_interface.png}
+\caption{\label{fig:figure3}(ref:caption-figure3)}
+\end{figure}
 
 Note that all descriptive statistics in the data base are aggregated across congruency conditions. This was a deliberate choice when designing the shiny app. By withholding information about the effect of interest, researches can inspect and select the data based on varying characteristics of the data set (including distributional properties), but remain unbiased as to the most relevant outcome variable. We hope that researchers can then formulate (and perhaps preregister) hypotheses about their reanalysis without much hindsight bias.
 
-\emph{\marginnote{\color{red}Julia} (TODO: Add example descriptive plots.)}
+\includegraphics{images/example_descriptive_plot.png}
+\emph{\marginnote{\color{red}Julia} (So far this is a screenshot from the shiny app, might be good to download the actual plot as psf for better resolution?)}
 
 \hypertarget{r-package}{%
 \subsection{R-Package}\label{r-package}}
 
-The R-package \texttt{acdcquery} allows a more customized, but still user-friendly interaction with the database without ever writing any SQL code themselves (\textbf{R-acdcquery?}). Using three key functions, \texttt{connect\_to\_db()}, \texttt{add\_argument()}, and \texttt{query\_db()}, the package enables connecting to the database, filtering the data based on any variable, and load specified variables as a data frame into R. The \texttt{add\_argument()} function allows easy specification of filter arguments. Any variable present in any table in the database may be used in the query. Users may also provide multiple arguments and control which of them should be combined using \emph{AND} and which will be combined using \emph{OR} logic. Users may also request any variable present in the database to be returned by the query. The package constructs one SQL query combining all query arguments and the requested variables. This SQL query will join multiple tables together if the user requests variables from multiple tables or the query selection is based on variables present in multiple tables. The query constructed by the package is optimized for speed by automatically discarding unnecessary variables, choosing efficient ways to join tables, and eliminating the need for temporary storage of query results. All arguments and requests are combined simultaneously, allowing optimal use of SQL's base optimization.
+The R-package \texttt{acdcquery} allows a more customized, but still user-friendly interaction with the database without ever writing any SQL code themselves (Lesche, Hoffstadt, \& Haaf, 2023). Using three key functions, \texttt{connect\_to\_db()}, \texttt{add\_argument()}, and \texttt{query\_db()}, the package enables connecting to the database, filtering the data based on any variable, and load specified variables as a data frame into R. The \texttt{add\_argument()} function allows easy specification of filter arguments. Any variable present in any table in the database may be used in the query. Users may also provide multiple arguments and control which of them should be combined using \emph{AND} and which will be combined using \emph{OR} logic. Users may also request any variable present in the database to be returned by the query. The package constructs one SQL query combining all query arguments and the requested variables. This SQL query will join multiple tables together if the user requests variables from multiple tables or the query selection is based on variables present in multiple tables. The query constructed by the package is optimized for speed by automatically discarding unnecessary variables, choosing efficient ways to join tables, and eliminating the need for temporary storage of query results. All arguments and requests are combined simultaneously, allowing optimal use of SQL's base optimization.
 
 \hypertarget{queries-and-output}{%
 \subsection{Queries and Output}\label{queries-and-output}}
@@ -455,7 +460,7 @@ Additional info can be found on the package's \href{https://github.com/SLesche/a
 \hypertarget{reliability-of-acdc-tasks}{%
 \section{Reliability of ACDC Tasks}\label{reliability-of-acdc-tasks}}
 
-To illustrate how ACDC can be used for reanalysis, we provide an example data analysis assessing the reliability of attentional control tasks. Reliability of tasks like the Stroop task has recently been the target of much debate (Draheim, Mashburn, Martin, \& Engle, 2019; e.g., Hedge, Powell, \& Sumner, 2018; Rey-Mermet, Gade, \& Oberauer, 2018; Rouder \& Haaf, 2019; Rouder et al., 2023). The current analysis can be understood as an extension of to the analysis of 24 data sets conducted by Rouder et al. (2023) (see their Table 2).
+To illustrate how ACDC can be used for reanalysis, we provide an example data analysis assessing the reliability of attentional control tasks.\footnote{All analyses were conducted using the following R packages: R (Version 4.2.2; R Core Team, 2022) and the R-packages \emph{acdcquery} (Version 1.0.1; Lesche et al., 2023, 2023), \emph{BayesFactor} (Version 0.9.12.4.5; Morey \& Rouder, 2023), \emph{coda} (Version 0.19.4; Plummer, Best, Cowles, \& Vines, 2006), \emph{DBI} (Version 1.1.3; R Special Interest Group on Databases (R-SIG-DB), Wickham, \& Müller, 2022), \emph{dplyr} (Version 1.1.3; Wickham, François, Henry, Müller, \& Vaughan, 2023), \emph{DT} (Version 0.30; Xie, Cheng, \& Tan, 2023), \emph{forcats} (Version 1.0.0; Wickham, 2023), \emph{ggplot2} (Version 3.4.4; Wickham, 2016), \emph{htmltools} (Version 0.5.6.1; Cheng et al., 2023), \emph{knitr} (Version 1.45; Xie, 2015), \emph{lubridate} (Version 1.9.3; Grolemund \& Wickham, 2011), \emph{MASS} (Version 7.3.58.2; Venables \& Ripley, 2002), \emph{Matrix} (Version 1.6.1.1; Bates, Maechler, \& Jagan, 2023), \emph{MCMCpack} (Version 1.6.3; Martin, Quinn, \& Park, 2011), \emph{papaja} (Version 0.1.2; Aust \& Barth, 2022), \emph{purrr} (Version 1.0.2; Wickham \& Henry, 2023), \emph{readr} (Version 2.1.4; Wickham, Hester, \& Bryan, 2023), \emph{RSQLite} (Version 2.3.2; Müller, Wickham, James, \& Falcon, 2023), \emph{shiny} (Version 1.7.5.1; Chang et al., 2023), \emph{splithalf} (Version 0.8.2; Parsons, 2021), \emph{stringr} (Version 1.5.0; Wickham, 2022), \emph{tibble} (Version 3.2.1; Müller \& Wickham, 2023), \emph{tidyr} (Version 1.3.0; Wickham, Vaughan, \& Girlich, 2023), \emph{tidyverse} (Version 2.0.0; Wickham et al., 2019), and \emph{tinylabels} (Version 0.2.4; Barth, 2022)} Reliability of tasks like the Stroop task has recently been the target of much debate (Draheim, Mashburn, Martin, \& Engle, 2019; e.g., Hedge, Powell, \& Sumner, 2018; Rey-Mermet, Gade, \& Oberauer, 2018; Rouder \& Haaf, 2019; Rouder et al., 2023). The current analysis can be understood as an extension of to the analysis of 24 data sets conducted by Rouder et al. (2023) (see their Table 2).
 
 Here, we rely on methodological development by Rouder and colleagues (Rouder \& Haaf, 2019; Rouder et al., 2023) to survey the reliability of data sets in ACDC. The authors have made suggestions to update the analysis of reliability of individual differences in cognitive tasks based on two simple observations. First, conventional measures of reliability such as the split-half reliability or intra-class correlation are not well suited for cognitive tasks as they are dependent on the number of trials. The reason for this dependency is that observed between-subjects variability of a target effect is a combination of true individual differences and sample noise. If sample noise is large, as is the case in these tasks, reliability can be drastically reduced with a small number of trials compared to a large number of trials. Second, unlike with psychometric tests, the number of trials of cognitive tasks is oftentimes chosen arbitrarily, as a matter of preference by the lab conducting the experiment, making it difficult to compare reliability across labs or across tasks (Rouder \& Haaf, 2019).
 
@@ -470,7 +475,7 @@ Here, we rely on methodological development by Rouder and colleagues (Rouder \& 
 \caption{Reliability estimates as a function of number of trials and participants. A. The signal-to-noise ratio is independent of the (log) number of trials per condition but has a small positive correlation. B. The split-half reliability is highly correlated with the (log) number of trials per condition. C. The signal-to-noise ratio is independent of the (log) number of participants. D. The split-half reliability has a slight negative relationship with (log) number of participants due to the fact that large-participants studies commonly use a smaller number of trials per task.}\label{fig:reliability-fig}
 \end{figure}
 
-The relationship between common reliability estimates and trial number is illustrated in Figure \ref{fig:reliability-fig}B. The figure shows the split-half reliability coefficients for all ACDC data sets as a function of the (log) number of trials per condition. The correlation between split-half-reliability and log trial number is \(r = 0.72\), 95\% HDI \([0.59, 0.84]\), \(\mathrm{BF}_{\textrm{10}} = 2.52 \times 10^{8}\). Figure \ref{fig:reliability-fig}D shows the relationship between split-half reliability coefficients and the (log) number of participants. Theoretically, there should be no relationship. However, for purely practical reasons, many studies with a large number of participants have in turn a low number of trials. Therefore, empirically, we do find a negative relationship between the log number of participants and split-half reliability, \(r = -0.31\), 95\% HDI \([-0.54, -0.08]\), \(\mathrm{BF}_{\textrm{10}} = 6.15\).
+The relationship between common reliability estimates and trial number is illustrated in Figure \ref{fig:reliability-fig}B. The figure shows the split-half reliability coefficients for all ACDC data sets as a function of the (log) number of trials per condition. The correlation between split-half-reliability and log trial number is \(r = 0.65\), 95\% HDI \([0.50, 0.78]\), \(\mathrm{BF}_{\textrm{10}} = 2.62 \times 10^{7}\). Figure \ref{fig:reliability-fig}D shows the relationship between split-half reliability coefficients and the (log) number of participants. Theoretically, there should be no relationship. However, for purely practical reasons, many studies with a large number of participants have in turn a low number of trials. Therefore, empirically, we do find a negative relationship between the log number of participants and split-half reliability, \(r = -0.26\), 95\% HDI \([-0.47, -0.03]\), \(\mathrm{BF}_{\textrm{10}} = 3.41\).
 
 To counter the lack of comparability of conventional reliability measures, Rouder et al. (2023) proposed a measure of reliability that is derived from hierarchical modeling of the trial-level data. This modeling approach allows to separately estimate true individual variability and sample noise. As a result, we may determine how much true variability there is relative to variability due to sample noise. This ratio, termed \(\gamma^2\), can be expressed as
 
@@ -489,7 +494,7 @@ where the numerator is the true variance of individuals' effects estimated by th
 \caption{Signal-to-noise ratio and reliability. A. Signal-to-noise ratio \(\gamma\) for all data sets ordered from smallest to largest. B. Reliability as a function of number of trials for all data sets in ACDC. The lines represent different signal-to-noise ratios. For a fixed \(\gamma\), the relationship between the number of trials per condition and the reliability is deterministic.}\label{fig:line-plot}
 \end{figure}
 
-Figure \ref{fig:line-plot}A. shows the signal-to-noise ratio \(\gamma\) for all data sets ordered from smallest to largest. The median of \(\gamma\) is \(Med = 0.12\) corresponding to a ratio of roughly 1 to 8.5. That is, for every unit of signal there are 8.5 units of noise. Using the ACDC data sets, we can also assess the independence of \(\gamma\) from the number of trials and participants. Figure \ref{fig:line-plot}A and C show these relationships. While there is no correlation between the log number of participants and \(\gamma\), \(r = 0.00\), 95\% HDI \([-0.24, 0.26]\), \(\mathrm{BF}_{\textrm{10}} = 0.31\), there is evidence for a positive relationship between the log number of trials and \(\gamma\), \(r = 0.32\), 95\% HDI \([0.08, 0.53]\), \(\mathrm{BF}_{\textrm{10}} = 7.44\). However, we suspect that this dependence is in part due to the large number of data sets from the ManyLabs study by Ebersole et al. (2016) that only had 30 trials per participant and condition rendering them extremely unreliable. If these data sets are removed from the analysis, the Bayes factor between models with and without correlation coefficient is inconclusive, \(r = 0.25\), 95\% HDI \([-0.05, 0.49]\), \(\mathrm{BF}_{\textrm{10}} = 1.41\). For the same data selection, the correlation between split-half reliability and number of trials is somewhat reduced but remains high, \(r = 0.65\), 95\% HDI \([0.47, 0.82]\), \(\mathrm{BF}_{\textrm{10}} = 39,579.34\).
+Figure \ref{fig:line-plot}A. shows the signal-to-noise ratio \(\gamma\) for all data sets ordered from smallest to largest. The median of \(\gamma\) is \(Med = 0.12\) corresponding to a ratio of roughly 1 to 8.5. That is, for every unit of signal there are 8.5 units of noise. Using the ACDC data sets, we can also assess the independence of \(\gamma\) from the number of trials and participants. Figure \ref{fig:line-plot}A and C show these relationships. While there is no correlation between the log number of participants and \(\gamma\), \(r = -0.12\), 95\% HDI \([-0.32, 0.13]\), \(\mathrm{BF}_{\textrm{10}} = 0.44\), there is evidence for a positive relationship between the log number of trials and \(\gamma\), \(r = 0.12\), 95\% HDI \([-0.09, 0.36]\), \(\mathrm{BF}_{\textrm{10}} = 0.49\). However, we suspect that this dependence is in part due to the large number of data sets from the ManyLabs study by Ebersole et al. (2016) that only had 30 trials per participant and condition rendering them extremely unreliable. If these data sets are removed from the analysis, the Bayes factor between models with and without correlation coefficient is inconclusive, \(r = 0.03\), 95\% HDI \([-0.25, 0.28]\), \(\mathrm{BF}_{\textrm{10}} = 0.33\). For the same data selection, the correlation between split-half reliability and number of trials is somewhat reduced but remains high, \(r = 0.55\), 95\% HDI \([0.36, 0.72]\), \(\mathrm{BF}_{\textrm{10}} = 5,332.71\).
 
 Overall, the assessment of reliability of the currently used attentional control tasks shows mixed results. Signal-to-noise ratios of these tasks tend to be around 0.1-0.2, highlighting overwhelming levels of trial-by-trial variability compared to true individual variability of congruency effects. As shown in Figure \ref{fig:line-plot}B, here is no task type standing out with consistently higher or lower reliability. That is, there is no argument based on reliability that would make us prefer any task over another. However, the analysis can still help us plan future studies better. Figure \ref{fig:line-plot}B shows the functional relationship between the reliability coefficient and the number of trial through the signal-to-noise ratio. For tasks with a signal-to-noise ratio around 0.2, around 100 trials per condition and person are needed for acceptable levels of reliability. For tasks with a signal-to-noise ratio around 0.1, roughly 500 trials are needed. We also see that all studies with large numbers of trials have acceptable levels of reliability. These insights match a recent finding by Lee et al. (2023). The authors had participants go through almost 4000 trials per condition per task to assess how many trials are needed for precise estimates of individual effects. They conclude that around 400 trials per person and condition (or 800 in total) are needed for stable estimates of individual effects. From our current analysis using a larger number of studies and participants, we arrive at the same conclusion.
 
@@ -498,7 +503,7 @@ Overall, the assessment of reliability of the currently used attentional control
 
 Open data policies are required 1. to understand how many results in the literature are reproducible, and 2. to promote the reuse of data for a more efficient use of participants' time and public resources. While repositories like the Open Science Framework are well suited for the first goal, they do at this point not sufficiently address the latter goal. We argue that structured collections of open data are much more useful as they allow a larger community of researchers an easy access to a large body of data. Here, we introduced the Attentional Control Data Collection, an SQL data base for attentional control experiments. The data base is easy to access using a shiny app and an \texttt{R}-package, and is built to grow when researchers are willing to contribute their data in the future. We illustrate the structure of the data base, how it can be accessed, and which type of analyses can be conducted with such a large data collection.
 
-The data base approach is related to meta-analysis, but different in two crucial aspects. One major disadvantage of the data base approach is that it does not represent a systematic overview, or even a representative sample of studies. To remedy this issue, researchers planning to develop an open data collection could conduct a systematic review of the literature including \emph{all} studies with open data that meet their criteria in the data base. However, as the field only recently started sharing date, older studies would still be systematically excluded. One major advantage of the data base approach over meta-analysis is that it opens the path to much more sophisticated research questions and analysis. As the data base provides raw, unfiltered, trial-level data, we may use it for studying questions far beyond congruency effects. Potential analyses target sequential effects, computational modeling, or even methodological questions like the effect of online versus in-lab data collection on data quality.
+The data base approach is related to meta-analysis, but different in two crucial aspects. One major disadvantage of the data base approach is that it does not represent a systematic overview, or even a representative sample of studies. To remedy this issue, researchers planning to develop an open data collection could conduct a systematic review of the literature including \emph{all} studies with open data that meet their criteria in the data base. However, as the field only recently started sharing data, older studies would still be systematically excluded. One major advantage of the data base approach over meta-analysis is that it opens the path to much more sophisticated research questions and analysis. As the data base provides raw, unfiltered, trial-level data, we may use it for studying questions far beyond congruency effects. Potential analyses target sequential effects, computational modeling, or even methodological questions like the effect of online versus in-lab data collection on data quality.
 
 Finally, we hope researchers are willing to contribute data from their studies to ACDC or other open data collections. If they already share their data on the OSF, we see no disadvantage in also contributing to more structured data collection. In the best case, their data will contribute to advancing the field without requiring unnecessary additional data collection, leading to faster insights based on more data. This might also have benefits for the researchers themselves as anyone using their data will also cite the original paper.
 
@@ -509,8 +514,23 @@ Finally, we hope researchers are willing to contribute data from their studies t
 
 \hypertarget{refs}{}
 \begin{CSLReferences}{1}{0}
+\leavevmode\vadjust pre{\hypertarget{ref-R-papaja}{}}%
+Aust, F., \& Barth, M. (2022). \emph{{papaja}: {Prepare} reproducible {APA} journal articles with {R Markdown}}. Retrieved from \url{https://github.com/crsh/papaja}
+
+\leavevmode\vadjust pre{\hypertarget{ref-R-tinylabels}{}}%
+Barth, M. (2022). \emph{{tinylabels}: Lightweight variable labels}. Retrieved from \url{https://cran.r-project.org/package=tinylabels}
+
+\leavevmode\vadjust pre{\hypertarget{ref-R-Matrix}{}}%
+Bates, D., Maechler, M., \& Jagan, M. (2023). \emph{Matrix: Sparse and dense matrix classes and methods}. Retrieved from \url{https://CRAN.R-project.org/package=Matrix}
+
 \leavevmode\vadjust pre{\hypertarget{ref-Bauer:2022}{}}%
 Bauer, P. J. (2022). Psychological science stepping up a level. \emph{Psychological Science}, \emph{33}(2), 179--183.
+
+\leavevmode\vadjust pre{\hypertarget{ref-R-shiny}{}}%
+Chang, W., Cheng, J., Allaire, J., Sievert, C., Schloerke, B., Xie, Y., \ldots{} Borges, B. (2023). \emph{Shiny: Web application framework for r}. Retrieved from \url{https://CRAN.R-project.org/package=shiny}
+
+\leavevmode\vadjust pre{\hypertarget{ref-R-htmltools}{}}%
+Cheng, J., Sievert, C., Schloerke, B., Chang, W., Xie, Y., \& Allen, J. (2023). \emph{Htmltools: Tools for HTML}. Retrieved from \url{https://CRAN.R-project.org/package=htmltools}
 
 \leavevmode\vadjust pre{\hypertarget{ref-chetverikov2017blame}{}}%
 Chetverikov, A., Iamschinina, P., Begler, A., Ivanchei, I., Filippova, M., \& Kuvaldina, M. (2017). Blame everyone: Error-related devaluation in eriksen flanker task. \emph{Acta Psychologica}, \emph{180}, 155--159.
@@ -527,6 +547,9 @@ Ebersole, C. R., Atherton, O. E., Belanger, A. L., Skulborstad, H. M., Allen, J.
 \leavevmode\vadjust pre{\hypertarget{ref-enkavi2019large}{}}%
 Enkavi, A. Z., Eisenberg, I. W., Bissett, P. G., Mazza, G. L., MacKinnon, D. P., Marsch, L. A., \& Poldrack, R. A. (2019). Large-scale analysis of test--retest reliabilities of self-regulation measures. \emph{Proceedings of the National Academy of Sciences}, \emph{116}(12), 5472--5477.
 
+\leavevmode\vadjust pre{\hypertarget{ref-R-lubridate}{}}%
+Grolemund, G., \& Wickham, H. (2011). Dates and times made easy with {lubridate}. \emph{Journal of Statistical Software}, \emph{40}(3), 1--25. Retrieved from \url{https://www.jstatsoft.org/v40/i03/}
+
 \leavevmode\vadjust pre{\hypertarget{ref-Haaf:Rouder:2017}{}}%
 Haaf, J. M., \& Rouder, J. N. (2017). Developing constraint in {B}ayesian mixed models. \emph{Psychological Methods}, \emph{22}(4), 779--798.
 
@@ -542,11 +565,26 @@ Kucina, T., Wells, L., Lewis, I., Salas, K. de, Kohl, A., Palmer, M. A., \ldots{
 \leavevmode\vadjust pre{\hypertarget{ref-Lee:etal:2023}{}}%
 Lee, H. J., Smith, D. M., Hauenstein, C., Dworetsky, A., Kraus, B. T., Dorn, M., \ldots{} Gratton, C. (2023). Precise individual measures of inhibitory control.
 
+\leavevmode\vadjust pre{\hypertarget{ref-R-acdcquery}{}}%
+Lesche, S., Hoffstadt, M., \& Haaf, J. M. (2023). \emph{Acdcquery: Query the attentional control data collection}. Retrieved from \url{https://CRAN.R-project.org/package=acdcquery}
+
 \leavevmode\vadjust pre{\hypertarget{ref-loeffler2022common}{}}%
 Löffler, C., Frischkorn, G. T., Hagemann, D., Sadus, K., \& Schubert, A.-L. (2022). The common factor of executive functions measures nothing but speed of information uptake.
 
 \leavevmode\vadjust pre{\hypertarget{ref-MacLeod:1991}{}}%
 MacLeod, C. (1991). Half a century of research on the {S}troop effect: {A}n integrative review. \emph{Psychological Bulletin}, \emph{109}, 163--203.
+
+\leavevmode\vadjust pre{\hypertarget{ref-R-MCMCpack}{}}%
+Martin, A. D., Quinn, K. M., \& Park, J. H. (2011). {MCMCpack}: Markov chain monte carlo in {R}. \emph{Journal of Statistical Software}, \emph{42}(9), 22. doi:\href{https://doi.org/10.18637/jss.v042.i09}{10.18637/jss.v042.i09}
+
+\leavevmode\vadjust pre{\hypertarget{ref-R-BayesFactor}{}}%
+Morey, R. D., \& Rouder, J. N. (2023). \emph{BayesFactor: Computation of bayes factors for common designs}. Retrieved from \url{https://CRAN.R-project.org/package=BayesFactor}
+
+\leavevmode\vadjust pre{\hypertarget{ref-R-tibble}{}}%
+Müller, K., \& Wickham, H. (2023). \emph{Tibble: Simple data frames}. Retrieved from \url{https://CRAN.R-project.org/package=tibble}
+
+\leavevmode\vadjust pre{\hypertarget{ref-R-RSQLite}{}}%
+Müller, K., Wickham, H., James, D. A., \& Falcon, S. (2023). \emph{RSQLite: SQLite interface for r}. Retrieved from \url{https://CRAN.R-project.org/package=RSQLite}
 
 \leavevmode\vadjust pre{\hypertarget{ref-Nosek:etal:2015}{}}%
 Nosek, B. A., Alter, G., Banks, G. C., Borsboom, D., Bowman, S. D., Breckler, S. J., \ldots{} Yarkoni, T. (2015). Promoting an open research culture. \emph{Science}, \emph{348}(6242), 1422--1425.
@@ -554,8 +592,20 @@ Nosek, B. A., Alter, G., Banks, G. C., Borsboom, D., Bowman, S. D., Breckler, S.
 \leavevmode\vadjust pre{\hypertarget{ref-Obels:etal:2020}{}}%
 Obels, P., Lakens, D., Coles, N. A., Gottfried, J., \& Green, S. A. (2020). Analysis of open data and computational reproducibility in registered reports in psychology. \emph{Advances in Methods and Practices in Psychological Science}, \emph{3}(2), 229--237.
 
+\leavevmode\vadjust pre{\hypertarget{ref-R-splithalf}{}}%
+Parsons, S. (2021). Splithalf; robust estimates of split half reliability. Retrieved from \url{https://doi.org/10.21105/joss.03041}
+
+\leavevmode\vadjust pre{\hypertarget{ref-R-coda}{}}%
+Plummer, M., Best, N., Cowles, K., \& Vines, K. (2006). CODA: Convergence diagnosis and output analysis for MCMC. \emph{R News}, \emph{6}(1), 7--11. Retrieved from \url{https://journal.r-project.org/archive/}
+
 \leavevmode\vadjust pre{\hypertarget{ref-pratte2010exploring}{}}%
 Pratte, M. S., Rouder, J. N., Morey, R. D., \& Feng, C. (2010). Exploring the differences in distributional properties between stroop and simon effects using delta plots. \emph{Attention, Perception, \& Psychophysics}, \emph{72}, 2013--2025.
+
+\leavevmode\vadjust pre{\hypertarget{ref-R-base}{}}%
+R Core Team. (2022). \emph{R: A language and environment for statistical computing}. Vienna, Austria: R Foundation for Statistical Computing. Retrieved from \url{https://www.R-project.org/}
+
+\leavevmode\vadjust pre{\hypertarget{ref-R-DBI}{}}%
+R Special Interest Group on Databases (R-SIG-DB), Wickham, H., \& Müller, K. (2022). \emph{DBI: R database interface}. Retrieved from \url{https://CRAN.R-project.org/package=DBI}
 
 \leavevmode\vadjust pre{\hypertarget{ref-mermet2018should}{}}%
 Rey-Mermet, A., Gade, M., \& Oberauer, K. (2018). Should we stop thinking about inhibition? Searching for individual and age differences in inhibition ability. \emph{Journal of Experimental Psychology: Learning, Memory, and Cognition}, \emph{44}(4), 501.
@@ -578,14 +628,50 @@ Stroop, J. R. (1935). Studies of interference in serial verbal reactions. \emph{
 \leavevmode\vadjust pre{\hypertarget{ref-tang2023dual}{}}%
 Tang, R., Bugg, J. M., Snijder, J.-P., Conway, A. R., \& Braver, T. S. (2023). The dual mechanisms of cognitive control (DMCC) project: Validation of an online behavioural task battery. \emph{Quarterly Journal of Experimental Psychology}, \emph{76}(7), 1457--1480.
 
+\leavevmode\vadjust pre{\hypertarget{ref-R-MASS}{}}%
+Venables, W. N., \& Ripley, B. D. (2002). \emph{Modern applied statistics with s} (Fourth.). New York: Springer. Retrieved from \url{https://www.stats.ox.ac.uk/pub/MASS4/}
+
 \leavevmode\vadjust pre{\hypertarget{ref-vonbastian2016evidence}{}}%
 Von Bastian, C. C., Souza, A. S., \& Gade, M. (2016). No evidence for bilingual cognitive advantages: A test of four hypotheses. \emph{Journal of Experimental Psychology: General}, \emph{145}(2), 246.
+
+\leavevmode\vadjust pre{\hypertarget{ref-whitehead2019cognitive}{}}%
+Whitehead, P. S., Brewer, G. A., \& Blais, C. (2019). Are cognitive control processes reliable? \emph{Journal of Experimental Psychology: Learning, Memory, and Cognition}, \emph{45}, 765--778.
 
 \leavevmode\vadjust pre{\hypertarget{ref-Wicherts:etal:2006}{}}%
 Wicherts, J. M., Borsboom, D., Kats, J., \& Molenaar, D. (2006). The poor availability of psychological research data for reanalysis. \emph{American Psychologist}, \emph{61}(7), 726--728. Retrieved from \url{http://wicherts.socsci.uva.nl/datasharing.pdf}
 
+\leavevmode\vadjust pre{\hypertarget{ref-R-ggplot2}{}}%
+Wickham, H. (2016). \emph{ggplot2: Elegant graphics for data analysis}. Springer-Verlag New York. Retrieved from \url{https://ggplot2.tidyverse.org}
+
+\leavevmode\vadjust pre{\hypertarget{ref-R-stringr}{}}%
+Wickham, H. (2022). \emph{Stringr: Simple, consistent wrappers for common string operations}. Retrieved from \url{https://CRAN.R-project.org/package=stringr}
+
+\leavevmode\vadjust pre{\hypertarget{ref-R-forcats}{}}%
+Wickham, H. (2023). \emph{Forcats: Tools for working with categorical variables (factors)}. Retrieved from \url{https://CRAN.R-project.org/package=forcats}
+
+\leavevmode\vadjust pre{\hypertarget{ref-R-tidyverse}{}}%
+Wickham, H., Averick, M., Bryan, J., Chang, W., McGowan, L. D., François, R., \ldots{} Yutani, H. (2019). Welcome to the {tidyverse}. \emph{Journal of Open Source Software}, \emph{4}(43), 1686. doi:\href{https://doi.org/10.21105/joss.01686}{10.21105/joss.01686}
+
+\leavevmode\vadjust pre{\hypertarget{ref-R-dplyr}{}}%
+Wickham, H., François, R., Henry, L., Müller, K., \& Vaughan, D. (2023). \emph{Dplyr: A grammar of data manipulation}. Retrieved from \url{https://CRAN.R-project.org/package=dplyr}
+
+\leavevmode\vadjust pre{\hypertarget{ref-R-purrr}{}}%
+Wickham, H., \& Henry, L. (2023). \emph{Purrr: Functional programming tools}. Retrieved from \url{https://CRAN.R-project.org/package=purrr}
+
+\leavevmode\vadjust pre{\hypertarget{ref-R-readr}{}}%
+Wickham, H., Hester, J., \& Bryan, J. (2023). \emph{Readr: Read rectangular text data}. Retrieved from \url{https://CRAN.R-project.org/package=readr}
+
+\leavevmode\vadjust pre{\hypertarget{ref-R-tidyr}{}}%
+Wickham, H., Vaughan, D., \& Girlich, M. (2023). \emph{Tidyr: Tidy messy data}. Retrieved from \url{https://CRAN.R-project.org/package=tidyr}
+
 \leavevmode\vadjust pre{\hypertarget{ref-Wilkinson:etal:2016}{}}%
 Wilkinson, M. D., Dumontier, M., Aalbersberg, Ij. J., Appleton, G., Axton, M., Baak, A., et al.others. (2016). The FAIR guiding principles for scientific data management and stewardship. \emph{Scientific Data}, \emph{3}(1), 1--9.
+
+\leavevmode\vadjust pre{\hypertarget{ref-R-knitr}{}}%
+Xie, Y. (2015). \emph{Dynamic documents with {R} and knitr} (2nd ed.). Boca Raton, Florida: Chapman; Hall/CRC. Retrieved from \url{https://yihui.org/knitr/}
+
+\leavevmode\vadjust pre{\hypertarget{ref-R-DT}{}}%
+Xie, Y., Cheng, J., \& Tan, X. (2023). \emph{DT: A wrapper of the JavaScript library 'DataTables'}. Retrieved from \url{https://CRAN.R-project.org/package=DT}
 
 \end{CSLReferences}
 
@@ -595,10 +681,11 @@ Wilkinson, M. D., Dumontier, M., Aalbersberg, Ij. J., Appleton, G., Axton, M., B
 \appendix}
 
 
-\hypertarget{appendix}{%
-\subsection{Appendix}\label{appendix}}
+\hypertarget{all-acdc-data-sets}{%
+\section{All ACDC data sets}\label{all-acdc-data-sets}}
 
-Table \ref{tab:taball} contains all data sets that are part of the Attentional Control Data Collection at the time of manuscript submission.The table is ordered by dataset ID and study, and contains the number of trials per condition and participant, and the number of participants. Additionally, three reliability estimates are included: The signal-to-noise ratio, \(\gamma\), the split-half reliability for 2000 random splits, \(\rho\), and the corrected split-half reliability using the Spearman-Brown formula, \(\rho^*\).
+Table \ref{tab:taball} contains all data sets that are part of the Attentional Control Data Collection at the time of manuscript submission. The table is ordered by dataset ID and study, and contains the number of trials per condition and participant, and the number of participants. Additionally, three reliability estimates are included: The signal-to-noise ratio, \(\gamma\), the split-half reliability for 2000 random splits, \(\rho\), and the corrected split-half reliability using the Spearman-Brown formula, \(\rho^*\).
+
 
 
 
@@ -637,68 +724,79 @@ ID & Task name & I & K & $\gamma$ & $\rho$ & $\rho^*$\\
 Chetverikov et al. (2017) &  &  &  &  &  & \\
 \ \ \ 1 & flanker & 58 & 100 & 0.191 & 0.35 & 0.51\\
 Enkavi et al. (2019) &  &  &  &  &  & \\
-\ \ \ 2 & stroop & 523 & 73 & 0.257 & 0.52 & 0.68\\
-\ \ \ 3 & simon & 522 & 73 & 0.110 & 0.17 & 0.29\\
+\ \ \ 2 & stroop & 523 & 73 & 0.276 & 0.50 & 0.67\\
+\ \ \ 3 & simon & 522 & 73 & 0.116 & 0.16 & 0.28\\
+\ \ \ 4 & other & 516 & 131 & 0.076 & 0.02 & 0.04\\
 Hedge et al. (2018) &  &  &  &  &  & \\
-\ \ \ 4 & stroop & 47 & 439 & 0.107 & 0.56 & 0.72\\
-\ \ \ 5 & flanker & 47 & 426 & 0.145 & 0.66 & 0.80\\
-\ \ \ 6 & stroop & 60 & 428 & 0.176 & 0.74 & 0.85\\
-\ \ \ 7 & flanker & 60 & 414 & 0.162 & 0.61 & 0.75\\
+\ \ \ 5 & stroop & 47 & 439 & 0.107 & 0.56 & 0.72\\
+\ \ \ 6 & flanker & 47 & 426 & 0.146 & 0.67 & 0.80\\
+\ \ \ 7 & stroop & 60 & 428 & 0.175 & 0.74 & 0.85\\
+\ \ \ 8 & flanker & 60 & 414 & 0.162 & 0.61 & 0.75\\
 Kucina et al. (2023) &  &  &  &  &  & \\
-\ \ \ 8 & other & 31 & 205 & 0.124 & 0.49 & 0.65\\
-\ \ \ 9 & other & 30 & 205 & 0.132 & 0.53 & 0.68\\
-\ \ \ 10 & other & 31 & 207 & 0.319 & 0.86 & 0.92\\
-\ \ \ 11 & flanker & 33 & 198 & 0.225 & 0.64 & 0.77\\
-\ \ \ 12 & other & 30 & 210 & 0.240 & 0.77 & 0.87\\
+\ \ \ 9 & other & 31 & 163 & 0.227 & 0.69 & 0.82\\
+\ \ \ 10 & other & 30 & 205 & 0.133 & 0.52 & 0.68\\
+\ \ \ 11 & other & 31 & 207 & 0.321 & 0.86 & 0.92\\
+\ \ \ 12 & flanker & 33 & 198 & 0.225 & 0.64 & 0.77\\
+\ \ \ 13 & other & 30 & 210 & 0.240 & 0.77 & 0.87\\
 Löffler, Frischkorn, Hagemann, Sadus, and Schubert (2022) &  &  &  &  &  & \\
-\ \ \ 13 & stroop & 148 & 98 & 0.290 & 0.74 & 0.85\\
-\ \ \ 14 & flanker & 147 & 93 & 0.213 & 0.50 & 0.67\\
-\ \ \ 15 & negative priming & 142 & 94 & 0.095 & 0.08 & 0.13\\
+\ \ \ 14 & stroop & 148 & 98 & 0.290 & 0.74 & 0.85\\
+\ \ \ 15 & flanker & 147 & 93 & 0.211 & 0.50 & 0.67\\
+\ \ \ 16 & negative priming & 142 & 94 & 0.095 & 0.08 & 0.13\\
 Ebersole et al. (2016) &  &  &  &  &  & \\
-\ \ \ 16 & stroop & 160 & 30 & 0.090 & 0.07 & 0.13\\
-\ \ \ 17 & stroop & 288 & 31 & 0.108 & 0.07 & 0.13\\
-\ \ \ 18 & stroop & 136 & 31 & 0.129 & 0.16 & 0.27\\
-\ \ \ 19 & stroop & 195 & 30 & 0.144 & 0.18 & 0.30\\
-\ \ \ 20 & stroop & 93 & 30 & 0.081 & -0.07 & -0.13\\
-\ \ \ 21 & stroop & 117 & 30 & 0.162 & 0.24 & 0.38\\
-\ \ \ 22 & stroop & 127 & 31 & 0.115 & 0.10 & 0.18\\
-\ \ \ 23 & stroop & 142 & 30 & 0.104 & 0.06 & 0.12\\
-\ \ \ 24 & stroop & 131 & 31 & 0.127 & 0.15 & 0.25\\
-\ \ \ 25 & stroop & 82 & 30 & 0.090 & -0.03 & -0.05\\
-\ \ \ 26 & stroop & 98 & 30 & 0.094 & 0.02 & 0.04\\
-\ \ \ 27 & stroop & 119 & 31 & 0.106 & 0.02 & 0.03\\
-\ \ \ 28 & stroop & 100 & 30 & 0.104 & 0.14 & 0.24\\
-\ \ \ 29 & stroop & 120 & 30 & 0.113 & 0.10 & 0.18\\
-\ \ \ 30 & stroop & 613 & 30 & 0.185 & 0.16 & 0.28\\
-\ \ \ 31 & stroop & 96 & 30 & 0.111 & 0.11 & 0.20\\
-\ \ \ 32 & stroop & 178 & 30 & 0.138 & 0.16 & 0.26\\
-\ \ \ 33 & stroop & 84 & 31 & 0.086 & -0.07 & -0.13\\
-\ \ \ 34 & stroop & 45 & 31 & 0.100 & 0.07 & 0.12\\
-\ \ \ 35 & stroop & 250 & 30 & 0.136 & 0.15 & 0.25\\
-\ \ \ 36 & stroop & 129 & 30 & 0.095 & 0.01 & 0.02\\
+\ \ \ 17 & stroop & 160 & 30 & 0.096 & 0.07 & 0.13\\
+\ \ \ 18 & stroop & 288 & 31 & 0.106 & 0.07 & 0.12\\
+\ \ \ 19 & stroop & 136 & 31 & 0.133 & 0.15 & 0.26\\
+\ \ \ 20 & stroop & 195 & 30 & 0.140 & 0.18 & 0.30\\
+\ \ \ 21 & stroop & 93 & 30 & 0.080 & -0.07 & -0.13\\
+\ \ \ 22 & stroop & 117 & 30 & 0.147 & 0.24 & 0.38\\
+\ \ \ 23 & stroop & 127 & 31 & 0.119 & 0.10 & 0.18\\
+\ \ \ 24 & stroop & 142 & 30 & 0.104 & 0.07 & 0.12\\
+\ \ \ 25 & stroop & 131 & 31 & 0.127 & 0.15 & 0.25\\
+\ \ \ 26 & stroop & 82 & 30 & 0.089 & -0.03 & -0.05\\
+\ \ \ 27 & stroop & 98 & 30 & 0.094 & 0.03 & 0.05\\
+\ \ \ 28 & stroop & 119 & 31 & 0.098 & 0.02 & 0.03\\
+\ \ \ 29 & stroop & 100 & 30 & 0.105 & 0.14 & 0.24\\
+\ \ \ 30 & stroop & 120 & 30 & 0.111 & 0.11 & 0.18\\
+\ \ \ 31 & stroop & 613 & 30 & 0.186 & 0.16 & 0.28\\
+\ \ \ 32 & stroop & 96 & 30 & 0.109 & 0.12 & 0.20\\
+\ \ \ 33 & stroop & 178 & 30 & 0.138 & 0.16 & 0.27\\
+\ \ \ 34 & stroop & 84 & 31 & 0.087 & -0.08 & -0.13\\
+\ \ \ 35 & stroop & 45 & 31 & 0.100 & 0.07 & 0.12\\
+\ \ \ 36 & stroop & 250 & 30 & 0.134 & 0.14 & 0.25\\
+\ \ \ 37 & stroop & 129 & 30 & 0.089 & 0.01 & 0.03\\
 Pratte, Rouder, Morey, and Feng (2010) &  &  &  &  &  & \\
-\ \ \ 37 & simon & 38 & 245 & 0.093 & 0.33 & 0.48\\
-\ \ \ 38 & stroop & 38 & 160 & 0.168 & 0.57 & 0.72\\
-\ \ \ 39 & simon & 38 & 174 & 0.117 & 0.40 & 0.56\\
-\ \ \ 40 & stroop & 38 & 178 & 0.096 & 0.22 & 0.34\\
+\ \ \ 38 & simon & 38 & 245 & 0.095 & 0.33 & 0.48\\
+\ \ \ 39 & stroop & 38 & 160 & 0.171 & 0.57 & 0.72\\
+\ \ \ 40 & simon & 38 & 174 & 0.117 & 0.39 & 0.55\\
+\ \ \ 41 & stroop & 38 & 178 & 0.093 & 0.21 & 0.33\\
 Rey-Mermet et al. (2018) &  &  &  &  &  & \\
-\ \ \ 41 & stroop & 129 & 102 & 0.123 & 0.26 & 0.41\\
-\ \ \ 42 & stroop & 129 & 100 & 0.132 & 0.29 & 0.45\\
-\ \ \ 43 & flanker & 129 & 102 & 0.100 & 0.10 & 0.17\\
-\ \ \ 44 & flanker & 129 & 101 & 0.078 & 0.05 & 0.09\\
-\ \ \ 45 & stroop & 155 & 101 & 0.307 & 0.68 & 0.81\\
-\ \ \ 46 & stroop & 155 & 100 & 0.076 & 0.07 & 0.12\\
-\ \ \ 47 & flanker & 158 & 103 & 0.363 & 0.76 & 0.86\\
-\ \ \ 48 & flanker & 157 & 103 & 0.073 & 0.03 & 0.05\\
+\ \ \ 42 & stroop & 129 & 102 & 0.129 & 0.27 & 0.42\\
+\ \ \ 43 & stroop & 129 & 100 & 0.142 & 0.32 & 0.48\\
+\ \ \ 44 & flanker & 129 & 102 & 0.112 & 0.15 & 0.25\\
+\ \ \ 45 & flanker & 129 & 101 & 0.083 & 0.05 & 0.09\\
+\ \ \ 46 & stroop & 155 & 101 & 0.343 & 0.72 & 0.83\\
+\ \ \ 47 & stroop & 155 & 100 & 0.085 & 0.07 & 0.13\\
+\ \ \ 48 & flanker & 158 & 103 & 0.423 & 0.79 & 0.88\\
+\ \ \ 49 & flanker & 157 & 103 & 0.080 & 0.05 & 0.10\\
 Stahl et al. (2014) &  &  &  &  &  & \\
-\ \ \ 49 & stroop & 199 & 131 & 0.129 & 0.34 & 0.50\\
-\ \ \ 50 & flanker & 199 & 196 & 0.079 & 0.17 & 0.29\\
+\ \ \ 50 & stroop & 199 & 131 & 0.131 & 0.32 & 0.48\\
+\ \ \ 51 & flanker & 199 & 196 & 0.078 & 0.15 & 0.26\\
 Tang, Bugg, Snijder, Conway, and Braver (2023) &  &  &  &  &  & \\
-\ \ \ 51 & stroop & 176 & 801 & 0.303 & 0.91 & 0.95\\
+\ \ \ 52 & stroop & 176 & 801 & 0.304 & 0.91 & 0.95\\
 Von Bastian, Souza, and Gade (2016) &  &  &  &  &  & \\
-\ \ \ 52 & stroop & 121 & 47 & 0.096 & 0.10 & 0.18\\
-\ \ \ 53 & simon & 121 & 97 & 0.216 & 0.43 & 0.60\\
-\ \ \ 54 & flanker & 121 & 46 & 0.097 & -0.01 & -0.01\\
+\ \ \ 53 & stroop & 121 & 47 & 0.097 & 0.11 & 0.18\\
+\ \ \ 54 & simon & 121 & 97 & 0.216 & 0.43 & 0.60\\
+\ \ \ 55 & flanker & 121 & 46 & 0.096 & -0.01 & -0.02\\
+Whitehead, Brewer, and Blais (2019) &  &  &  &  &  & \\
+\ \ \ 56 & stroop & 221 & 438 & 0.117 & 0.53 & 0.69\\
+\ \ \ 57 & simon & 219 & 460 & 0.147 & 0.64 & 0.78\\
+\ \ \ 58 & flanker & 220 & 462 & 0.085 & 0.42 & 0.58\\
+\ \ \ 59 & stroop & 211 & 456 & 0.081 & 0.38 & 0.55\\
+\ \ \ 60 & simon & 211 & 480 & 0.093 & 0.49 & 0.65\\
+\ \ \ 61 & flanker & 216 & 481 & 0.051 & 0.16 & 0.26\\
+\ \ \ 62 & stroop & 222 & 358 & 0.102 & 0.44 & 0.61\\
+\ \ \ 63 & simon & 221 & 360 & 0.122 & 0.53 & 0.69\\
+\ \ \ 64 & flanker & 224 & 360 & 0.071 & 0.26 & 0.41\\
 \bottomrule
 \addlinespace
 \insertTableNotes
