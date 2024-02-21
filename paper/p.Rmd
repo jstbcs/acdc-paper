@@ -206,13 +206,15 @@ One advantage of SQLite databases is that they are simply a file that can be dow
 
 The easiest way to inspect the data is using our shiny app provided [here](LINKTOSHINYAPP). The app allows to inspect all data sets or select data sets with certain specification using the filter box on the left. For example, if a researcher is interested in the flanker task, they may select all flanker data sets for closer inspection. After selection, researchers can choose between an overview of the included data sets, some descriptive statistics, and descriptive plots (see \@ref(fig:figure2)). If they want to further analyze the data, they can download the data via the "get the data" tab, either directly as `csv` file or using the provided `R`-code.
 
-```{r figure2, fig.cap = "(ref:caption-figure3)"}
+(ref:caption-figure3) Interface of tge ACDC shiny app. The side bar allows users to choose a criterion, operator, and value to filter datasets by. Chosen arguments are listed in the sidebar below and can be removed using the respective fields. The main panel shows general information about the app and the ACDC project, and provides detailed information about the filtered datasets and how to access the data.
+
+```{r figure3, fig.cap = "(ref:caption-figure3)"}
 knitr::include_graphics("images/Shiny_interface.png")
 ```
 
 Note that all descriptive statistics in the data base are aggregated across congruency conditions. This was a deliberate choice when designing the shiny app. By withholding information about the effect of interest, researches can inspect and select the data based on varying characteristics of the data set (including distributional properties), but remain unbiased as to the most relevant outcome variable. We hope that researchers can then formulate (and perhaps preregister) hypotheses about their reanalysis without much hindsight bias.
 
-```{r figure2, fig.cap = "(ref:caption-figure3)"}
+```{r figure4, fig.cap = "(ref:caption-figure4)"}
 knitr::include_graphics("images/example_descriptive_plot.png")
 ```
 \readme{TODO: Enhance resolution of image?}
