@@ -94,7 +94,9 @@ classoption       : "man"
 output            : papaja::apa6_pdf
 csl               : apa6.csl
 bibliography: [references.bib, db.bib, lab.bib, r-references.bib]
-appendix: "appendix.Rmd"
+appendix:
+  - "appendix_a.Rmd"
+  - "appendix_b.Rmd"
 ---
 
 ```{r setup, include = FALSE}
@@ -108,7 +110,7 @@ library("ggplot2")
 library("dplyr")
 library(acdcquery)
 
-r_refs("r-references.bib")
+# r_refs("r-references.bib")
 ```
 
 ```{r analysis-preferences}
@@ -215,6 +217,8 @@ One advantage of SQLite databases is that they are simply a file that can be dow
 
 The easiest way to inspect the data is using our shiny app provided [here](LINKTOSHINYAPP). The app allows to inspect all data sets or to select data sets with certain specification using the filter box on the left. For example, if a researcher is interested in the flanker task, they may select all flanker data sets for closer inspection. After selection, researchers can choose between an overview of the included data sets, some descriptive statistics, and descriptive plots (see \@ref(fig:figure3)). If they want to further analyze the data, they can download the data via the "get the data" tab, either directly as `csv` file or using the provided `R`-code.
 
+(ref:caption-figure3) Interface of the ACDC shiny app. The side bar allows users to choose a criterion, operator, and value to filter data sets by. Chosen arguments are listed in the sidebar below and can be removed using the respective fields. The main panel shows general information about the app and the ACDC project, and provides detailed information about the filtered data sets and how to access the data.
+
 ```{r figure3, fig.cap = "(ref:caption-figure3)"}
 knitr::include_graphics("images/Shiny_interface.png")
 ```
@@ -224,11 +228,11 @@ Note that all descriptive statistics in the data base are aggregated across cong
 ```{r figure4, fig.cap = "(ref:caption-figure4)"}
 knitr::include_graphics("images/example_descriptive_plot.png")
 ```
-\readme{So far this is a screenshot from the shiny app, might be good to download the actual plot as psf for better resolution?}
+\readme{TODO: Enhance resolution of image?}
 
 ## R-Package
 
-The R-package `acdcquery` allows a more customized, but still user-friendly interaction with the database without ever writing any SQL code themselves [@R-acdcquery]. Using three key functions, `connect_to_db()`, `add_argument()`, and `query_db()`, the package enables connecting to the database, filtering the data based on any variable, and load specified variables as a data frame into R. The `add_argument()` function allows easy specification of filter arguments. Any variable present in any table in the database may be used in the query. Users may also provide multiple arguments and control which of them should be combined using *AND* and which will be combined using *OR* logic. Users may also request any variable present in the database to be returned by the query. The package constructs one SQL query combining all query arguments and the requested variables. This SQL query will join multiple tables together if the user requests variables from multiple tables or the query selection is based on variables present in multiple tables. The query constructed by the package is optimized for speed by automatically discarding unnecessary variables, choosing efficient ways to join tables, and eliminating the need for temporary storage of query results. All arguments and requests are combined simultaneously, allowing optimal use of SQL's base optimization.
+The R-package `acdcquery` allows a more customized, but still user-friendly interaction with the database without ever writing any SQL code themselves [@R-acdcquery]. Using three key functions, `connect_to_db()`, `add_argument()`, and `query_db()`, the package enables connecting to the database, filtering the data based on any variable, and load specified variables as a data frame into R. The `add_argument()` function allows easy specification of filter arguments. Any variable present in any table in the database may be used in the query. Users may also provide multiple arguments and control which of them should be combined using *AND* and which will be combined using *OR* logic. Users can additionally request any variable present in the database to be returned by the query \readme{Isn't this sentence the same as the one above? "Any variable present in any table in the database may be used in the query."}. The package constructs one SQL query combining all query arguments and the requested variables. This SQL query will join multiple tables together if the user requests variables from multiple tables or the query selection is based on variables present in multiple tables. The query constructed by the package is optimized for speed by automatically discarding unnecessary variables, choosing efficient ways to join tables, and eliminating the need for temporary storage of query results. All arguments and requests are combined simultaneously, allowing optimal use of SQL's base optimization.
 
 ## Queries and Output
 
@@ -398,7 +402,7 @@ colnames(reldat) <- c("dataset_id", "publication_code", "task_name"
 reldat$gamma <- round(sqrt(reldat$gamma), 3)
 ```
 
-To illustrate how ACDC can be used for reanalysis, we provide an example data analysis assessing the reliability of attentional control tasks.^[All analyses were conducted using the following R packages: `r cite_r(file = "r-references.bib")`] Reliability of tasks like the Stroop task has recently been the target of much debate [e.g., @hedge2018reliability; @Rouder:Haaf:2019a; @Rouder:etal:2023; @mermet2018should; @Draheim:etal:2019]. The current analysis can be understood as an extension of to the analysis of 24 data sets conducted by @Rouder:etal:2023 (see their Table 2).
+To illustrate how ACDC can be used for reanalysis, we provide an example data analysis assessing the reliability of attentional control tasks.^[For a full list of `R`-packages used for the analyses see Appendix.] Reliability of tasks like the Stroop task has recently been the target of much debate [e.g., @hedge2018reliability; @Rouder:Haaf:2019a; @Rouder:etal:2023; @mermet2018should; @Draheim:etal:2019]. The current analysis can be understood as an extension of to the analysis of 24 data sets conducted by @Rouder:etal:2023 (see their Table 2).
 
 Here, we rely on methodological development by Rouder and colleagues [@Rouder:Haaf:2019a; @Rouder:etal:2023] to survey the reliability of data sets in ACDC. The authors have made suggestions to update the analysis of reliability of individual differences in cognitive tasks based on two simple observations. First, conventional measures of reliability such as the split-half reliability or intra-class correlation are not well suited for cognitive tasks as they are dependent on the number of trials. The reason for this dependency is that observed between-subjects variability of a target effect is a combination of true individual differences and sample noise. If sample noise is large, as is the case in these tasks, reliability can be drastically reduced with a small number of trials compared to a large number of trials. Second, unlike with psychometric tests, the number of trials of cognitive tasks is oftentimes chosen arbitrarily, as a matter of preference by the lab conducting the experiment, making it difficult to compare reliability across labs or across tasks [@Rouder:Haaf:2019a].
 
@@ -408,13 +412,13 @@ Here, we rely on methodological development by Rouder and colleagues [@Rouder:Ha
 myCols <- RColorBrewer::brewer.pal(8, "Dark2")
 layout(matrix(1:4, ncol = 2, byrow = T))
 par(mgp = c(2, .6, 0), cex = 1, mar = c(3.5, 3.5, 1, 1), cex.axis = .9)
-plot(log(reldat$K), reldat$gamma, ylim = c(0, .4)
+plot(log(reldat$K), reldat$gamma, ylim = c(0, .45)
 , pch = 19, col = adjustcolor("slateblue", .8)
 , axes = F
 , ylab = expression("Signal-to-noise" ~ gamma)
 , xlab = "Trials per condition")
 axis(1, at = log(c(30, 100, 250, 800)), labels = c(30, 100, 250, 800))
-axis(2, seq(0, .3, .1), las = 2)
+axis(2, seq(0, .4, .1), las = 2)
 mtext("A.", adj = .5, cex = 1.3)
 
 plot(log(reldat$K), reldat$splithalf, ylim = c(-.1, 1)
@@ -426,13 +430,13 @@ axis(1, at = log(c(30, 100, 250, 800)), labels = c(30, 100, 250, 800))
 axis(2, seq(0, 1, .2), las = 2)
 mtext("B.", adj = .5, cex = 1.3)
 
-plot(log(reldat$I), reldat$gamma, ylim = c(0, .4), xlim = log(c(20, 650))
+plot(log(reldat$I), reldat$gamma, ylim = c(0, .45), xlim = log(c(20, 650))
 , pch = 19, col = adjustcolor("slateblue", .8)
 , axes = F
 , ylab = expression("Signal-to-noise" ~ gamma)
 , xlab = "Participants")
 axis(1, at = log(c(20, 50, 150, 500)), labels = c(20, 50, 150, 500))
-axis(2, seq(0, .3, .1), las = 2)
+axis(2, seq(0, .4, .1), las = 2)
 mtext("C.", adj = .5, cex = 1.3)
 
 plot(log(reldat$I), reldat$splithalf, ylim = c(-.1, 1), xlim = log(c(20, 650))
@@ -451,7 +455,7 @@ To counter the lack of comparability of conventional reliability measures, @Roud
 
 $$\gamma^2 = \frac{\sigma^2_{\text{true}}}{\sigma^2_{\text{noise}}},$$
 
-where the numerator is the true variance of individuals' effects estimated by the model, and the denominator is the trial-by-trial within-person variability. For the purpose of individual differences research, $\sigma^2_{\text{true}}$ represents the signal and $\sigma^2_{\text{noise}}$ represents noise, therefore, Rouder and colleagues labeled $\gamma^2$ as the signal-to-noise ratio. Here, we use the square-root of $\gamma^2$, $\gamma$, representing a ratio of standard deviations as researcher tend to be more familiar with standard deviations rather than variances.
+where the numerator is the true variance of individuals' effects estimated by the model, and the denominator is the trial-by-trial within-person variability. For the purpose of individual differences research, $\sigma^2_{\text{true}}$ represents the signal and $\sigma^2_{\text{noise}}$ represents noise, therefore, Rouder and colleagues labeled $\gamma^2$ as the signal-to-noise ratio. Here, we use the square-root of $\gamma^2$, $\gamma$, representing a ratio of standard deviations as researchers tend to be more familiar with standard deviations rather than variances.
 
 (ref:caption-line-plot) Signal-to-noise ratio and reliability. A. Signal-to-noise ratio $\gamma$ for all data sets ordered from smallest to largest. B. Reliability as a function of number of trials for all data sets in ACDC. The lines represent different signal-to-noise ratios. For a fixed $\gamma$, the relationship between the number of trials per condition and the reliability is deterministic.
 
@@ -495,7 +499,7 @@ reldat_l <- subset(reldat, K > 30)
 # dev.off()
 ```
 
-Figure \@ref(fig:line-plot)A. shows the signal-to-noise ratio $\gamma$ for all data sets ordered from smallest to largest. The median of $\gamma$ is $Med = `r round(median(sqrt(stn[, 1])), 2)`$ corresponding to a ratio of roughly 1 to 8.5. That is, for every unit of signal there are 8.5 units of noise. Using the ACDC data sets, we can also assess the independence of $\gamma$ from the number of trials and participants. Figure \@ref(fig:line-plot)A and C show these relationships. While there is no correlation between the log number of participants and $\gamma$, `r apa_print(BayesFactor::correlationBF(log(reldat$I), reldat$gamma))$full_result`, there is evidence for a positive relationship between the log number of trials and $\gamma$, `r apa_print(BayesFactor::correlationBF(log(reldat$K), reldat$gamma))$full_result`. However, we suspect that this dependence is in part due to the large number of data sets from the ManyLabs study by @ebersole2016many that only had 30 trials per participant and condition rendering them extremely unreliable. If these data sets are removed from the analysis, the Bayes factor between models with and without correlation coefficient is inconclusive, `r apa_print(BayesFactor::correlationBF(log(reldat_l$K), reldat_l$gamma))$full_result`. For the same data selection, the correlation between split-half reliability and number of trials is somewhat reduced but remains high, `r apa_print(BayesFactor::correlationBF(log(reldat_l$K), reldat_l$splithalf))$full_result`.
+Figure \@ref(fig:line-plot)A. shows the signal-to-noise ratio $\gamma$ for all data sets ordered from smallest to largest. The median of $\gamma$ is $Med = `r round(median(sqrt(stn[, 1])), 2)`$ corresponding to a ratio of roughly 1 to 8. That is, for every unit of signal there are 8 units of noise. Using the ACDC data sets, we can also assess the independence of $\gamma$ from the number of trials and participants. Figure \@ref(fig:reliability-fig)A and C show these relationships. There is no correlation between the log number of participants and $\gamma$, `r apa_print(BayesFactor::correlationBF(log(reldat$I), reldat$gamma))$full_result`, nor between the log number of trials and $\gamma$, `r apa_print(BayesFactor::correlationBF(log(reldat$K), reldat$gamma))$full_result`.
 
 Overall, the assessment of reliability of the currently used attentional control tasks shows mixed results. Signal-to-noise ratios of these tasks tend to be around 0.1-0.2, highlighting overwhelming levels of trial-by-trial variability compared to true individual variability of congruency effects. As shown in Figure \@ref(fig:line-plot)B, here is no task type standing out with consistently higher or lower reliability. That is, there is no argument based on reliability that would make us prefer any task over another. However, the analysis can still help us plan future studies better. Figure \@ref(fig:line-plot)B shows the functional relationship between the reliability coefficient and the number of trial through the signal-to-noise ratio. For tasks with a signal-to-noise ratio around 0.2, around 100 trials per condition and person are needed for acceptable levels of reliability. For tasks with a signal-to-noise ratio around 0.1, roughly 500 trials are needed. We also see that all studies with large numbers of trials have acceptable levels of reliability. These insights match a recent finding by @Lee:etal:2023. The authors had participants go through almost 4000 trials per condition per task to assess how many trials are needed for precise estimates of individual effects. They conclude that around 400 trials per person and condition (or 800 in total) are needed for stable estimates of individual effects. From our current analysis using a larger number of studies and participants, we arrive at the same conclusion.
 
@@ -515,11 +519,13 @@ Finally, we hope researchers are willing to contribute data from their studies t
 :::
 
 
-
 \newpage
 
 # (APPENDIX) Appendix {-}
 
-```{r child = "appendix.Rmd"}
+```{r child = "appendix_a.Rmd"}
+```
+
+```{r child = "appendix_b.Rmd"}
 ```
 

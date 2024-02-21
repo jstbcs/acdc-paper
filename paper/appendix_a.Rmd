@@ -42,4 +42,3 @@ apa_table(reldat[,-2]
           , stub_indents = stub_indents
           )
 ```
-

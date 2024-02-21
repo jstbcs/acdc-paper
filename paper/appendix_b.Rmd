@@ -1,0 +1,4 @@
+# R-packages for analysis
+
+All analyses were conducted using the following R packages: `r cite_r(file = "r-references.bib")`.
+
