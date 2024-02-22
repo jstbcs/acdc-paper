@@ -199,10 +199,7 @@
     {}{\InnerPatchFailed}%
   }
 {}{\PatchFailed}
-\keywords{Open Data, Attentional Control, SQL\newline\indent Word count: X}
-\usepackage{lineno}
-
-\linenumbers
+\keywords{Open Data, Attentional Control, SQL\newline\indent Word count: 4916}
 \usepackage{csquotes}
 \usepackage{mathrsfs}
 \usepackage[makeroom]{cancel}
@@ -224,7 +221,7 @@
 \urlstyle{same}
 \hypersetup{
   pdftitle={Attentional Control Data Collection: A Resource for Efficient Data Reuse},
-  pdfauthor={Julia M. Haaf1, Madlen Hoffstadt1, \& Sven Lesche2},
+  pdfauthor={Julia M. Haaf1, 2, Madlen Hoffstadt1, \& Sven Lesche3},
   pdflang={en-EN},
   pdfkeywords={Open Data, Attentional Control, SQL},
   colorlinks=true,
@@ -235,7 +232,7 @@
   pdfcreator={LaTeX via pandoc}}
 
 \title{Attentional Control Data Collection: A Resource for Efficient Data Reuse}
-\author{Julia M. Haaf\textsuperscript{1}, Madlen Hoffstadt\textsuperscript{1}, \& Sven Lesche\textsuperscript{2}}
+\author{Julia M. Haaf\textsuperscript{1, 2}, Madlen Hoffstadt\textsuperscript{1}, \& Sven Lesche\textsuperscript{3}}
 \date{}
 
 
@@ -249,16 +246,16 @@ This work was supported in part by a Veni grant from the NWO (VI.Veni.201G.019) 
 
 The authors made the following contributions. Julia M. Haaf: Conceptualization, Data Curation, Formal Analysis, Funding Acquisition, Investigation, Methodology, Project Administration, Supervision, Validation, Visualization, Writing - Original Draft Preparation, Writing - Review \& Editing; Madlen Hoffstadt: Conceptualization, Data Curation, Investigation, Methodology, Validation, Visualization, Writing - Original Draft Preparation, Writing - Review \& Editing; Sven Lesche: Conceptualization, Data Curation, Investigation, Software, Validation, Visualization, Writing - Original Draft Preparation, Writing - Review \& Editing.
 
-Correspondence concerning this article should be addressed to Julia M. Haaf, Nieuwe Achtergracht 129B, 1018 WT Amsterdam, The Netherlands.. E-mail: \href{mailto:j.m.haaf@uva.nl}{\nolinkurl{j.m.haaf@uva.nl}}
+Correspondence concerning this article should be addressed to Julia M. Haaf, Karl-Liebknecht-Str. 24/25, 14476 Potsdam, Germany. E-mail: \href{mailto:drjmhaaf@gmail.com}{\nolinkurl{drjmhaaf@gmail.com}}
 
 }
 
-\affiliation{\vspace{0.5cm}\textsuperscript{1} University of Amsterdam\\\textsuperscript{2} University of Heidelberg}
+\affiliation{\vspace{0.5cm}\textsuperscript{1} University of Amsterdam\\\textsuperscript{2} University of Potsdam\\\textsuperscript{3} University of Heidelberg}
 
-\note{Version 1, January 2024}
+\note{Version 1, February 2024}
 
 \abstract{%
-Publicly available data are required 1. to assess the reproducibility of each individual finding in the literature, and 2. to promote the reuse of data for a more efficient use of participants' time and public resources. While cuurently used data repositories are well suited for the first goal, they do at this point not sufficiently address the latter goal. Here, we show how structured collections of open data can be very useful as they allow a larger community of researchers easy access to a large body of data from their own research area. We introduced the Attentional Control Data Collection, an SQL data base for attentional control experiments. We illustrate the structure of the data base, how it can be easily accessed using a shiny app and an \texttt{R}-package, and how researchers can contribute data from their studies to the data base. Finally, we conduct our own initial analysis of the large number of data sets in our data base, assessing the reliability of individual differences. The analysis highlights that reliability is generally low, and provides insights into planning future studies. For example researchers should consider to increase the number of trials per person and condition to at least 400.
+Publicly available data are required 1. to assess the reproducibility of each individual finding in the literature, and 2. to promote the reuse of data for a more efficient use of participants' time and public resources. Current data sharing efforts are well suited for the first goal; yet, they do not sufficiently address the second goal. Here, we show how structured collections of open data can be useful as they allow a larger community of researchers easy access to a large body of data from their own research area. We introduce the Attentional Control Data Collection, an SQL data base for attentional control experiments. We illustrate the structure of the data base, how it can be easily accessed using a shiny app and an \texttt{R}-package, and how researchers can contribute data from their studies to the data base. Finally, we conduct our own initial analysis of the 64 data sets in our data base, assessing the reliability of individual differences. The analysis highlights that reliability is generally low, and provides insights into planning future studies. For example researchers should consider to increase the number of trials per person and condition to at least 400. The analysis highlights how an open data base like ACDC can aid meta-analytic efforts as well as methodological innovation.
 }
 
 
@@ -266,9 +263,9 @@ Publicly available data are required 1. to assess the reproducibility of each in
 \begin{document}
 \maketitle
 
-Making data openly available has been a central demand by science reformers since the start of the reproducibility crisis in psychology (Nosek et al., 2015). Fortunately, this demand has lead to a considerable increase in data availability. While only about 25\% of data were shared after request in 2006 (Wicherts, Borsboom, Kats, \& Molenaar, 2006), publicly sharing data upon publication is now more and more the norm. Between 2014 and 2021, the percentage of open data badges awarded at the journal \emph{Psychological Science} drastically increased from 16 to 78 percent (Bauer, 2022). This cultural shift is also increasingly institutionalized: Universities and funding agencies prioritize open data, and some journals even mandate the publication of data with every published article (Sloman, 2015). In addition, technology like the Open Science Framework (OSF) and other data sharing services enable an easy process for researchers, further reducing barriers to share data.
+Making data openly available has been a central demand by science reformers since the start of the reproducibility crisis in psychology (Nosek et al., 2015). Fortunately, this demand has led to a considerable increase in data availability. While only about 25\% of data were shared after request in 2006 (Wicherts, Borsboom, Kats, \& Molenaar, 2006), publicly sharing data upon publication is now more and more the norm. Between 2014 and 2021, the percentage of open data badges awarded at the journal \emph{Psychological Science} drastically increased from 16 to 78 percent (Bauer, 2022). This cultural shift is also increasingly institutionalized: Universities and funding agencies prioritize open data, and some journals even mandate the publication of data with every published article (Sloman, 2015). In addition, technology like the Open Science Framework (OSF) and other data sharing services enable an easy process for researchers, further reducing barriers to share data.
 
-Data sharing serves two goals: 1. To make the scientific process more \emph{transparent} and enable error and fraud detection, and 2. to make the scientific process more \emph{efficient} by allowing data reuse for different research projects. Current data sharing efforts, however, focus overwhelmingly on the first goal (Crüwell et al., 2023; Hardwicke et al., 2021; Obels, Lakens, Coles, Gottfried, \& Green, 2020). We argue that, as a result, current data sharing procedures do not sufficiently meet the second goal. Whenever researchers complying with common data sharing procedures publish an article, they share the corresponding data on the OSF, ideally in a format that allows to redo the exact analyses reported in the article. The OSF repository is linked in the article, and readers may access the data through this link and check whether analysis code and shared data correspond to the results section in the article. From an ethical standpoint, this process seems reasonable: Data shared through this process are often aggregated and cleaned allowing reproduction of results without sharing unnecessary details of participants' behavior. However, one may also argue that this approach is unethical - not sharing raw, unaggregated data that is easy to find and reuse, is a mismanagement of public resources and participants' time.
+Data sharing serves two goals: 1. To make the scientific process more \emph{transparent} and enable error and fraud detection, and 2. to make the scientific process more \emph{efficient} by allowing data reuse for different research projects. Current data sharing efforts, however, focus overwhelmingly on the first goal (Crüwell et al., 2023; Hardwicke et al., 2021; Obels, Lakens, Coles, Gottfried, \& Green, 2020). We argue that, as a result, current data sharing procedures do not sufficiently meet the second goal. Whenever researchers that are complying with common data sharing procedures publish an article, they share the corresponding data on the OSF, ideally in a format that allows replicating the exact analyses reported in the article. The OSF repository is linked in the article, and readers may access the data through this link and check whether analysis code and shared data correspond to the results section in the article. From an ethical standpoint, this process seems reasonable: Data shared through this process are often aggregated and cleaned allowing reproduction of results without sharing unnecessary details of participants' behavior. However, one may also argue that this approach is unethical - not sharing raw, unaggregated data that is easy to find and reuse, is a mismanagement of public resources and participants' time.
 
 To enable data reuse, data sharing needs to be approached differently. Consider, for example, a researcher (like the first author of the current paper) might me interested in the Stroop task (Stroop, 1935). The Stroop task is popular in cognitive psychology (MacLeod, 1991), so we may assume that many studies include this or similar tasks in their studies. Instead of running yet another Stroop experiment, the researcher decides to use existing data to explore their research question before designing a more targeted study. First, the researcher needs to be able to find open Stroop task data. Currently, they could either search for papers on the topic and check whether open data are provided, or search directly via OSF or other data sharing servers. However, neither of these options is very promising as the vast majority of articles in the literature still does not provide raw data, and data sharing servers are not equipped with sufficient search options. Second, data sets need to be accessed easily and in a general, understandable format ready for reuse. There are data sharing formats that provide this structure (Wilkinson et al., 2016), but they are rarely used. Moreover, data are usually shared on the level necessary for the original analysis. In case of the Stroop task, researchers might share the Stroop effect per participant, but for this new analysis the researcher needs trial-level data. So again, there is yet another barrier for data reuse.
 
@@ -276,15 +273,15 @@ We think it is necessary to provide a data sharing solution that solves the curr
 
 To provide a little history of the project, the Attentional Control Data Collection was inspired by a collection of open data sets from attentional control tasks by the Perception and Cognition Lab led by J. Rouder (\href{https://github.com/PerceptionCognitionLab/data0}{url}). Colleagues provided the first author and Rouder with data sets for their statistical work (Haaf \& Rouder, 2017; Rouder, Kumar, \& Haaf, 2023). To ensure that data sets were accessible, we gathered them in a github repository. However, there was little structure to the collection, and github repositories are neither stable entities nor are they designed as data storage. Here, we describe how a structured data collection can be achieved and which benefits it provides.
 
-\hypertarget{sqlight-database}{%
-\section{SQLight Database}\label{sqlight-database}}
+\hypertarget{sqlite-data-base}{%
+\section{SQLite Data Base}\label{sqlite-data-base}}
 
-One of the most standard ways in computer science for storing data is using a Structured Query Language (SQL) data base. SQL allows to create, access and manipulate a structured data storage. SQL data bases consist of data tables and relations between these tables. There are many flavors of SQL data bases. Here, we decided to use an SQLight data base, a lightweight solution that allows us to store the entire data base in a single file of moderate size that can be downloaded by researchers for data reuse. In this section we describe the structure of the data base and the data currently included. Researchers who simply want to use ACDC may safely skip this section.
+One of the most standard ways in computer science for storing data is using a Structured Query Language (SQL) data base. SQL allows to create, access and manipulate a structured data storage. SQL data bases consist of data tables and relations between these tables. There are many flavors of SQL data bases. Here, we decided to use an SQLite data base, a lightweight solution that allows us to store the entire data base in a single file of moderate size that can be downloaded by researchers for data reuse. In this section we describe the structure of the data base and the data currently included. Researchers who simply want to use ACDC may safely skip this section.
 
-\hypertarget{database-structure}{%
-\subsection{Database Structure}\label{database-structure}}
+\hypertarget{data-base-structure}{%
+\subsection{Data Base Structure}\label{data-base-structure}}
 
-SQL databases are composed of several data tables consisting of rows and columns. Each row in a data table has a primary key (essentially a row ID) which uniquely identifies it. To connect one table to another table in the database, tables may contain foreign keys which reference a unique row in another data table. In contrast to primary keys, these foreign keys can have duplicate values in the data table, as long as they are unique in their primary table. For instance, a study table may store information about all studies in a database where each row corresponds to a single study. Here the primary key is the study\_id. We can ensure that our database links each study to the publication it was published in by adding a foreign key called publication\_id to the study table. This foreign key references the unique identifier of the respective publication in a publication table. Figure \ref{fig:figure1} illustrates the relationship between study table and publication table. While publication\_id links to a single row in the publication table, it can occur several times in the study\_table as there can be several studies per publication.
+SQL data bases are composed of several data tables consisting of rows and columns. Each row in a data table has a primary key (essentially a row ID) which uniquely identifies it. To connect information in one table to information in another table in the data base, tables may contain foreign keys which reference a unique row in another data table. In contrast to primary keys, these foreign keys can have duplicate values in the data table which they are foreign to, as long as they are unique in their primary table. For instance, a study table may store information about all studies in a data base where each row corresponds to a single study. Here the primary key is the study\_id. We can ensure that our data base links each study to the publication it was published in by adding a foreign key called publication\_id to the study table. This foreign key references the unique identifier of the respective publication in a publication table. Figure \ref{fig:figure1} illustrates the relationship between study table and publication table. While publication\_id links to a single row in the publication table, it can occur several times in the study\_table as there can be several studies per publication.
 
 
 
@@ -294,71 +291,85 @@ SQL databases are composed of several data tables consisting of rows and columns
 
 }
 
-\caption{Illustrative example of using foreign and primary keys in a SQL database.}\label{fig:figure1}
+\caption{Illustrative example of using foreign and primary keys in a SQL data base.}\label{fig:figure1}
 \end{figure}
 
 ACDC is adapted to the logic of publications consisting of one or multiple studies which in turn include one or more data sets. The whole structure of ACDC is shown in Figure \ref{fig:figure2}. A \emph{publication table} and a \emph{study table} contain specific information about each publication and study, respectively. Each data set within a study contains trial-level data from one attentional control task. If a between-subject manipulation exists, our data base contains a separate data set for each group and each task. For instance, a study in which two groups (younger and older adults) completed a Simon and a Stroop task would consist of four data sets (i.e., younger-Stroop, younger-Simon, older-Stroop, older-Simon) in the ACDC data base.
 
 The \emph{data set table} stores information about each data set, such as sample size, the number of within-participant manipulations, and whether a fixation cross was used. The \emph{observation table} holds the trial-level data (including response time and accuracy). The task type of each data set (i.e., Stroop, Simon, Flanker, negative priming, or other) and a description of which stimuli were presented in the task are documented in the \emph{task table}.
 
-Within-participant manipulations are coded in the within ID column of the observation table. Further information about each condition of each data set (such as the percentage of congruent trials, mean response time, and mean accuracy) are recorded in the \emph{within table}. Note that since the congruency of stimuli, i.e., whether response and stimulus attributes are compatible or incompatible, is part of every attentional control task, it is not considered a separate within-participant manipulation in this database but is per default included in the observation table.
+Within-participant manipulations are coded in the within ID column of the observation table. Further information about each condition of each data set (such as the percentage of congruent trials, mean response time, and mean accuracy) are recorded in the \emph{within table}. Note that since the congruency of stimuli, i.e., whether response and stimulus attributes are compatible or incompatible, is part of every attentional control task, it is not considered a separate within-participant manipulation in this data base but is per default included in the observation table.
 
 
 
 \begin{figure}
 \centering
 \includegraphics{images/db_structure.png}
-\caption{\label{fig:figure2}Structure of the ACDC database. Primary keys are indicated by the key symbol. References between data tables are illustrated through lines connecting columns across data tables. This overview includes the data type of each column: integers (int), numbers with decimal places (float), characters (varchar) and logical true/false values (booleans).}
+\caption{\label{fig:figure2}Structure of the ACDC data base. Primary keys are indicated by the key symbol. References between data tables are illustrated through lines connecting columns across data tables. This overview includes the data type of each column: integers (int), numbers with decimal places (float), characters (varchar) and logical true/false values (booleans).}
 \end{figure}
 
 \hypertarget{included-data}{%
 \subsection{Included Data}\label{included-data}}
 
-Up to the date of submission of the manuscript, 64 data sets from 12 publications are included in the database. The full list of data sets and references is provided in the Appendix. The current database includes data sets from studies with an experimental as well as a correlational focus. The data contain \(10^ 7\) observations collected from 9978 participants.
+Until the date of submission of the manuscript, 64 data sets from 12 publications are included in the data base. The full list of data sets and references is provided in the Appendix. The current data base includes data sets from studies with an experimental as well as a correlational focus. The data contain \(10^ 7\) observations collected from 9978 participants.
 
 We did not conduct a systematic search for data sets nor attempted to distribute a wider call for open data. Instead, we included the data sets that were already made available to the lab for previous projects, and added data sets from collaborators bit by bit. This approach was chosen to make the project feasible, and to first set up a working data base before large quantities of data are added.
 
 \hypertarget{contribute}{%
 \subsection{Contribute}\label{contribute}}
 
-We are planning to continuously add attentional control task data to our data base. Researchers seeking to improve data accessibility and citation potential of their work are invited to submit their data and related study meta-information via our online form. \emph{\marginnote{\color{red}Julia} (add link to form)}
+We are planning to continuously add attentional control task data to our data base. Researchers seeking to improve data accessibility and citation potential of their work are invited to submit their data and related study meta-information via our \href{https://www.ampl-psych.com/attentional-control-data-collection-acdc/}{online form}.
 
 To be eligible for the ACDC data base the data must have been collected for a published or pre-registered study using an attentional control task where the amount of control needed is experimentally manipulated. Researchers submitting the data must be allowed to publicly share them in anonymized format. Furthermore, the data files have to contain trial-level information on anonymized subject IDs, reaction time, accuracy (i.e., correct/ incorrect), and a congruency variable, indicating whether distractor stimuli were congruent, conflicting, or neutral. In case of between-subject manipulations and within-subject manipulations (besides congruency), the files should contain a between and a within variable indicating which condition a trial belonged to.
 
 When submitting data to our online submission form, researchers will be asked to provide meta-information about the publication and study, such as descriptions of the attentional control task and the between and within manipulations. Data files can either be uploaded in openly readable data formats or as a link to a repository, such as OSF or Github.
 
-\hypertarget{accessing-the-database}{%
-\section{Accessing the Database}\label{accessing-the-database}}
+\hypertarget{accessing-the-data-base}{%
+\section{Accessing the Data Base}\label{accessing-the-data-base}}
 
-One advantage of SQLite databases is that they are simply a file that can be downloaded and locally accesses by anyone. Our database is provided in a github repository.\footnote{The newest version can be accessed via \url{https://github.com/jstbcs/acdc-database/blob/main/acdc.db}, the version at the time of submission can be found \href{https://github.com/jstbcs/acdc-database/blob/main/acdc.db}{here}. \emph{\marginnote{\color{red}Julia} (TODO: REPLACE WITH CURRENT COMMIT.)}} To access the database, researchers can download the file \texttt{acdc.db}, and use the SQLite tool of their choice. In addition, we build \texttt{R}-based tools to inspect, access, and select data from ACDC. We introduce these tools, a shiny app and an \texttt{R} package, subsequently.
+One advantage of SQLite data bases is that they are simply a file that can be downloaded and locally accessed by anyone. Our data base is provided in a Github repository.\footnote{The newest version can be accessed via \url{https://github.com/jstbcs/acdc-database/blob/main/acdc.db}, the version at the time of submission can be found \href{https://github.com/jstbcs/acdc-database/blob/main/acdc.db}{here}. \emph{\marginnote{\color{red}Julia} (TODO: REPLACE WITH CURRENT COMMIT.)}} To access the data base, researchers can download the file \texttt{acdc.db}, and use the SQLite tool of their choice. In addition, we built \texttt{R}-based tools to inspect, access, and select data from ACDC. We introduce these tools, a shiny app and an \texttt{R} package, subsequently.
 
 \hypertarget{shiny-app}{%
 \subsection{Shiny App}\label{shiny-app}}
 
-The easiest way to inspect the data is using our shiny app provided \href{https://mfhcgn.shinyapps.io/acdc-database/}{here}. The app allows to inspect all data sets or to select data sets with certain specification using the filter box on the left. For example, if a researcher is interested in the flanker task, they may select all flanker data sets for closer inspection. After selection, researchers can choose between an overview of the included data sets, some descriptive statistics, and descriptive plots (see \ref{fig:figure3}). If they want to further analyze the data, they can download the data via the ``get the data'' tab, either directly as \texttt{csv} file or using the provided \texttt{R}-code.
+The easiest way to inspect the data is using our shiny app provided \href{https://mfhcgn.shinyapps.io/acdc-database/}{here}. The interface of the app is shown in Figure \ref{fig:figure3}. The app allows to inspect all data sets or to select data sets with certain specifications using the filter box on the left. For example, if a researcher is interested in the Flanker task, they may select all Flanker data sets for closer inspection. After selection, researchers can choose between an overview of the included data sets, some descriptive statistics, and descriptive plots. If they want to further analyze the data, they can download the data via the ``get the data'' tab, either directly as \texttt{csv} file or using the provided \texttt{R}-code.
 
 
 
 \begin{figure}
 \centering
 \includegraphics{images/Shiny_interface.png}
-\caption{\label{fig:figure3}Interface of the ACDC shiny app. The side bar allows users to choose a criterion, operator, and value to filter data sets by. Chosen arguments are listed in the sidebar below and can be removed using the respective fields. The main panel shows general information about the app and the ACDC project, and provides detailed information about the filtered data sets and how to access the data.}
+\caption{\label{fig:figure3}Interface of the ACDC shiny app. The side bar allows users to choose a criterion, operator, and value to filter data sets. Chosen arguments are listed in the sidebar below and can be removed using the respective fields. The main panel shows general information about the app and the ACDC project, and provides detailed information about the filtered data sets and how to access the data.}
 \end{figure}
 
-Note that all descriptive statistics in the data base are aggregated across congruency conditions. This was a deliberate choice when designing the shiny app. By withholding information about the effect of interest, researches can inspect and select the data based on varying characteristics of the data set (including distributional properties), but remain unbiased as to the most relevant outcome variable. We hope that researchers can then formulate (and perhaps preregister) hypotheses about their reanalysis without much hindsight bias.
-
-\includegraphics{images/example_descriptive_plot.png}
-\emph{\marginnote{\color{red}Julia} (TODO: Enhance resolution of image?)}
+Note that all descriptive statistics in the shiny app are aggregated across congruency conditions. This was a deliberate choice when designing the app. By withholding information about the effect of interest, researches can inspect and select the data based on varying characteristics (including distributional properties), but remain unbiased as to the most relevant outcome variable. We hope that researchers can then formulate (and perhaps preregister) hypotheses about their reanalysis without much hindsight bias.
 
 \hypertarget{r-package}{%
 \subsection{R-Package}\label{r-package}}
 
-The R-package \texttt{acdcquery} allows a more customized, but still user-friendly interaction with the database without ever writing any SQL code themselves (Lesche, Hoffstadt, \& Haaf, 2023). Using three key functions, \texttt{connect\_to\_db()}, \texttt{add\_argument()}, and \texttt{query\_db()}, the package enables connecting to the database, filtering the data based on any variable, and load specified variables as a data frame into R. The \texttt{add\_argument()} function allows easy specification of filter arguments. Any variable present in any table in the database may be used in the query. Users may also provide multiple arguments and control which of them should be combined using \emph{AND} and which will be combined using \emph{OR} logic. Users can additionally request any variable present in the database to be returned by the query \emph{\marginnote{\color{red}Julia} (Isn't this sentence the same as the one above? "Any variable present in any table in the database may be used in the query.")}. The package constructs one SQL query combining all query arguments and the requested variables. This SQL query will join multiple tables together if the user requests variables from multiple tables or the query selection is based on variables present in multiple tables. The query constructed by the package is optimized for speed by automatically discarding unnecessary variables, choosing efficient ways to join tables, and eliminating the need for temporary storage of query results. All arguments and requests are combined simultaneously, allowing optimal use of SQL's base optimization.
+The R-package \texttt{acdcquery} allows a more customized, but still user-friendly interaction with the data base without ever writing any SQL code (Lesche, Hoffstadt, \& Haaf, 2023). Using three key functions, \texttt{connect\_to\_db()}, \texttt{add\_argument()}, and \texttt{query\_db()}, the package enables connecting to the data base, filtering data based on any variable, and loading specified variables as a data frame into R. The \texttt{add\_argument()} function allows easy specification of filter arguments. Any variable present in any table in the data base may be used as a filter condition in the query. Users may also provide multiple arguments and control which of them should be combined using \emph{AND} and which should be combined using \emph{OR} logic. Much as any variable in the data base can be used as filter, any variable or combination of variables can also serve as output of the filtering process. The package constructs one SQL query combining all query arguments and the requested output variables. This SQL query will join multiple tables together if the user requests variables from multiple tables or the query selection is based on variables present in multiple tables. The query constructed by the package is optimized for speed by automatically discarding unnecessary variables, choosing efficient ways to join tables, and eliminating the need for temporary storage of query results. All arguments and requests are combined simultaneously, allowing optimal use of SQLite's built-in optimization.
 
 \hypertarget{queries-and-output}{%
 \subsection{Queries and Output}\label{queries-and-output}}
 
-Below, we will illustrate several examples for using the database. Querying the database consists of 5 steps. Connecting to the database, specifying the filter arguments, specifying the relationship of filter arguments, specifying the target variables and finally querying the database. For the first step, the package needs to be installed from CRAN and loaded. Querying also requires that researchers download the database and establish a connection using \texttt{connect\_to\_db()}.
+Below, we will illustrate several examples for using the \texttt{R}-package. Querying the data base consists of 5 steps:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Connecting to the data base,
+\item
+  specifying the filter arguments,
+\item
+  specifying the relationship of filter arguments,
+\item
+  specifying the output variables,
+\item
+  and querying the data base.
+\end{enumerate}
+
+For the first step, the package is installed from CRAN and loaded. Note that the data base also needs to be downloaded for this step. A connection to the data base is established using \texttt{connect\_to\_db()}.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -370,7 +381,7 @@ Below, we will illustrate several examples for using the database. Querying the 
 \end{Highlighting}
 \end{Shaded}
 
-The function \texttt{add\_argument()} allows easy specification of the list containing query arguments.
+For the second steb the function \texttt{add\_argument()} is used to specify a list containing query arguments. In the following code chunk, we specify three aguments. Typically, function either builds the SQL query from the provided input, however, it is also possible to manually submit an SQL statement (see the last argument).
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -404,7 +415,7 @@ The function \texttt{add\_argument()} allows easy specification of the list cont
 \end{Highlighting}
 \end{Shaded}
 
-This argument-list now contains three separate filter-arguments. In our case, we only want those cases for which all are true. The package also allows the user to specify which arguments should be combined using \emph{AND} or using \emph{OR}.
+This argument-list now contains three separate filter-arguments. In step 3, we specify which arguments should be combined using \emph{AND} or using \emph{OR}. In our case, we only want those cases for which all are true which corresponds to the specification \texttt{all\_true}.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -417,7 +428,7 @@ This argument-list now contains three separate filter-arguments. In our case, we
 \end{Highlighting}
 \end{Shaded}
 
-The user can also specify which variables should be returned by the query. Here, any variable present in any table can be selected. To allow for fast queries in the case of limited involvement of multiple tables, the user can specify the table the query is centered on using the \texttt{target\_table} argument of \texttt{query\_db()}. In most cases, this is the observation-table containing trial data. If dataset-level data is of interest, it is wise to specify \texttt{target\_table\ =\ dataset\_table}. If all variables of the target table and some additional variables from other tables should be returned, simply add ``default'' to the vector specifying the target variables.
+In step 4, we specify which variables should be returned by the query. Here, any variable present in any table can be selected. To allow for fast queries in the case of limited involvement of multiple tables, the user can specify the table the query is centered on using the \texttt{target\_table} argument of \texttt{query\_db()}. In most cases, this is the observation-table containing trial data. If dataset-level data is of interest, it is wise to specify \texttt{target\_table\ =\ dataset\_table}. If all variables of the target table and some additional variables from other tables should be returned, simply add ``default'' to the vector specifying the target variables.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -434,7 +445,7 @@ The user can also specify which variables should be returned by the query. Here,
 \end{Highlighting}
 \end{Shaded}
 
-The argument-list, relationship of arguments, target variables and target table are then supplied to the \texttt{query\_db()} function.
+Finally, in step 5 argument-list, relationship of arguments, target variables and target table are supplied to the \texttt{query\_db()} function.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -463,7 +474,7 @@ Additional info can be found on the package's \href{https://github.com/SLesche/a
 
 To illustrate how ACDC can be used for reanalysis, we provide an example data analysis assessing the reliability of attentional control tasks.\footnote{For a full list of \texttt{R}-packages used for the analyses see Appendix.} Reliability of tasks like the Stroop task has recently been the target of much debate (Draheim, Mashburn, Martin, \& Engle, 2019; e.g., Hedge, Powell, \& Sumner, 2018; Rey-Mermet, Gade, \& Oberauer, 2018; Rouder \& Haaf, 2019; Rouder et al., 2023). The current analysis can be understood as an extension of to the analysis of 24 data sets conducted by Rouder et al. (2023) (see their Table 2).
 
-Here, we rely on methodological development by Rouder and colleagues (Rouder \& Haaf, 2019; Rouder et al., 2023) to survey the reliability of data sets in ACDC. The authors have made suggestions to update the analysis of reliability of individual differences in cognitive tasks based on two simple observations. First, conventional measures of reliability such as the split-half reliability or intra-class correlation are not well suited for cognitive tasks as they are dependent on the number of trials. The reason for this dependency is that observed between-subjects variability of a target effect is a combination of true individual differences and sample noise. If sample noise is large, as is the case in these tasks, reliability can be drastically reduced with a small number of trials compared to a large number of trials. Second, unlike with psychometric tests, the number of trials of cognitive tasks is oftentimes chosen arbitrarily, as a matter of preference by the lab conducting the experiment, making it difficult to compare reliability across labs or across tasks (Rouder \& Haaf, 2019).
+Here, we rely on methodological development by Rouder and colleagues (Rouder \& Haaf, 2019; Rouder et al., 2023) to survey the reliability of data sets in ACDC. The authors suggested to improve the analysis of reliability of cognitive tasks based on two simple observations. First, conventional measures of reliability such as the split-half reliability or intra-class correlation are not well suited for cognitive tasks as they are dependent on the number of trials. The reason for this dependency is that observed between-subjects variability of a target effect is a combination of true individual differences and sample noise. If sample noise is large, as is the case in these tasks, reliability can be drastically reduced with a small number of trials compared to a large number of trials. Second, unlike with psychometric tests, the number of trials of cognitive tasks is oftentimes chosen arbitrarily, as a matter of preference by the lab conducting the experiment. These two issues taken together make it difficult to compare reliability across labs or across tasks (Rouder \& Haaf, 2019).
 
 
 
@@ -473,7 +484,7 @@ Here, we rely on methodological development by Rouder and colleagues (Rouder \& 
 
 }
 
-\caption{Reliability estimates as a function of number of trials and participants. A. The signal-to-noise ratio is independent of the (log) number of trials per condition but has a small positive correlation. B. The split-half reliability is highly correlated with the (log) number of trials per condition. C. The signal-to-noise ratio is independent of the (log) number of participants. D. The split-half reliability has a slight negative relationship with (log) number of participants due to the fact that large-participants studies commonly use a smaller number of trials per task.}\label{fig:reliability-fig}
+\caption{Reliability estimates as a function of number of trials and participants. A. The signal-to-noise ratio is independent of the (log) number of trials per condition. B. The split-half reliability is highly correlated with the (log) number of trials per condition. C. The signal-to-noise ratio is independent of the (log) number of participants. D. The split-half reliability has a slight negative relationship with (log) number of participants due to the fact that large-participants studies commonly use a smaller number of trials per task.}\label{fig:reliability-fig}
 \end{figure}
 
 The relationship between common reliability estimates and trial number is illustrated in Figure \ref{fig:reliability-fig}B. The figure shows the split-half reliability coefficients for all ACDC data sets as a function of the (log) number of trials per condition. The correlation between split-half-reliability and log trial number is \(r = 0.65\), 95\% HDI \([0.50, 0.78]\), \(\mathrm{BF}_{\textrm{10}} = 2.62 \times 10^{7}\). Figure \ref{fig:reliability-fig}D shows the relationship between split-half reliability coefficients and the (log) number of participants. Theoretically, there should be no relationship. However, for purely practical reasons, many studies with a large number of participants have in turn a low number of trials. Therefore, empirically, we do find a negative relationship between the log number of participants and split-half reliability, \(r = -0.26\), 95\% HDI \([-0.47, -0.03]\), \(\mathrm{BF}_{\textrm{10}} = 3.41\).
@@ -482,7 +493,7 @@ To counter the lack of comparability of conventional reliability measures, Roude
 
 \[\gamma^2 = \frac{\sigma^2_{\text{true}}}{\sigma^2_{\text{noise}}},\]
 
-where the numerator is the true variance of individuals' effects estimated by the model, and the denominator is the trial-by-trial within-person variability. For the purpose of individual differences research, \(\sigma^2_{\text{true}}\) represents the signal and \(\sigma^2_{\text{noise}}\) represents noise, therefore, Rouder and colleagues labeled \(\gamma^2\) as the signal-to-noise ratio. Here, we use the square-root of \(\gamma^2\), \(\gamma\), representing a ratio of standard deviations as researchers tend to be more familiar with standard deviations rather than variances.
+where the numerator is the true variance of individuals' effects estimated by the model, and the denominator is the trial-by-trial within-person variability. For the purpose of individual differences research, \(\sigma^2_{\text{true}}\) represents the signal and \(\sigma^2_{\text{noise}}\) represents noise, therefore, Rouder and colleagues termed \(\gamma^2\) the signal-to-noise ratio. Here, we use the square-root of \(\gamma^2\), \(\gamma\), representing a ratio of standard deviations as researchers tend to be more familiar with standard deviations rather than variances.
 
 
 
@@ -497,16 +508,16 @@ where the numerator is the true variance of individuals' effects estimated by th
 
 Figure \ref{fig:line-plot}A. shows the signal-to-noise ratio \(\gamma\) for all data sets ordered from smallest to largest. The median of \(\gamma\) is \(Med = 0.12\) corresponding to a ratio of roughly 1 to 8. That is, for every unit of signal there are 8 units of noise. Using the ACDC data sets, we can also assess the independence of \(\gamma\) from the number of trials and participants. Figure \ref{fig:reliability-fig}A and C show these relationships. There is no correlation between the log number of participants and \(\gamma\), \(r = -0.12\), 95\% HDI \([-0.32, 0.13]\), \(\mathrm{BF}_{\textrm{10}} = 0.44\), nor between the log number of trials and \(\gamma\), \(r = 0.12\), 95\% HDI \([-0.09, 0.36]\), \(\mathrm{BF}_{\textrm{10}} = 0.49\).
 
-Overall, the assessment of reliability of the currently used attentional control tasks shows mixed results. Signal-to-noise ratios of these tasks tend to be around 0.1-0.2, highlighting overwhelming levels of trial-by-trial variability compared to true individual variability of congruency effects. As shown in Figure \ref{fig:line-plot}B, here is no task type standing out with consistently higher or lower reliability. That is, there is no argument based on reliability that would make us prefer any task over another. However, the analysis can still help us plan future studies better. Figure \ref{fig:line-plot}B shows the functional relationship between the reliability coefficient and the number of trial through the signal-to-noise ratio. For tasks with a signal-to-noise ratio around 0.2, around 100 trials per condition and person are needed for acceptable levels of reliability. For tasks with a signal-to-noise ratio around 0.1, roughly 500 trials are needed. We also see that all studies with large numbers of trials have acceptable levels of reliability. These insights match a recent finding by Lee et al. (2023). The authors had participants go through almost 4000 trials per condition per task to assess how many trials are needed for precise estimates of individual effects. They conclude that around 400 trials per person and condition (or 800 in total) are needed for stable estimates of individual effects. From our current analysis using a larger number of studies and participants, we arrive at the same conclusion.
+Overall, the assessment of reliability of the currently used attentional control tasks shows mixed results. Signal-to-noise ratios of these tasks tend to be around 0.1-0.2, highlighting overwhelming levels of trial-by-trial variability compared to true individual variability of congruency effects. As shown in Figure \ref{fig:line-plot}B, there is no task type standing out with consistently higher or lower reliability. That is, there is no argument based on reliability that would make us prefer, for example, a flanker task over a Stroop task. However, the analysis can still help us plan future studies. Figure \ref{fig:line-plot}B shows the functional relationship between the reliability coefficient and the number of trials through the signal-to-noise ratio. For tasks with a signal-to-noise ratio around 0.2, around 100 trials per condition and person are needed for acceptable levels of reliability. For tasks with a signal-to-noise ratio around 0.1, roughly 500 trials are needed. We also see that all studies with large numbers of trials have acceptable levels of reliability. These insights match a recent finding by Lee et al. (2023). The authors had a small number of participants go through almost 4000 trials per condition per task to assess how many trials are needed for precise estimates of individual effects. They conclude that around 400 trials per person and condition (or 800 in total) are needed for stable estimates of individual effects. From our current analysis using a larger number of studies and participants, we arrive at the same conclusion.
 
 \hypertarget{conclusion}{%
 \section{Conclusion}\label{conclusion}}
 
-Open data policies are required 1. to understand how many results in the literature are reproducible, and 2. to promote the reuse of data for a more efficient use of participants' time and public resources. While repositories like the Open Science Framework are well suited for the first goal, they do at this point not sufficiently address the latter goal. We argue that structured collections of open data are much more useful as they allow a larger community of researchers an easy access to a large body of data. Here, we introduced the Attentional Control Data Collection, an SQL data base for attentional control experiments. The data base is easy to access using a shiny app and an \texttt{R}-package, and is built to grow when researchers are willing to contribute their data in the future. We illustrate the structure of the data base, how it can be accessed, and which type of analyses can be conducted with such a large data collection.
+Open data policies are required 1. to assess how many results in the literature are reproducible, and 2. to promote the reuse of data for a more efficient use of participants' time and public resources. While repositories like the Open Science Framework are well suited for the former goal, they do at this point not sufficiently address the latter goal. We argue that structured collections of open data are much more supportive of this goal as they allow a larger community of researchers easy access to a large body of data. Here, we introduced the Attentional Control Data Collection, an SQL data base for attentional control experiments. The data base is easy to access using a shiny app and an \texttt{R}-package, and is built to grow when researchers are willing to contribute their data in the future. We illustrate the structure of the data base, how it can be accessed, and which type of analyses can be conducted with such a large data collection.
 
-The data base approach is related to meta-analysis, but different in two crucial aspects. One major disadvantage of the data base approach is that it does not represent a systematic overview, or even a representative sample of studies. To remedy this issue, researchers planning to develop an open data collection could conduct a systematic review of the literature including \emph{all} studies with open data that meet their criteria in the data base. However, as the field only recently started sharing data, older studies would still be systematically excluded. One major advantage of the data base approach over meta-analysis is that it opens the path to much more sophisticated research questions and analysis. As the data base provides raw, unfiltered, trial-level data, we may use it for studying questions far beyond congruency effects. Potential analyses target sequential effects, computational modeling, or even methodological questions like the effect of online versus in-lab data collection on data quality.
+The data base approach is related to meta-analysis, but different in two crucial aspects. One major disadvantage of the data base approach is that it does not represent a systematic overview, or even a representative sample of studies. To remedy this issue, researchers planning to develop an open data collection could conduct a systematic review of the literature including \emph{all} studies with open data that meet their criteria in the data base. However, as the field only recently started sharing data, older studies would still be systematically excluded, and there might still remain systematic differences between more recent studies that do and do not share data. One major advantage of the data base approach over meta-analysis is that it opens the path to much more sophisticated research questions and analyses. As the data base provides raw, unfiltered, trial-level data, we may use it for studying questions far beyond congruency effects. Potential analyses target sequential effects, computational modeling, or even methodological questions like the effect of online versus in-lab data collection on data quality.
 
-Finally, we hope researchers are willing to contribute data from their studies to ACDC or other open data collections. If they already share their data on the OSF, we see no disadvantage in also contributing to more structured data collection. In the best case, their data will contribute to advancing the field without requiring unnecessary additional data collection, leading to faster insights based on more data. This might also have benefits for the researchers themselves as anyone using their data will also cite the original paper.
+Finally, we hope researchers are willing to contribute data from their studies to ACDC or other open data collections. If they already share their data on the OSF, we see no disadvantage in also contributing to more structured data collections. In the best case, their data will contribute to advancing the field without requiring unnecessary additional data collection, leading to faster insights based on more data. And as for a personal benefit, sharing raw data in a larger collection might even boost the citation record of their study.
 
 \newpage
 
