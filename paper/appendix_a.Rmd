@@ -1,6 +1,6 @@
 # All ACDC data sets
 
-Table \@ref(tab:taball) contains all data sets that are part of the Attentional Control Data Collection at the time of manuscript submission. The table is ordered by dataset ID and study, and contains the number of trials per condition and participant, and the number of participants. Additionally, three reliability estimates are included: The signal-to-noise ratio, $\gamma$, the split-half reliability for 2000 random splits, $\rho$, and the corrected split-half reliability using the Spearman-Brown formula, $\rho^*$.
+Table \@ref(tab:taball) contains all data sets that are part of the Attentional Control Data Collection at the time of manuscript submission. This version of the data base is maked by a git tag, and the git repository for the tag is [linked here](https://github.com/jstbcs/acdc-database/tree/submission1). The table is ordered by dataset ID and study, and contains the number of trials per condition and participant, and the number of participants. Additionally, three reliability estimates are included: The signal-to-noise ratio, $\gamma$, the split-half reliability for 2000 random splits, $\rho$, and the corrected split-half reliability using the Spearman-Brown formula, $\rho^*$.
 
 
 (ref:mytablenote) $\gamma =$ signal-to-noise ratio; $I =$ number of participants; $K =$ number of trials per condition; $\rho =$ split-half reliability coefficient; $\rho^* =$ Spearman-Brown corrected reliability coefficient.

@@ -4,7 +4,7 @@
 \PassOptionsToPackage{dvipsnames,svgnames,x11names}{xcolor}
 %
 \documentclass[
-  man,floatsintext]{apa6}
+  doc,floatsintext]{apa6}
 \usepackage{amsmath,amssymb}
 \usepackage{iftex}
 \ifPDFTeX
@@ -199,12 +199,12 @@
     {}{\InnerPatchFailed}%
   }
 {}{\PatchFailed}
-\keywords{Open Data, Attentional Control, SQL\newline\indent Word count: 4916}
+\keywords{Open Data, Attentional Control, SQL\newline\indent Word count: 4938}
 \usepackage{csquotes}
 \usepackage{mathrsfs}
 \usepackage[makeroom]{cancel}
 \usepackage{pcl}
-\usepackage{setspace}\doublespacing
+\usepackage{setspace}
 \usepackage{marginnote}
 \newcommand{\readme}[1]{\emph{\marginnote{\color{red}Julia} (#1)}}
 \usepackage{pifont}
@@ -327,7 +327,7 @@ When submitting data to our online submission form, researchers will be asked to
 \hypertarget{accessing-the-data-base}{%
 \section{Accessing the Data Base}\label{accessing-the-data-base}}
 
-One advantage of SQLite data bases is that they are simply a file that can be downloaded and locally accessed by anyone. Our data base is provided in a Github repository.\footnote{The newest version can be accessed via \url{https://github.com/jstbcs/acdc-database/blob/main/acdc.db}, the version at the time of submission can be found \href{https://github.com/jstbcs/acdc-database/blob/main/acdc.db}{here}. \emph{\marginnote{\color{red}Julia} (TODO: REPLACE WITH CURRENT COMMIT.)}} To access the data base, researchers can download the file \texttt{acdc.db}, and use the SQLite tool of their choice. In addition, we built \texttt{R}-based tools to inspect, access, and select data from ACDC. We introduce these tools, a shiny app and an \texttt{R} package, subsequently.
+One advantage of SQLite data bases is that they are simply a file that can be downloaded and locally accessed by anyone. Our data base is provided in a Github repository.\footnote{The newest version can be accessed via \url{https://github.com/jstbcs/acdc-database/blob/main/acdc.db}, the version at the time of submission can be found \href{https://github.com/jstbcs/acdc-database/raw/02f55c4b50da583f4741aed1a2a11bf5e63e7d99/acdc.db}{here}.} To access the data base, researchers can download the file \texttt{acdc.db}, and use the SQLite tool of their choice. In addition, we built \texttt{R}-based tools to inspect, access, and select data from ACDC. We introduce these tools, a shiny app and an \texttt{R} package, subsequently.
 
 \hypertarget{shiny-app}{%
 \subsection{Shiny App}\label{shiny-app}}
@@ -696,7 +696,7 @@ Xie, Y., Cheng, J., \& Tan, X. (2023). \emph{DT: A wrapper of the JavaScript lib
 \hypertarget{all-acdc-data-sets}{%
 \section{All ACDC data sets}\label{all-acdc-data-sets}}
 
-Table \ref{tab:taball} contains all data sets that are part of the Attentional Control Data Collection at the time of manuscript submission. The table is ordered by dataset ID and study, and contains the number of trials per condition and participant, and the number of participants. Additionally, three reliability estimates are included: The signal-to-noise ratio, \(\gamma\), the split-half reliability for 2000 random splits, \(\rho\), and the corrected split-half reliability using the Spearman-Brown formula, \(\rho^*\).
+Table \ref{tab:taball} contains all data sets that are part of the Attentional Control Data Collection at the time of manuscript submission. This version of the data base is maked by a git tag, and the git repository for the tag is \href{https://github.com/jstbcs/acdc-database/tree/submission1}{linked here}. The table is ordered by dataset ID and study, and contains the number of trials per condition and participant, and the number of participants. Additionally, three reliability estimates are included: The signal-to-noise ratio, \(\gamma\), the split-half reliability for 2000 random splits, \(\rho\), and the corrected split-half reliability using the Spearman-Brown formula, \(\rho^*\).
 
 
 

@@ -64,7 +64,7 @@ abstract: |
   <!-- https://tinyurl.com/ybremelq -->
   
 keywords          : "Open Data, Attentional Control, SQL"
-wordcount         : "4916"
+wordcount         : "4938"
 note              : "Version 1, February 2024"
 
 floatsintext      : yes
@@ -82,7 +82,7 @@ header-includes:
   - \usepackage{mathrsfs}
   - \usepackage[makeroom]{cancel}
   - \usepackage{pcl}
-  - \usepackage{setspace}\doublespacing
+  - \usepackage{setspace}
   - \usepackage{marginnote}
   - \newcommand{\readme}[1]{\emph{\marginnote{\color{red}Julia} (#1)}}
   - \usepackage{pifont}
@@ -92,7 +92,7 @@ header-includes:
   - \AtBeginEnvironment{longtable}{\singlespacing}
   - \AtBeginEnvironment{tablenotes}{\doublespacing}
   
-classoption       : "man"
+classoption       : "doc"
 output            : papaja::apa6_pdf
 csl               : apa6.csl
 bibliography: [references.bib, db.bib, lab.bib, r-references.bib]
@@ -212,7 +212,7 @@ When submitting data to our online submission form, researchers will be asked to
 
 One advantage of SQLite data bases is that they are simply a file that can be downloaded and locally accessed by anyone. Our data base is provided in a Github repository.[^1] To access the data base, researchers can download the file `acdc.db`, and use the SQLite tool of their choice. In addition, we built `R`-based tools to inspect, access, and select data from ACDC. We introduce these tools, a shiny app and an `R` package, subsequently.
 
-[^1]: The newest version can be accessed via <https://github.com/jstbcs/acdc-database/blob/main/acdc.db>, the version at the time of submission can be found [here](https://github.com/jstbcs/acdc-database/blob/main/acdc.db). \readme{TODO: REPLACE WITH CURRENT COMMIT.}
+[^1]: The newest version can be accessed via <https://github.com/jstbcs/acdc-database/blob/main/acdc.db>, the version at the time of submission can be found [here](https://github.com/jstbcs/acdc-database/raw/02f55c4b50da583f4741aed1a2a11bf5e63e7d99/acdc.db).
 
 ## Shiny App
 
